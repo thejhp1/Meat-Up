@@ -43,7 +43,7 @@ app.use(
 );
 
 app.use(routes);
-
+app.use('/api/groups', require('./routes/api/groups'))
 
 
 // Catch unhandled requests and forward to error handler.
