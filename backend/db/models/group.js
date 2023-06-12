@@ -64,10 +64,6 @@ module.exports = (sequelize, DataTypes) => {
     city: {
       allowNull: false,
       type: DataTypes.STRING,
-      validate: {
-        isAlpha: true,
-        isUppercase: true
-      }
     },
     state: {
       allowNull: false,
