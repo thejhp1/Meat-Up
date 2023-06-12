@@ -55,7 +55,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: {
       allowNull: false,
-      type: DataTypes.ENUM,
+      type: DataTypes.ENUM('In person','Online'),
+      // value:
     },
     private: {
       allowNull: false,
@@ -64,10 +65,19 @@ module.exports = (sequelize, DataTypes) => {
     city: {
       allowNull: false,
       type: DataTypes.STRING,
+      validate: {
+        isAlpha: true,
+        isUppercase: true
+      }
     },
     state: {
       allowNull: false,
       type: DataTypes.STRING,
+      validate: {
+        len: [2,2],
+        isAlpha: true,
+        isUppercase: true
+      }
     },
   }, {
     sequelize,

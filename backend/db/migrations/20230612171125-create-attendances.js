@@ -24,7 +24,7 @@ module.exports = {
       },
       status: {
         allowNull: false,
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM('attending', 'waitlist', 'pending')
       },
       createdAt: {
         allowNull: false,
