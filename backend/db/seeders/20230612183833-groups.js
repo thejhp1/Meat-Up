@@ -8,22 +8,14 @@ const { Group } = require('../models');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
     options.tableName = 'Groups'
-    await Group.bulkCreate(options, [
+    options.validate = true
+    await Group.bulkCreate([
       {
         organizerId: 1,
         name: "Evening Tennis on the Water",
         about: "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
-        type: "In person",
+        type: 'In person',
         private: true,
         city: "New York",
         state: "NY",
@@ -64,7 +56,7 @@ module.exports = {
       //   city: "Philadelphia",
       //   state: "PA",
       // },
-    ], {validate: true})
+    ], options)
   },
 
   async down (queryInterface, Sequelize) {
@@ -74,7 +66,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Groups'
+    // options.tableName = 'Groups'
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       city: { [Op.in]: ['New York', 'San Francisco', 'Raleigh', 'Los Angeles', 'Philadelphia'] }

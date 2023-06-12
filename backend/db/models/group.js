@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       Group.belongsToMany(models.Venue, {
-        through: models.DraftPick,
+        through: models.Event,
         foreignKey: 'groupId',
         otherKey: 'venueId'
       })
@@ -55,8 +55,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: {
       allowNull: false,
-      type: DataTypes.ENUM('In person','Online'),
-      // value:
+      type: DataTypes.ENUM("In person","Online"),
     },
     private: {
       allowNull: false,
