@@ -32,6 +32,23 @@ const validateGroupSignup = [
   handleValidationErrors,
 ];
 
+const validateVenueSignup = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .withMessage("Street address is required"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  check("lat")
+    .exists({ checkFalsy: true })
+    .isNumeric()
+    .withMessage("Latitude is not valid"),
+  check("lng")
+    .exists({ checkFalsy: true })
+    .isNumeric()
+    .withMessage("Longitude is not valid"),
+  handleValidationErrors,
+];
+
 router.get("/", async (req, res, next) => {
   const groups = await Group.findAll({
     include: [
@@ -84,10 +101,10 @@ router.get("/current", async (req, res, next) => {
       ],
     });
     if (!group) {
-        res.status(404);
-        res.json({
-          message: "No groups exist for this user",
-        });
+      res.status(404);
+      res.json({
+        message: "No groups exist for this user",
+      });
     }
     let list = [];
     list.push(group.toJSON());
@@ -111,7 +128,7 @@ router.get("/current", async (req, res, next) => {
     if (list) {
       res.json({
         Groups: list,
-      })
+      });
     }
   } else {
     res.status(404);
@@ -280,17 +297,51 @@ router.delete("/:groupId", async (req, res, next) => {
 });
 
 router.get("/:groupId/venues", async (req, res, next) => {
-    const venue = await Venue.findByPk(req.params.groupId, {
-        attributes: {
-            exclude: ['updatedAt', 'createdAt']
-        }
-    })
-    if (!venue) {
-        res.status(404)
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
-    res.json({Venues: [venue]})
+  const venue = await Venue.findAll({
+    where: {
+      groupId: req.params.groupId,
+    },
+    attributes: {
+      exclude: ["updatedAt", "createdAt"],
+    },
+  });
+  if (venue.length === 0) {
+    res.status(404);
+    return res.json({
+      message: "Group couldn't be found",
+    });
+  }
+  res.json({ Venues: venue });
 });
+
+router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
+  const { address, city, state, lat, lng } = req.body;
+  const groupId = req.params.groupId;
+  const group = await Group.findByPk(groupId);
+  if (!group) {
+    res.status(404);
+    res.json({
+      message: "Group couldn't be found",
+    });
+  }
+  const venue = await Venue.create({
+    groupId,
+    address,
+    city,
+    state,
+    lat,
+    lng,
+  });
+  const venueUpdate = {
+    id: venue.id,
+    groupId: venue.groupId,
+    address: venue.address,
+    city: venue.city,
+    state: venue.state,
+    lat: venue.lat,
+    lng: venue.lng,
+  };
+  res.json(venueUpdate);
+});
+
 module.exports = router;
