@@ -31,7 +31,7 @@ module.exports = {
       {
         organizerId: 3,
         name: "Whitewater Rafting and Kayak Training",
-        about: "Come learn how to properly ride and maneuver a kayak!",
+        about: "Come learn how to properly ride and maneuver a kayak! Beginner or expert, anyone is welcome to sign up!",
         type: "In person",
         private: true,
         city: "Raleigh",
@@ -40,7 +40,7 @@ module.exports = {
       {
         organizerId: 4,
         name: "Zoom Book Club",
-        about: "We will discuss our list of books over a Zoom meeting!",
+        about: "We will discuss our list of books over a Zoom meeting! Be prepared for an awesome time!",
         type: "Online",
         private: true,
         city: "Los Angeles",
@@ -49,7 +49,7 @@ module.exports = {
       {
         organizerId: 5,
         name: "Dog Walking",
-        about: "Come enjoy the park with your furry friend!",
+        about: "Come enjoy the park with your furry friend! Bring any other friends that wish to go!",
         type: "In person",
         private: false,
         city: "Philadelphia",

@@ -36,10 +36,10 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    options.tableName = 'Events'
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      status: { [Op.in]: ['co-host', 'member', 'pending'] }
-    }, {});
+    // options.tableName = 'Events'
+    // const Op = Sequelize.Op;
+    // return queryInterface.bulkDelete(options, {
+    //   status: { [Op.in]: ['co-host', 'member', 'pending'] }
+    // }, {});
   }
 };
