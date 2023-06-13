@@ -6,6 +6,9 @@ const {
   GroupImage,
   Venue,
   User,
+  Event,
+  Attendance,
+  EventImage,
 } = require("../../db/models");
 
 const { check } = require("express-validator");
@@ -297,7 +300,7 @@ router.delete("/:groupId", async (req, res, next) => {
 });
 
 router.get("/:groupId/venues", async (req, res, next) => {
-  const venue = await Venue.findAll({
+  const venues = await Venue.findAll({
     where: {
       groupId: req.params.groupId,
     },
@@ -305,13 +308,13 @@ router.get("/:groupId/venues", async (req, res, next) => {
       exclude: ["updatedAt", "createdAt"],
     },
   });
-  if (venue.length === 0) {
+  if (venues.length === 0) {
     res.status(404);
     return res.json({
       message: "Group couldn't be found",
     });
   }
-  res.json({ Venues: venue });
+  res.json({ Venues: venues });
 });
 
 router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
@@ -342,6 +345,81 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
     lng: venue.lng,
   };
   res.json(venueUpdate);
+});
+
+router.get("/:groupId/events", async (req, res, next) => {
+  const events = await Event.findAll({
+    where: {
+      groupId: req.params.groupId,
+    },
+    attributes: {
+      exclude: ["description", "capacity", "price", "updatedAt", "createdAt"],
+    },
+    include: [
+      {
+        model: Group,
+        attributes: {
+          exclude: [
+            "organizerId",
+            "about",
+            "type",
+            "private",
+            "createdAt",
+            "updatedAt",
+          ],
+        },
+      },
+      {
+        model: Venue,
+        attributes: {
+          exclude: [
+            "groupId",
+            "address",
+            "lat",
+            "lng",
+            "createdAt",
+            "updatedAt",
+          ],
+        },
+      },
+      {
+        model: Attendance,
+      },
+      {
+        model: EventImage,
+      },
+    ],
+  });
+
+  let list = [];
+  events.forEach((event) => {
+    list.push(event.toJSON());
+  });
+
+  list.forEach((event) => {
+    let count = 0;
+    event.Attendances.forEach((member) => {
+      count++;
+      console.log(count);
+      event.numAttending = count;
+    });
+    event.EventImages.forEach((image) => {
+      if (image.preview === true) {
+        event.previewImage = image.url;
+      }
+    });
+    delete event.EventImages;
+    delete event.Attendances;
+  });
+  if (list.length === 0) {
+    res.status(404);
+    return res.json({
+      message: "Group couldn't be found.",
+    });
+  }
+  res.json({
+    Events: list,
+  });
 });
 
 module.exports = router;

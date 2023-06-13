@@ -11,8 +11,8 @@ module.exports = {
     options.validate = true
     await Event.bulkCreate([
       {
-        venueId: null,
         groupId: 1,
+        venueId: null,
         name: 'Tennis Group First Meet and Greet',
         type: 'In person',
         description: 'Come and get to know your fellow tennis mates!',
@@ -66,6 +66,17 @@ module.exports = {
         startDate: "06/14/2023",
         endDate: "06/14/2023"
       },
+      {
+        groupId: 5,
+        venueId: 5,
+        name: 'Dog Walk in the Park',
+        type: 'In person',
+        description: 'We will be walking our furry friends around the park in the afternoon.',
+        capacity: 10,
+        price: 0,
+        startDate: "06/19/2023",
+        endDate: "06/19/2023"
+      }
     ], options).catch((err) => {
       throw new Error(err)
     })

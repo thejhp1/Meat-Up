@@ -20,24 +20,38 @@ router.get("/", async (req, res, next) => {
         model: Attendance,
       },
       {
-        model: EventImage
+        model: EventImage,
       },
       {
         model: Group,
         attributes: {
-            exclude: ['organizerId', 'about', 'type', 'private', 'createdAt', 'updatedAt']
-        }
+          exclude: [
+            "organizerId",
+            "about",
+            "type",
+            "private",
+            "createdAt",
+            "updatedAt",
+          ],
+        },
       },
       {
         model: Venue,
         attributes: {
-            exclude: ['groupId', 'address', 'lat', 'lng', 'createdAt', 'updatedAt']
-        }
+          exclude: [
+            "groupId",
+            "address",
+            "lat",
+            "lng",
+            "createdAt",
+            "updatedAt",
+          ],
+        },
       },
     ],
     attributes: {
-        exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
-    }
+      exclude: ["description", "capacity", "price", "createdAt", "updatedAt"],
+    },
   });
 
   let list = [];
@@ -49,21 +63,21 @@ router.get("/", async (req, res, next) => {
     let count = 0;
     event.Attendances.forEach((member) => {
       count++;
-      console.log(count)
+      console.log(count);
       event.numAttending = count;
     });
     event.EventImages.forEach((image) => {
-        if (image.preview === true) {
-          event.previewImage = image.url;
-        }
-      });
-    delete event.EventImages
-    delete event.Attendances
+      if (image.preview === true) {
+        event.previewImage = image.url;
+      }
+    });
+    delete event.EventImages;
+    delete event.Attendances;
   });
 
   res.json({
-    Events: list
-  })
+    Events: list,
+  });
 });
 
 module.exports = router;
