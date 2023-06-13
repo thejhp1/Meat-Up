@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership, GroupImage } = require('../../db/models')
+const { Group, Membership, GroupImage, Venue } = require('../../db/models')
 
 router.get('/', async (req, res, next) => {
     const groups = await Group.findAll({
@@ -37,6 +37,41 @@ router.get('/', async (req, res, next) => {
     res.json({
         Groups: list
     })
+})
+
+router.get('/:groupId', async (req, res, next) => {
+    const group = await Group.findByPk(req.params.groupId, {
+        include: [{
+            model: Membership
+        },
+        {
+            model: GroupImage,
+            attributes: {
+                exclude: ['updatedAt', 'createdAt']
+            }
+        },
+        {
+            model: Venue,
+            attributes: {
+                exclude: ['updatedAt', 'createdAt']
+            }
+        }
+        ]
+    })
+
+    let list = []
+    list.push(group.toJSON())
+
+    list.forEach(item => {
+        let count = 0
+        item.Memberships.forEach(member => {
+            count++
+            item.numMembers = count
+        })
+        delete item.Memberships
+    })
+
+    res.json(list[0])
 })
 
 module.exports = router;
