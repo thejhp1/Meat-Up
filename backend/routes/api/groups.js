@@ -227,7 +227,7 @@ router.post("/:groupId/images", async (req, res, next) => {
 });
 
 router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
-  const { name, about, type, private, city, state } = req.body;
+  let { name, about, type, private, city, state } = req.body;
   const group = await Group.findByPk(req.params.groupId);
 
   if (!group) {
