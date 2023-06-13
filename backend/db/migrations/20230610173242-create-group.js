@@ -17,21 +17,27 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        allowNull: false,
+        type: Sequelize.STRING(60)
       },
       about: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       type: {
+        allowNull: false,
         type: Sequelize.ENUM('In person','Online'),
       },
       private: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       city: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       state: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {
