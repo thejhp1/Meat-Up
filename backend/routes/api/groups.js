@@ -150,22 +150,18 @@ router.post('/:groupId/images', async (req, res, next) => {
         preview = false
         result.preview = preview
     }
-    let groupId = req.params.groupId
-    const image = await GroupImage.create({groupId, url, preview})
-    const safeImage = {
-        id: image.id,
-        groupId: image.groupId,
-        url: image.url,
-        preview: image.preview,
-        createdAt: image.createdAt,
-        updatedAt: image.updatedAt
-    }
-    const group = await Group.findByPk(req.params.groupId, {
-        include: { model: GroupImage }
-    })
+    const group = await Group.findByPk(req.params.groupId)
+    if (group) {
+        let groupId = req.params.groupId
+        await GroupImage.create({groupId, url, preview})
 
-    result.id = group.id
-    res.json(result)
+        result.id = group.id
+        res.json(result)
+    } else {
+        res.json({
+            message: "Group couldn't be found"
+        })
+    }
 });
 
 module.exports = router;
