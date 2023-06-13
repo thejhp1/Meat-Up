@@ -63,6 +63,12 @@ router.get('/:groupId', async (req, res, next) => {
         }
         ]
     })
+    if (!group) {
+        res.status(404)
+        res.json({
+            message: "Group couldn't be found"
+        })
+    }
 
     let list = []
     list.push(group.toJSON())
@@ -78,5 +84,7 @@ router.get('/:groupId', async (req, res, next) => {
 
     res.json(list[0])
 })
+
+// router.
 
 module.exports = router;
