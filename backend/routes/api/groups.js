@@ -21,7 +21,6 @@ const validateGroupSignup = [
       .isIn(['In person','Online'])
       .withMessage("Type must be 'Online' or 'In person'"),
     check("private")
-      .exists({ checkFalsy: true })
       .isBoolean()
       .withMessage("Private must be a boolean"),
     check("city")
@@ -158,10 +157,51 @@ router.post('/:groupId/images', async (req, res, next) => {
         result.id = group.id
         res.json(result)
     } else {
+        res.status(404)
         res.json({
             message: "Group couldn't be found"
         })
     }
 });
+
+router.put('/:groupId', validateGroupSignup, async (req, res, next) => {
+    const { name, about, type, private, city, state } = req.body
+    const group = await Group.findByPk(req.params.groupId)
+
+    if (!group) {
+        res.status(404)
+        res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    if (name) {
+        group.name = name
+    }
+    if (about) {
+        group.about = about
+    }
+    if (type) {
+        group.type = type
+    }
+    if (private && private == true) {
+        group.private = private
+    } else {
+        private = false
+        group.private = private
+    }
+    if (city) {
+        group.city = city
+    }
+    if (state) {
+        group.state = state
+    }
+
+    await group.save()
+
+    res.json(group)
+});
+
+
 
 module.exports = router;
