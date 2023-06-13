@@ -279,4 +279,18 @@ router.delete("/:groupId", async (req, res, next) => {
   });
 });
 
+router.get("/:groupId/venues", async (req, res, next) => {
+    const venue = await Venue.findByPk(req.params.groupId, {
+        attributes: {
+            exclude: ['updatedAt', 'createdAt']
+        }
+    })
+    if (!venue) {
+        res.status(404)
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+    res.json({Venues: [venue]})
+});
 module.exports = router;
