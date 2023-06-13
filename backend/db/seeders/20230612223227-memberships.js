@@ -45,6 +45,11 @@ module.exports = {
         groupId: 5,
         status: 'member'
       },
+      {
+        userId: 6,
+        groupId: 1,
+        status: 'member'
+      },
     ], options).catch((err) => {
       throw new Error(err)
     })
