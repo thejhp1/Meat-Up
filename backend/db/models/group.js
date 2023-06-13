@@ -55,9 +55,6 @@ module.exports = (sequelize, DataTypes) => {
     about: {
       allowNull: false,
       type: DataTypes.TEXT,
-      validate: {
-        len: [50, 255]
-      }
     },
     type: {
       allowNull: false,
