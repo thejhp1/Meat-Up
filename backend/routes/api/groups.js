@@ -139,7 +139,33 @@ router.post('/', validateGroupSignup, async (req, res, next) => {
 })
 
 router.post('/:groupId/images', async (req, res, next) => {
+    let { url, preview } = req.body
+    let result = {}
+    if (url) {
+        result.url = url
+    }
+    if (preview && preview == true) {
+        result.preview = preview
+    } else {
+        preview = false
+        result.preview = preview
+    }
+    let groupId = req.params.groupId
+    const image = await GroupImage.create({groupId, url, preview})
+    const safeImage = {
+        id: image.id,
+        groupId: image.groupId,
+        url: image.url,
+        preview: image.preview,
+        createdAt: image.createdAt,
+        updatedAt: image.updatedAt
+    }
+    const group = await Group.findByPk(req.params.groupId, {
+        include: { model: GroupImage }
+    })
 
+    result.id = group.id
+    res.json(result)
 });
 
 module.exports = router;
