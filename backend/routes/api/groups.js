@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership, GroupImage, Venue } = require('../../db/models')
+const { Group, Membership, GroupImage, Venue, User } = require('../../db/models')
 
 router.get('/', async (req, res, next) => {
     const groups = await Group.findAll({
@@ -47,8 +47,13 @@ router.get('/:groupId', async (req, res, next) => {
         {
             model: GroupImage,
             attributes: {
-                exclude: ['updatedAt', 'createdAt']
+                exclude: ['groupId', 'updatedAt', 'createdAt']
             }
+        },
+        {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName'],
+            as: 'Organizer',
         },
         {
             model: Venue,

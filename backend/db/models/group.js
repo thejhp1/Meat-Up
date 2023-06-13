@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       Group.belongsTo(models.User, {
+        as: 'Organizer',
         foreignKey: 'organizerId'
       })
 
