@@ -168,7 +168,7 @@ router.get("/:groupId", async (req, res, next) => {
   });
   if (!group) {
     res.status(404);
-    res.json({
+    return res.json({
       message: "Group couldn't be found",
     });
   }
