@@ -202,6 +202,19 @@ router.put('/:groupId', validateGroupSignup, async (req, res, next) => {
     res.json(group)
 });
 
+router.delete('/:groupId', async (req, res, next) => {
+    const group = await Group.findByPk(req.params.groupId)
+    if (!group) {
+        res.status(404)
+        res.json({
+            message: "Group couldn't be found"
+        })
+    }
 
+    await group.destroy()
+    res.json({
+        message: "Successfully deleted"
+    })
+})
 
 module.exports = router;
