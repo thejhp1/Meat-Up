@@ -1,11 +1,7 @@
 const express = require("express");
 
 const {
-  Group,
-  Membership,
-  GroupImage,
-  Venue,
-  User,
+  Venue
 } = require("../../db/models");
 
 const { check } = require("express-validator");

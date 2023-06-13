@@ -34,7 +34,9 @@ module.exports = {
         url: 'https://www.cesarsway.com/wp-content/uploads/2015/06/6-tips-for-mastering-the-dog-walk.jpg',
         preview: false
       },
-    ])
+    ], options).catch((err) => {
+      throw new Error(err)
+    })
   },
 
   async down (queryInterface, Sequelize) {

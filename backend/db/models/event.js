@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'eventId',
         onDelete: 'CASCADE',
         hooks: true
-      }) 
+      })
 
       Event.hasMany(models.Attendance, {
         foreignKey: 'eventId',
@@ -39,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     venueId: {
-      allowNull: false,
       type: DataTypes.INTEGER,
     },
     groupId: {
