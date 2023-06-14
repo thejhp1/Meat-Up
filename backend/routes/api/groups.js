@@ -507,4 +507,39 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
   res.json(event);
 });
 
+router.get("/:groupId/members", async (req, res, next) => {
+    const members = await Membership.findAll({
+        where: {
+            groupId: req.params.groupId
+        },
+        attributes: ['status'],
+        include: {
+            model: User
+        }
+    })
+    const group = await Group.findByPk(req.params.groupId)
+    if (!group) {
+        res.status(404)
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+    let list = [], Members = [];
+    members.forEach((member) => {
+        list.push(member.toJSON());
+    });
+    for (let i = 0; i < list.length; i++) {
+        let ele = list[i]
+        Members.push({
+            id: ele.User.id,
+            firstName: ele.User.firstName,
+            lastName: ele.User.lastName,
+            Membership: {
+                status: ele.status
+            }
+        })
+    }
+    res.json({Members})
+});
+
 module.exports = router;
