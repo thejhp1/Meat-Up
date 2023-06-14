@@ -322,41 +322,57 @@ router.post("/:groupId/images", async (req, res, next) => {
 });
 
 router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
-  let { name, about, type, private, city, state } = req.body;
-  const group = await Group.findByPk(req.params.groupId);
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (group.toJSON().organizerId === user.id){
+      let { name, about, type, private, city, state } = req.body;
+      const group = await Group.findByPk(req.params.groupId);
 
-  if (!group) {
-    res.status(404);
+      if (!group) {
+        res.status(404);
+        res.json({
+          message: "Group couldn't be found",
+        });
+      }
+
+      if (name) {
+        group.name = name;
+      }
+      if (about) {
+        group.about = about;
+      }
+      if (type) {
+        group.type = type;
+      }
+      if (private && private == true) {
+        group.private = private;
+      } else {
+        private = false;
+        group.private = private;
+      }
+      if (city) {
+        group.city = city;
+      }
+      if (state) {
+        group.state = state;
+      }
+
+      await group.save();
+
+      res.json(group);
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
     res.json({
-      message: "Group couldn't be found",
+      message: "Authentication required",
     });
   }
-
-  if (name) {
-    group.name = name;
-  }
-  if (about) {
-    group.about = about;
-  }
-  if (type) {
-    group.type = type;
-  }
-  if (private && private == true) {
-    group.private = private;
-  } else {
-    private = false;
-    group.private = private;
-  }
-  if (city) {
-    group.city = city;
-  }
-  if (state) {
-    group.state = state;
-  }
-
-  await group.save();
-
-  res.json(group);
 });
 
 router.delete("/:groupId", async (req, res, next) => {
