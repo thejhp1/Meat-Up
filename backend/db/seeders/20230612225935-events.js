@@ -63,8 +63,8 @@ module.exports = {
         description: 'We will be discussing the first two books! Come with questions.',
         capacity: 99,
         price: 0,
-        startDate: "06/14/2023",
-        endDate: "06/14/2023"
+        startDate: "09/14/2023",
+        endDate: "09/14/2023"
       },
       {
         groupId: 5,
@@ -74,8 +74,8 @@ module.exports = {
         description: 'We will be walking our furry friends around the park in the afternoon.',
         capacity: 10,
         price: 0,
-        startDate: "06/19/2023",
-        endDate: "06/19/2023"
+        startDate: "06/29/2023",
+        endDate: "06/29/2023"
       }
     ], options).catch((err) => {
       throw new Error(err)
