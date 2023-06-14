@@ -305,17 +305,40 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
 });
 
 router.delete("/:eventId", async (req, res, next) => {
-    const event = await Event.findByPk(req.params.eventId);
-    if (!event) {
-        res.status(404);
-        return res.json({
-          message: "Event couldn't be found",
-        });
-    }
-    await event.destroy();
-    res.json({
-        message: "Successfully deleted",
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
       });
+    }
+    const userCheck = await Membership.findByPk(user.id)
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+      const event = await Event.findByPk(req.params.eventId);
+      if (!event) {
+          res.status(404);
+          return res.json({
+            message: "Event couldn't be found",
+          });
+      }
+      await event.destroy();
+      res.json({
+          message: "Successfully deleted",
+      });
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
 });
 
 module.exports = router;
