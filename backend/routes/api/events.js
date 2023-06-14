@@ -14,6 +14,16 @@ const e = require("express");
 
 const router = express.Router();
 
+const validateImageAdd = [
+    check("url")
+      .exists({ checkFalsy: true })
+      .withMessage("Url is required"),
+    check("preview")
+      .isBoolean()
+      .withMessage("Preview must be a boolean"),
+    handleValidationErrors,
+  ];
+
 router.get("/", async (req, res, next) => {
   const events = await Event.findAll({
     include: [
@@ -130,6 +140,33 @@ router.get("/:eventId", async (req, res, next) => {
   });
 
   res.json(list[0]);
+});
+
+router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
+    let { url, preview } = req.body;
+
+    const event = await Event.findByPk(req.params.eventId)
+
+    if (event) {
+        const image = await EventImage.create({
+            eventId: Number(req.params.eventId),
+            url,
+            preview
+        })
+
+        const eventImage = {
+            id: image.id,
+            url: image.url,
+            preview: image.preview
+        }
+
+        res.json(eventImage)
+    } else {
+        res.status(404);
+        res.json({
+          message: "Event couldn't be found",
+        });
+    }
 });
 
 module.exports = router;
