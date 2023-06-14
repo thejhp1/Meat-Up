@@ -53,59 +53,56 @@ const validateVenueSignup = [
 ];
 
 const validateEventSignup = [
-    check("venueId")
-      .exists({ checkFalsy: true })
-      .custom(async (val, { req }) => {
-        const venue = await Venue.findByPk(req.body.venueId)
-        if (!venue) {
-            throw new Error("Venue couldn't be found")
-        }
-        return true
-      }),
-    check("name")
-      .exists({ checkFalsy: true })
-      .isLength({ min: 5 })
-      .withMessage("Name must be at least 5 characters"),
-    check("type")
-      .exists({ checkFalsy: true })
-      .isIn(["In person", "Online"])
-      .withMessage("Type must be Online or In person"),
-    check("capacity")
-      .exists({ checkFalsy: true })
-      .isNumeric()
-      .withMessage("Capacity must be an integer"),
-    check("price")
-      .exists({ checkFalsy: true })
-      .isNumeric()
-      .withMessage("Price is invalid"),
-    check("description")
-      .exists({ checkFalsy: true })
-      .withMessage("Description is required"),
-    check("startDate")
-      .exists({ checkFalsy: true })
-      .custom(val => {
-          const todayDate = new Date();
-          const startDate = new Date(val);
-          if (startDate < todayDate){
-              throw new Error("Start date must be in the future")
-          }
-          return true
-        }),
-    check("endDate")
-      .exists({ checkFalsy: true })
-      .custom((val, { req }) => {
-        const endDate = new Date(val);
-        const startDate = new Date(req.body.startDate);
-        console.log('endDate', endDate)
-        console.log('startDate', startDate)
-        console.log(endDate < startDate)
-        if (endDate < startDate) {
-            throw new Error("End date is less than start date")
-        }
-        return true
-      }),
-    handleValidationErrors,
-  ];
+  check("venueId")
+    .exists({ checkFalsy: true })
+    .custom(async (val, { req }) => {
+      const venue = await Venue.findByPk(req.body.venueId);
+      if (!venue) {
+        throw new Error("Venue couldn't be found");
+      }
+      return true;
+    }),
+  check("name")
+    .exists({ checkFalsy: true })
+    .isLength({ min: 5 })
+    .withMessage("Name must be at least 5 characters"),
+  check("type")
+    .exists({ checkFalsy: true })
+    .isIn(["In person", "Online"])
+    .withMessage("Type must be Online or In person"),
+  check("capacity")
+    .exists({ checkFalsy: true })
+    .isNumeric()
+    .withMessage("Capacity must be an integer"),
+  check("price")
+    .exists({ checkFalsy: true })
+    .isNumeric()
+    .withMessage("Price is invalid"),
+  check("description")
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+  check("startDate")
+    .exists({ checkFalsy: true })
+    .custom((val) => {
+      const todayDate = new Date();
+      const startDate = new Date(val);
+      if (startDate < todayDate) {
+        throw new Error("Start date must be in the future");
+      }
+      return true;
+    }),
+  check("endDate")
+    .exists({ checkFalsy: true })
+    .custom((val, { req }) => {
+      const endDate = new Date(val);
+      const startDate = new Date(req.body.startDate);
+      if (endDate < startDate) {
+        throw new Error("End date is less than start date");
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
 
 router.get("/", async (req, res, next) => {
   const groups = await Group.findAll({
@@ -455,7 +452,6 @@ router.get("/:groupId/events", async (req, res, next) => {
     let count = 0;
     event.Attendances.forEach((member) => {
       count++;
-      console.log(count);
       event.numAttending = count;
     });
     event.EventImages.forEach((image) => {
@@ -478,28 +474,37 @@ router.get("/:groupId/events", async (req, res, next) => {
 });
 
 router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
-    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body
-    const group = await Group.findByPk(req.params.groupId);
-    if (!group) {
-        res.status(404);
-        res.json({
-          message: "Group couldn't be found",
-        });
-    }
+  const {
+    venueId,
+    name,
+    type,
+    capacity,
+    price,
+    description,
+    startDate,
+    endDate,
+  } = req.body;
+  const group = await Group.findByPk(req.params.groupId);
+  if (!group) {
+    res.status(404);
+    res.json({
+      message: "Group couldn't be found",
+    });
+  }
 
-    const event = await Event.create({
-        venueId,
-        groupId: Number(req.params.groupId),
-        name,
-        type,
-        capacity,
-        price,
-        description,
-        startDate,
-        endDate
-    })
+  const event = await Event.create({
+    venueId,
+    groupId: Number(req.params.groupId),
+    name,
+    type,
+    capacity,
+    price,
+    description,
+    startDate,
+    endDate,
+  });
 
-    res.json(event)
+  res.json(event);
 });
 
 module.exports = router;
