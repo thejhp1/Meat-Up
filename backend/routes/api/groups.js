@@ -572,8 +572,24 @@ router.post("/:groupId/membership", async (req, res, next) => {
         memberId: member.id,
         status: member.status
     }
-    
+
     res.json(newMember)
+});
+
+router.put("/:groupId/membership", async (req, res, next) => {
+    const { user } = req;
+    const { memberId, status } = req.body
+    const group = await Group.findByPk(req.params.groupId)
+    if (!group) {
+        res.status(404)
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    if (user.status == 'pending') {
+        
+    }
 });
 
 module.exports = router;
