@@ -284,6 +284,11 @@ router.post("/:groupId/images", async (req, res, next) => {
   const { user } = req;
   if (user) {
       const group = await Group.findByPk(req.params.groupId);
+      if (!group) {
+        res.status(404);
+        res.json({
+          message: "Group couldn't be found",
+      })};
       if (group.toJSON().organizerId === user.id){
         let { url, preview } = req.body;
         let result = {};
@@ -327,6 +332,11 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
     const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+    })};
     if (group.toJSON().organizerId === user.id){
       let { name, about, type, private, city, state } = req.body;
       const group = await Group.findByPk(req.params.groupId);
