@@ -186,9 +186,9 @@ router.get("/current", async (req, res, next) => {
       });
     }
   } else {
-    res.status(404);
+    res.status(401);
     res.json({
-      message: "No current user exists",
+      message: "Authentication required",
     });
   }
 });
@@ -588,7 +588,7 @@ router.put("/:groupId/membership", async (req, res, next) => {
     }
 
     if (user.status == 'pending') {
-        
+
     }
 });
 
