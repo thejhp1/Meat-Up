@@ -31,13 +31,6 @@ const validateVenueSignup = [
 router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
-    if (!group) {
-      res.status(404);
-      res.json({
-        message: "Group couldn't be found",
-      });
-    }
     const userCheck = await Membership.findByPk(user.id)
     if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
       const { address, city, state, lat, lng } = req.body;
