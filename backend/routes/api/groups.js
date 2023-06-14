@@ -376,18 +376,34 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
 });
 
 router.delete("/:groupId", async (req, res, next) => {
-  const group = await Group.findByPk(req.params.groupId);
-  if (!group) {
-    res.status(404);
-    return res.json({
-      message: "Group couldn't be found",
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (group.toJSON().organizerId === user.id){
+      const group = await Group.findByPk(req.params.groupId);
+      if (!group) {
+        res.status(404);
+        return res.json({
+          message: "Group couldn't be found",
+        });
+      }
+
+      await group.destroy();
+      res.json({
+        message: "Successfully deleted",
+      });
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
     });
   }
-
-  await group.destroy();
-  res.json({
-    message: "Successfully deleted",
-  });
 });
 
 router.get("/:groupId/venues", async (req, res, next) => {
