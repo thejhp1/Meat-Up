@@ -244,34 +244,34 @@ router.get("/:groupId", async (req, res, next) => {
 router.post("/", validateGroupSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-      let { organizerId, name, about, type, private, city, state } = req.body;
-      if (!organizerId) {
-        organizerId = 1;
-      }
-      const group = await Group.create({
-        organizerId,
-        name,
-        about,
-        type,
-        private,
-        city,
-        state,
-      });
-      const safeGroup = {
-        id: group.id,
-        organizerId: group.organizerId,
-        name: group.name,
-        about: group.about,
-        type: group.type,
-        private: group.private,
-        city: group.city,
-        state: group.state,
-        createdAt: group.createdAt,
-        updatedAt: group.updatedAt,
-      };
+    let { organizerId, name, about, type, private, city, state } = req.body;
+    if (!organizerId) {
+      organizerId = 1;
+    }
+    const group = await Group.create({
+      organizerId,
+      name,
+      about,
+      type,
+      private,
+      city,
+      state,
+    });
+    const safeGroup = {
+      id: group.id,
+      organizerId: group.organizerId,
+      name: group.name,
+      about: group.about,
+      type: group.type,
+      private: group.private,
+      city: group.city,
+      state: group.state,
+      createdAt: group.createdAt,
+      updatedAt: group.updatedAt,
+    };
 
-      res.status(201);
-      return res.json(safeGroup);
+    res.status(201);
+    return res.json(safeGroup);
   } else {
     res.status(401);
     res.json({
@@ -283,37 +283,38 @@ router.post("/", validateGroupSignup, async (req, res, next) => {
 router.post("/:groupId/images", async (req, res, next) => {
   const { user } = req;
   if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+      });
+    }
+    if (group.toJSON().organizerId === user.id) {
+      let { url, preview } = req.body;
+      let result = {};
+      if (url) {
+        result.url = url;
+      }
+      if (preview && preview == true) {
+        result.preview = preview;
+      } else {
+        preview = false;
+        result.preview = preview;
+      }
       const group = await Group.findByPk(req.params.groupId);
-      if (!group) {
+      if (group) {
+        let groupId = req.params.groupId;
+        await GroupImage.create({ groupId, url, preview });
+
+        result.id = group.id;
+        res.json(result);
+      } else {
         res.status(404);
         res.json({
           message: "Group couldn't be found",
-      })};
-      if (group.toJSON().organizerId === user.id){
-        let { url, preview } = req.body;
-        let result = {};
-        if (url) {
-          result.url = url;
-        }
-        if (preview && preview == true) {
-          result.preview = preview;
-        } else {
-          preview = false;
-          result.preview = preview;
-        }
-        const group = await Group.findByPk(req.params.groupId);
-        if (group) {
-          let groupId = req.params.groupId;
-          await GroupImage.create({ groupId, url, preview });
-
-          result.id = group.id;
-          res.json(result);
-        } else {
-          res.status(404);
-          res.json({
-            message: "Group couldn't be found",
-          });
-        }
+        });
+      }
     } else {
       res.status(403);
       res.json({
@@ -336,8 +337,9 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
       res.status(404);
       res.json({
         message: "Group couldn't be found",
-    })};
-    if (group.toJSON().organizerId === user.id){
+      });
+    }
+    if (group.toJSON().organizerId === user.id) {
       let { name, about, type, private, city, state } = req.body;
       const group = await Group.findByPk(req.params.groupId);
 
@@ -391,7 +393,7 @@ router.delete("/:groupId", async (req, res, next) => {
   const { user } = req;
   if (user) {
     const group = await Group.findByPk(req.params.groupId);
-    if (group.toJSON().organizerId === user.id){
+    if (group.toJSON().organizerId === user.id) {
       const group = await Group.findByPk(req.params.groupId);
       if (!group) {
         res.status(404);
@@ -428,8 +430,12 @@ router.get("/:groupId/venues", async (req, res, next) => {
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+    const userCheck = await Membership.findByPk(user.id);
+    if (
+      group.toJSON().organizerId === user.id ||
+      (userCheck.toJSON().status == "co-host" &&
+        userCheck.toJSON().groupId === req.params.groupId)
+    ) {
       const venues = await Venue.findAll({
         where: {
           groupId: req.params.groupId,
@@ -469,8 +475,12 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+    const userCheck = await Membership.findByPk(user.id);
+    if (
+      group.toJSON().organizerId === user.id ||
+      (userCheck.toJSON().status == "co-host" &&
+        userCheck.toJSON().groupId === req.params.groupId)
+    ) {
       const { address, city, state, lat, lng } = req.body;
       const groupId = req.params.groupId;
       const group = await Group.findByPk(groupId);
@@ -596,8 +606,12 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+    const userCheck = await Membership.findByPk(user.id);
+    if (
+      group.toJSON().organizerId === user.id ||
+      (userCheck.toJSON().status == "co-host" &&
+        userCheck.toJSON().groupId === req.params.groupId)
+    ) {
       const {
         venueId,
         name,
@@ -629,7 +643,6 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
       });
 
       res.json(event);
-
     } else {
       res.status(403);
       res.json({
@@ -645,95 +658,183 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
 });
 
 router.get("/:groupId/members", async (req, res, next) => {
-    const members = await Membership.findAll({
-        where: {
-            groupId: req.params.groupId
-        },
-        attributes: ['status'],
-        include: {
-            model: User
-        }
-    })
-    const group = await Group.findByPk(req.params.groupId)
-    if (!group) {
-        res.status(404)
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
-    let list = [], Members = [];
-    members.forEach((member) => {
-        list.push(member.toJSON());
+  const members = await Membership.findAll({
+    where: {
+      groupId: req.params.groupId,
+    },
+    attributes: ["status"],
+    include: {
+      model: User,
+    },
+  });
+  const group = await Group.findByPk(req.params.groupId);
+  if (!group) {
+    res.status(404);
+    return res.json({
+      message: "Group couldn't be found",
     });
-    for (let i = 0; i < list.length; i++) {
-        let ele = list[i]
-        Members.push({
-            id: ele.User.id,
-            firstName: ele.User.firstName,
-            lastName: ele.User.lastName,
-            Membership: {
-                status: ele.status
-            }
-        })
-    }
-    res.json({Members})
+  }
+  let list = [],
+    Members = [];
+  members.forEach((member) => {
+    list.push(member.toJSON());
+  });
+  for (let i = 0; i < list.length; i++) {
+    let ele = list[i];
+    Members.push({
+      id: ele.User.id,
+      firstName: ele.User.firstName,
+      lastName: ele.User.lastName,
+      Membership: {
+        status: ele.status,
+      },
+    });
+  }
+  res.json({ Members });
 });
 
 router.post("/:groupId/membership", async (req, res, next) => {
-    const { user } = req;
-    if (user) {
-      const group = await Group.findByPk(req.params.groupId)
-      if (!group) {
-          res.status(404)
-          return res.json({
-              message: "Group couldn't be found"
-          })
-      }
-      const memberCheck = await Membership.findByPk(user.id)
-      if (memberCheck.status == 'co-host' || memberCheck.status == 'member') {
-          res.status(400)
-          return res.json({
-              message: "User is already a member of the group"
-          })
-      } else if (memberCheck.status == 'pending') {
-          res.status(400)
-          return res.json({
-              message: "Membership has already been requested"
-          })
-      }
-      const member = await Membership.create({
-          userId: user.id,
-          groupId: req.params.groupId,
-          status: 'pending'
-      })
-      const newMember = {
-          memberId: member.id,
-          status: member.status
-      }
-
-      res.json(newMember)
-    } else {
-      res.status(401);
-      res.json({
-        message: "Authentication required",
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      return res.json({
+        message: "Group couldn't be found",
       });
     }
+    const memberCheck = await Membership.findByPk(user.id);
+    if (memberCheck.status == "co-host" || memberCheck.status == "member") {
+      res.status(400);
+      return res.json({
+        message: "User is already a member of the group",
+      });
+    } else if (memberCheck.status == "pending") {
+      res.status(400);
+      return res.json({
+        message: "Membership has already been requested",
+      });
+    }
+    const member = await Membership.create({
+      userId: user.id,
+      groupId: req.params.groupId,
+      status: "pending",
+    });
+    const newMember = {
+      memberId: member.id,
+      status: member.status,
+    };
+
+    res.json(newMember);
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
 });
 
 router.put("/:groupId/membership", async (req, res, next) => {
-    const { user } = req;
-    const { memberId, status } = req.body
-    const group = await Group.findByPk(req.params.groupId)
+  const { memberId, status } = req.body;
+  if (status === 'pending') {
+    res.status(400);
+    return res.json({
+      message: "Validations Error",
+      errors: {
+        status: "Cannot change a membership status to pending"
+      }
+    });
+  }
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
     if (!group) {
-        res.status(404)
+      res.status(404);
+      return res.json({
+        message: "Group couldn't be found",
+      });
+    }
+    const userCheck = await Membership.findByPk(user.id);
+    if (group.toJSON().organizerId === user.id && status == 'co-host') {
+      const { memberId, status } = req.body;
+      const group = await Group.findByPk(req.params.groupId, {
+        include: { model: Membership },
+      });
+      if (!group) {
+        res.status(404);
         return res.json({
-            message: "Group couldn't be found"
-        })
+          message: "Group couldn't be found",
+        });
+      }
+      const memberCheck = group.toJSON();
+      memberCheck.Memberships.forEach((member) => {
+        if (
+          member.groupId === Number(req.params.groupId) &&
+          member.status == "member"
+        ) {
+          if (status == 'co-host') {
+            member.status = status;
+          }
+        }
+      });
+
+      res.json(memberCheck.Memberships);
     }
 
-    if (user.status == 'pending') {
-
+    if (group.toJSON().organizerId === user.id && status == 'member' || (userCheck.toJSON().status == "co-host" && userCheck.toJSON().groupId === Number(req.params.groupId)) && status == 'member') {
+      const { memberId, status } = req.body;
+      const group = await Group.findByPk(req.params.groupId, {
+        include: { model: Membership, attributes: { exclude: ['updatedAt', 'createdAt']}},
+      });
+      if (!group) {
+        res.status(404);
+        return res.json({
+          message: "Group couldn't be found",
+        });
+      }
+      const memberCheck = group.toJSON();
+      const list = []
+      memberCheck.Memberships.forEach((member) => {
+        console.log(member)
+        if (
+          member.groupId === Number(req.params.groupId) &&
+          member.status == "pending" && member.userId === memberId
+        ) {
+          if (status == 'member') {
+            member.status = status;
+            list.push(member)
+          }
+        }
+      });
+      if (list.length >= 1) {
+        const updatedMember = {
+          id: list[0].id,
+          groupId: list[0].groupId,
+          memberId: memberId,
+          status: list[0].status
+        }
+        res.json(updatedMember);
+      } else {
+          res.status(400)
+          return res.json({
+            "message": "Validations Error",
+            "errors": {
+              "status" : "Cannot change a membership status to pending"
+            }
+          })
+        }
+    } else {
+      res.status(403);
+      return res.json({
+        message: "Forbidden",
+      });
     }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
 });
 
 module.exports = router;
