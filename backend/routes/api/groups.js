@@ -681,36 +681,43 @@ router.get("/:groupId/members", async (req, res, next) => {
 
 router.post("/:groupId/membership", async (req, res, next) => {
     const { user } = req;
-    const group = await Group.findByPk(req.params.groupId)
-    if (!group) {
-        res.status(404)
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
-    const memberCheck = await Membership.findByPk(user.id)
-    if (memberCheck.status == 'co-host' || memberCheck.status == 'member') {
-        res.status(400)
-        return res.json({
-            message: "User is already a member of the group"
-        })
-    } else if (memberCheck.status == 'pending') {
-        res.status(400)
-        return res.json({
-            message: "Membership has already been requested"
-        })
-    }
-    const member = await Membership.create({
-        userId: user.id,
-        groupId: req.params.groupId,
-        status: 'pending'
-    })
-    const newMember = {
-        memberId: member.id,
-        status: member.status
-    }
+    if (user) {
+      const group = await Group.findByPk(req.params.groupId)
+      if (!group) {
+          res.status(404)
+          return res.json({
+              message: "Group couldn't be found"
+          })
+      }
+      const memberCheck = await Membership.findByPk(user.id)
+      if (memberCheck.status == 'co-host' || memberCheck.status == 'member') {
+          res.status(400)
+          return res.json({
+              message: "User is already a member of the group"
+          })
+      } else if (memberCheck.status == 'pending') {
+          res.status(400)
+          return res.json({
+              message: "Membership has already been requested"
+          })
+      }
+      const member = await Membership.create({
+          userId: user.id,
+          groupId: req.params.groupId,
+          status: 'pending'
+      })
+      const newMember = {
+          memberId: member.id,
+          status: member.status
+      }
 
-    res.json(newMember)
+      res.json(newMember)
+    } else {
+      res.status(401);
+      res.json({
+        message: "Authentication required",
+      });
+    }
 });
 
 router.put("/:groupId/membership", async (req, res, next) => {
