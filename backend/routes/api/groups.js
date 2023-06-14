@@ -280,28 +280,43 @@ router.post("/", validateGroupSignup, async (req, res, next) => {
 });
 
 router.post("/:groupId/images", async (req, res, next) => {
-  let { url, preview } = req.body;
-  let result = {};
-  if (url) {
-    result.url = url;
-  }
-  if (preview && preview == true) {
-    result.preview = preview;
-  } else {
-    preview = false;
-    result.preview = preview;
-  }
-  const group = await Group.findByPk(req.params.groupId);
-  if (group) {
-    let groupId = req.params.groupId;
-    await GroupImage.create({ groupId, url, preview });
-
-    result.id = group.id;
-    res.json(result);
-  } else {
-    res.status(404);
+  const { user } = req;
+  if (!user) {
+    res.status(401);
     res.json({
-      message: "Group couldn't be found",
+      message: "Authentication required",
+    });
+  }
+  const userCheck = await Membership.findByPk(user.id)
+  if (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId == Number(req.params.groupId)) {
+      let { url, preview } = req.body;
+      let result = {};
+      if (url) {
+        result.url = url;
+      }
+      if (preview && preview == true) {
+        result.preview = preview;
+      } else {
+        preview = false;
+        result.preview = preview;
+      }
+      const group = await Group.findByPk(req.params.groupId);
+      if (group) {
+        let groupId = req.params.groupId;
+        await GroupImage.create({ groupId, url, preview });
+
+        result.id = group.id;
+        res.json(result);
+      } else {
+        res.status(404);
+        res.json({
+          message: "Group couldn't be found",
+        });
+      }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
     });
   }
 });
