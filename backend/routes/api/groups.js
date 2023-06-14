@@ -922,4 +922,5 @@ router.delete("/:groupId/membership", async (req, res, next) => {
   }
 
 });
+
 module.exports = router;

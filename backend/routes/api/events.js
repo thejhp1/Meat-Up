@@ -384,4 +384,8 @@ router.delete("/:eventId", async (req, res, next) => {
   }
 });
 
+router.get("/:eventId/attendees", async (req, res, next) => {
+
+});
+
 module.exports = router;
