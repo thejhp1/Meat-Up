@@ -587,37 +587,61 @@ router.get("/:groupId/events", async (req, res, next) => {
 });
 
 router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
-  const {
-    venueId,
-    name,
-    type,
-    capacity,
-    price,
-    description,
-    startDate,
-    endDate,
-  } = req.body;
-  const group = await Group.findByPk(req.params.groupId);
-  if (!group) {
-    res.status(404);
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+      });
+    }
+    const userCheck = await Membership.findByPk(user.id)
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+      const {
+        venueId,
+        name,
+        type,
+        capacity,
+        price,
+        description,
+        startDate,
+        endDate,
+      } = req.body;
+      const group = await Group.findByPk(req.params.groupId);
+      if (!group) {
+        res.status(404);
+        res.json({
+          message: "Group couldn't be found",
+        });
+      }
+
+      const event = await Event.create({
+        venueId,
+        groupId: Number(req.params.groupId),
+        name,
+        type,
+        capacity,
+        price,
+        description,
+        startDate,
+        endDate,
+      });
+
+      res.json(event);
+
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
     res.json({
-      message: "Group couldn't be found",
+      message: "Authentication required",
     });
   }
-
-  const event = await Event.create({
-    venueId,
-    groupId: Number(req.params.groupId),
-    name,
-    type,
-    capacity,
-    price,
-    description,
-    startDate,
-    endDate,
-  });
-
-  res.json(event);
 });
 
 router.get("/:groupId/members", async (req, res, next) => {
