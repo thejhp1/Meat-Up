@@ -241,34 +241,42 @@ router.get("/:groupId", async (req, res, next) => {
 });
 
 router.post("/", validateGroupSignup, async (req, res, next) => {
-  let { organizerId, name, about, type, private, city, state } = req.body;
-  if (!organizerId) {
-    organizerId = 1;
-  }
-  const group = await Group.create({
-    organizerId,
-    name,
-    about,
-    type,
-    private,
-    city,
-    state,
-  });
-  const safeGroup = {
-    id: group.id,
-    organizerId: group.organizerId,
-    name: group.name,
-    about: group.about,
-    type: group.type,
-    private: group.private,
-    city: group.city,
-    state: group.state,
-    createdAt: group.createdAt,
-    updatedAt: group.updatedAt,
-  };
+  const { user } = req;
+  if (user) {
+      let { organizerId, name, about, type, private, city, state } = req.body;
+      if (!organizerId) {
+        organizerId = 1;
+      }
+      const group = await Group.create({
+        organizerId,
+        name,
+        about,
+        type,
+        private,
+        city,
+        state,
+      });
+      const safeGroup = {
+        id: group.id,
+        organizerId: group.organizerId,
+        name: group.name,
+        about: group.about,
+        type: group.type,
+        private: group.private,
+        city: group.city,
+        state: group.state,
+        createdAt: group.createdAt,
+        updatedAt: group.updatedAt,
+      };
 
-  res.status(201);
-  return res.json(safeGroup);
+      res.status(201);
+      return res.json(safeGroup);
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
 });
 
 router.post("/:groupId/images", async (req, res, next) => {
