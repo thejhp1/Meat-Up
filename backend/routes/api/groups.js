@@ -736,13 +736,13 @@ router.post("/:groupId/membership", async (req, res, next) => {
 
 router.put("/:groupId/membership", async (req, res, next) => {
   const { memberId, status } = req.body;
-  if (status === 'pending') {
+  if (status === "pending") {
     res.status(400);
     return res.json({
       message: "Validations Error",
       errors: {
-        status: "Cannot change a membership status to pending"
-      }
+        status: "Cannot change a membership status to pending",
+      },
     });
   }
   const { user } = req;
@@ -755,7 +755,7 @@ router.put("/:groupId/membership", async (req, res, next) => {
       });
     }
     const userCheck = await Membership.findByPk(user.id);
-    if (group.toJSON().organizerId === user.id && status == 'co-host') {
+    if (group.toJSON().organizerId === user.id && status == "co-host") {
       const { memberId, status } = req.body;
       const group = await Group.findByPk(req.params.groupId, {
         include: { model: Membership },
@@ -767,42 +767,21 @@ router.put("/:groupId/membership", async (req, res, next) => {
         });
       }
       const memberCheck = group.toJSON();
+      if (memberCheck.Memberships.length <= 0) {
+        res.status(404);
+        return res.json({
+          message: "Membership between the user and the group does not exist"
+        });
+      }
+      const list = [];
       memberCheck.Memberships.forEach((member) => {
         if (
           member.groupId === Number(req.params.groupId) &&
           member.status == "member"
         ) {
-          if (status == 'co-host') {
+          if (status == "co-host") {
             member.status = status;
-          }
-        }
-      });
-
-      res.json(memberCheck.Memberships);
-    }
-
-    if (group.toJSON().organizerId === user.id && status == 'member' || (userCheck.toJSON().status == "co-host" && userCheck.toJSON().groupId === Number(req.params.groupId)) && status == 'member') {
-      const { memberId, status } = req.body;
-      const group = await Group.findByPk(req.params.groupId, {
-        include: { model: Membership, attributes: { exclude: ['updatedAt', 'createdAt']}},
-      });
-      if (!group) {
-        res.status(404);
-        return res.json({
-          message: "Group couldn't be found",
-        });
-      }
-      const memberCheck = group.toJSON();
-      const list = []
-      memberCheck.Memberships.forEach((member) => {
-        console.log(member)
-        if (
-          member.groupId === Number(req.params.groupId) &&
-          member.status == "pending" && member.userId === memberId
-        ) {
-          if (status == 'member') {
-            member.status = status;
-            list.push(member)
+            list.push(member);
           }
         }
       });
@@ -811,18 +790,77 @@ router.put("/:groupId/membership", async (req, res, next) => {
           id: list[0].id,
           groupId: list[0].groupId,
           memberId: memberId,
-          status: list[0].status
-        }
+          status: list[0].status,
+        };
         res.json(updatedMember);
       } else {
-          res.status(400)
-          return res.json({
-            "message": "Validations Error",
-            "errors": {
-              "status" : "Cannot change a membership status to pending"
-            }
-          })
+        res.status(400);
+        return res.json({
+          message: "Validations Error",
+          errors: {
+            status: "User couldn't be found",
+          },
+        });
+      }
+    }
+
+    if (
+      (group.toJSON().organizerId === user.id && status == "member") ||
+      (userCheck.toJSON().status == "co-host" &&
+        userCheck.toJSON().groupId === Number(req.params.groupId) &&
+        status == "member")
+    ) {
+      const { memberId, status } = req.body;
+      const group = await Group.findByPk(req.params.groupId, {
+        include: {
+          model: Membership,
+          attributes: { exclude: ["updatedAt", "createdAt"] },
+        },
+      });
+      if (!group) {
+        res.status(404);
+        return res.json({
+          message: "Group couldn't be found",
+        });
+      }
+      const memberCheck = group.toJSON();
+      if (memberCheck.Memberships.length <= 0) {
+        res.status(404);
+        return res.json({
+          message: "Membership between the user and the group does not exist"
+        });
+      }
+      const list = [];
+      memberCheck.Memberships.forEach((member) => {
+        console.log(member);
+        if (
+          member.groupId === Number(req.params.groupId) &&
+          member.status == "pending" &&
+          member.userId === memberId
+        ) {
+          if (status == "member") {
+            member.status = status;
+            list.push(member);
+          }
         }
+      });
+      if (list.length >= 1) {
+        const updatedMember = {
+          id: list[0].id,
+          groupId: list[0].groupId,
+          memberId: memberId,
+          status: list[0].status,
+        };
+        res.json(updatedMember);
+      } else {
+        res.status(400);
+        return res.json({
+          message: "Validations Error",
+          errors: {
+            status: "User couldn't be found",
+          },
+        });
+      }
     } else {
       res.status(403);
       return res.json({

@@ -55,6 +55,15 @@ module.exports = {
         city: "Philadelphia",
         state: "PA",
       },
+      {
+        organizerId: 6,
+        name: "Solo Club",
+        about: "This realy was a test group for me and values shouldn't matter...",
+        type: "Online",
+        private: true,
+        city: "Solo",
+        state: "UT",
+      }
     ], options).catch((err) => {
       throw new Error(err)
     })
