@@ -22,15 +22,6 @@ const validateImageAdd = [
 ];
 
 const validateEventSignup = [
-  check("venueId")
-    .exists({ checkFalsy: true })
-    .custom(async (val, { req }) => {
-      const venue = await Venue.findByPk(req.body.venueId);
-      if (!venue) {
-        throw new Error("Venue couldn't be found");
-      }
-      return true;
-    }),
   check("name")
     .exists({ checkFalsy: true })
     .isLength({ min: 5 })
@@ -201,8 +192,6 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
       });
     }
     const membership = await Membership.findByPk(user.id)
-
-    console.log((membership.toJSON().groupId === event.toJSON().groupId))
     const userCheck = await Attendance.findByPk(user.id)
     if (userCheck.toJSON().status == 'attending' && userCheck.toJSON().eventId === Number(req.params.eventId) || (membership.toJSON().status == 'co-host' && (membership.toJSON().groupId === event.toJSON().groupId))){
       let { url, preview } = req.body;
@@ -247,15 +236,17 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
 router.put("/:eventId", validateEventSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
-    if (!group) {
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
       res.status(404);
       res.json({
-        message: "Group couldn't be found",
+        message: "Event couldn't be found",
       });
     }
+    const group = await Group.findByPk(event.toJSON().groupId)
     const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === event.toJSON().groupId)){
       const {
         venueId,
         name,
@@ -267,8 +258,17 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
         endDate,
       } = req.body;
 
-      const event = await Event.findByPk(req.params.eventId);
+      const venue = await Venue.findByPk(venueId);
+      if (venue !== null){
+        if (!venue) {
+          res.status(404);
+          return res.json({
+            message: "Venue couldn't be found",
+          });
+        }
+      }
 
+      const event = await Event.findByPk(req.params.eventId);
       if (!event) {
         res.status(404);
         return res.json({
@@ -276,7 +276,7 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
         });
       }
 
-      if (venueId) {
+      if (venueId || venueId == null) {
         event.venueId = venueId
       }
       if (name) {
