@@ -244,6 +244,13 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
       });
     }
     const group = await Group.findByPk(event.toJSON().groupId)
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+      });
+    }
+
     const userCheck = await Membership.findByPk(user.id)
 
     if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === event.toJSON().groupId)){
@@ -335,7 +342,14 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
 router.delete("/:eventId", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+      res.status(404);
+      res.json({
+        message: "Event couldn't be found",
+      });
+    }
+    const group = await Group.findByPk(event.toJSON().groupId)
     if (!group) {
       res.status(404);
       res.json({
@@ -343,7 +357,8 @@ router.delete("/:eventId", async (req, res, next) => {
       });
     }
     const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === event.toJSON().groupId)){
       const event = await Event.findByPk(req.params.eventId);
       if (!event) {
           res.status(404);
