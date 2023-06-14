@@ -412,6 +412,12 @@ router.get("/:groupId/venues", async (req, res, next) => {
   const { user } = req;
   if (user) {
     const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+      });
+    }
     const userCheck = await Membership.findByPk(user.id)
     if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
       const venues = await Venue.findAll({
@@ -444,33 +450,56 @@ router.get("/:groupId/venues", async (req, res, next) => {
 });
 
 router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
-  const { address, city, state, lat, lng } = req.body;
-  const groupId = req.params.groupId;
-  const group = await Group.findByPk(groupId);
-  if (!group) {
-    res.status(404);
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+      });
+    }
+    const userCheck = await Membership.findByPk(user.id)
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+      const { address, city, state, lat, lng } = req.body;
+      const groupId = req.params.groupId;
+      const group = await Group.findByPk(groupId);
+      if (!group) {
+        res.status(404);
+        res.json({
+          message: "Group couldn't be found",
+        });
+      }
+      const venue = await Venue.create({
+        groupId,
+        address,
+        city,
+        state,
+        lat,
+        lng,
+      });
+      const newVenue = {
+        id: venue.id,
+        groupId: venue.groupId,
+        address: venue.address,
+        city: venue.city,
+        state: venue.state,
+        lat: venue.lat,
+        lng: venue.lng,
+      };
+      res.json(newVenue);
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
     res.json({
-      message: "Group couldn't be found",
+      message: "Authentication required",
     });
   }
-  const venue = await Venue.create({
-    groupId,
-    address,
-    city,
-    state,
-    lat,
-    lng,
-  });
-  const newVenue = {
-    id: venue.id,
-    groupId: venue.groupId,
-    address: venue.address,
-    city: venue.city,
-    state: venue.state,
-    lat: venue.lat,
-    lng: venue.lng,
-  };
-  res.json(newVenue);
 });
 
 router.get("/:groupId/events", async (req, res, next) => {
