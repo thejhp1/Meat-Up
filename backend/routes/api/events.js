@@ -281,6 +281,17 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
 });
 
 router.delete("/:eventId", async (req, res, next) => {
-    
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+        res.status(404);
+        return res.json({
+          message: "Event couldn't be found",
+        });
+    }
+    await event.destroy();
+    res.json({
+        message: "Successfully deleted",
+      });
 });
+
 module.exports = router;

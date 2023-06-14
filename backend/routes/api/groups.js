@@ -340,7 +340,7 @@ router.delete("/:groupId", async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId);
   if (!group) {
     res.status(404);
-    res.json({
+    return res.json({
       message: "Group couldn't be found",
     });
   }
