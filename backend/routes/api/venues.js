@@ -32,10 +32,20 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
     const group = await Group.findByPk(user.id);
+    if (!group){
+      res.status(404);
+      res.json({
+        message: "Current User is not organizer of this group or a member with a status of 'co-host'",
+      });
+    }
     const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === user.id)){
       const { address, city, state, lat, lng } = req.body;
-      const venue = await Venue.findByPk(req.params.venueId, {});
+      const venue = await Venue.findByPk(req.params.venueId, {
+        attributes: {
+          exclude: ['updatedAt', 'createdAt']
+        }
+      });
 
       if (!venue) {
         res.status(404);
