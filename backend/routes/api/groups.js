@@ -13,6 +13,7 @@ const {
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const e = require("express");
 
 const router = express.Router();
 
@@ -281,38 +282,39 @@ router.post("/", validateGroupSignup, async (req, res, next) => {
 
 router.post("/:groupId/images", async (req, res, next) => {
   const { user } = req;
-  if (!user) {
-    res.status(401);
-    res.json({
-      message: "Authentication required",
-    });
-  }
-  const userCheck = await Membership.findByPk(user.id)
-  if (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId == Number(req.params.groupId)) {
-      let { url, preview } = req.body;
-      let result = {};
-      if (url) {
-        result.url = url;
-      }
-      if (preview && preview == true) {
-        result.preview = preview;
-      } else {
-        preview = false;
-        result.preview = preview;
-      }
+  if (user) {
       const group = await Group.findByPk(req.params.groupId);
-      if (group) {
-        let groupId = req.params.groupId;
-        await GroupImage.create({ groupId, url, preview });
+      if (group.toJSON().organizerId === user.id){
+        let { url, preview } = req.body;
+        let result = {};
+        if (url) {
+          result.url = url;
+        }
+        if (preview && preview == true) {
+          result.preview = preview;
+        } else {
+          preview = false;
+          result.preview = preview;
+        }
+        const group = await Group.findByPk(req.params.groupId);
+        if (group) {
+          let groupId = req.params.groupId;
+          await GroupImage.create({ groupId, url, preview });
 
-        result.id = group.id;
-        res.json(result);
-      } else {
-        res.status(404);
-        res.json({
-          message: "Group couldn't be found",
-        });
-      }
+          result.id = group.id;
+          res.json(result);
+        } else {
+          res.status(404);
+          res.json({
+            message: "Group couldn't be found",
+          });
+        }
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
   } else {
     res.status(401);
     res.json({
@@ -407,21 +409,38 @@ router.delete("/:groupId", async (req, res, next) => {
 });
 
 router.get("/:groupId/venues", async (req, res, next) => {
-  const venues = await Venue.findAll({
-    where: {
-      groupId: req.params.groupId,
-    },
-    attributes: {
-      exclude: ["updatedAt", "createdAt"],
-    },
-  });
-  if (venues.length === 0) {
-    res.status(404);
-    return res.json({
-      message: "Group couldn't be found",
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    const userCheck = await Membership.findByPk(user.id)
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+      const venues = await Venue.findAll({
+        where: {
+          groupId: req.params.groupId,
+        },
+        attributes: {
+          exclude: ["updatedAt", "createdAt"],
+        },
+      });
+      if (venues.length === 0) {
+        res.status(404);
+        return res.json({
+          message: "Group couldn't be found",
+        });
+      }
+      res.json({ Venues: venues });
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
     });
   }
-  res.json({ Venues: venues });
 });
 
 router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
