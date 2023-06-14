@@ -217,67 +217,91 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
 });
 
 router.put("/:eventId", validateEventSignup, async (req, res, next) => {
-  const {
-    venueId,
-    name,
-    type,
-    capacity,
-    price,
-    description,
-    startDate,
-    endDate,
-  } = req.body;
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+      res.status(404);
+      res.json({
+        message: "Group couldn't be found",
+      });
+    }
+    const userCheck = await Membership.findByPk(user.id)
+    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === req.params.groupId)){
+      const {
+        venueId,
+        name,
+        type,
+        capacity,
+        price,
+        description,
+        startDate,
+        endDate,
+      } = req.body;
 
-  const event = await Event.findByPk(req.params.eventId);
+      const event = await Event.findByPk(req.params.eventId);
 
-  if (!event) {
-    res.status(404);
-    return res.json({
-      message: "Event couldn't be found",
+      if (!event) {
+        res.status(404);
+        return res.json({
+          message: "Event couldn't be found",
+        });
+      }
+
+      if (venueId) {
+        event.venueId = venueId
+      }
+      if (name) {
+        event.name = name
+      }
+      if (type) {
+        event.type = type
+      }
+      if (capacity) {
+        event.capacity = capacity
+      }
+      if (price) {
+        event.price = price
+      }
+      if (description) {
+        event.description = description
+      }
+      if (startDate) {
+        event.startDate = startDate
+      }
+      if (endDate) {
+        event.endDate = endDate
+      }
+
+      await event.save()
+
+      const updatedEvent = {
+        id: event.id,
+        groupId: event.groupId,
+        venueId: event.venueId,
+        name: event.name,
+        type: event.type,
+        capacity: event.capacity,
+        price: event.price,
+        description: event.description,
+        startDate: event.startDate,
+        endDate: event.endDate
+      };
+
+      res.json(updatedEvent)
+
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
     });
   }
-
-  if (venueId) {
-    event.venueId = venueId
-  }
-  if (name) {
-    event.name = name
-  }
-  if (type) {
-    event.type = type
-  }
-  if (capacity) {
-    event.capacity = capacity
-  }
-  if (price) {
-    event.price = price
-  }
-  if (description) {
-    event.description = description
-  }
-  if (startDate) {
-    event.startDate = startDate
-  }
-  if (endDate) {
-    event.endDate = endDate
-  }
-
-  await event.save()
-
-  const updatedEvent = {
-    id: event.id,
-    groupId: event.groupId,
-    venueId: event.venueId,
-    name: event.name,
-    type: event.type,
-    capacity: event.capacity,
-    price: event.price,
-    description: event.description,
-    startDate: event.startDate,
-    endDate: event.endDate
-  };
-
-  res.json(updatedEvent)
 });
 
 router.delete("/:eventId", async (req, res, next) => {
