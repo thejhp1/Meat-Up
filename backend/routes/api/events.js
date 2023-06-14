@@ -6,6 +6,7 @@ const {
   Group,
   EventImage,
   Venue,
+  Membership
 } = require("../../db/models");
 
 const { check } = require("express-validator");
@@ -190,30 +191,57 @@ router.get("/:eventId", async (req, res, next) => {
 });
 
 router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
-  let { url, preview } = req.body;
+  const { user } = req;
+  if (user) {
+    const event = await Event.findByPk(req.params.eventId)
+    if (!event) {
+      res.status(404);
+      res.json({
+        message: "Event couldn't be found",
+      });
+    }
+    const membership = await Membership.findByPk(user.id)
 
-  const event = await Event.findByPk(req.params.eventId);
+    console.log((membership.toJSON().groupId === event.toJSON().groupId))
+    const userCheck = await Attendance.findByPk(user.id)
+    if (userCheck.toJSON().status == 'attending' && userCheck.toJSON().eventId === Number(req.params.eventId) || (membership.toJSON().status == 'co-host' && (membership.toJSON().groupId === event.toJSON().groupId))){
+      let { url, preview } = req.body;
 
-  if (event) {
-    const image = await EventImage.create({
-      eventId: Number(req.params.eventId),
-      url,
-      preview,
-    });
+      const event = await Event.findByPk(req.params.eventId);
 
-    const eventImage = {
-      id: image.id,
-      url: image.url,
-      preview: image.preview,
-    };
+      if (event) {
+        const image = await EventImage.create({
+          eventId: Number(req.params.eventId),
+          url,
+          preview,
+        });
 
-    res.json(eventImage);
+        const eventImage = {
+          id: image.id,
+          url: image.url,
+          preview: image.preview,
+        };
+
+        res.json(eventImage);
+      } else {
+        res.status(404);
+        res.json({
+          message: "Event couldn't be found",
+        });
+      }
+    } else {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+      });
+    }
   } else {
-    res.status(404);
+    res.status(401);
     res.json({
-      message: "Event couldn't be found",
+      message: "Authentication required",
     });
   }
+
 });
 
 router.put("/:eventId", validateEventSignup, async (req, res, next) => {

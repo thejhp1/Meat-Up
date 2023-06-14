@@ -39,6 +39,26 @@ module.exports = {
         eventId: 5,
         userId: 6,
         status: 'pending'
+      },
+      {
+        eventId: 4,
+        userId: 7,
+        status: 'attending'
+      },
+      {
+        eventId: 2,
+        userId: 8,
+        status: 'attending'
+      },
+      {
+        eventId: 5,
+        userId: 9,
+        status: 'attending'
+      },
+      {
+        eventId: 3,
+        userId: 10,
+        status: 'attending'
       }
     ], options).catch((err) => {
       throw new Error(err)
