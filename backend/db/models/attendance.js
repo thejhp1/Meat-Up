@@ -36,6 +36,13 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Attendance',
+    scopes: {
+      noDates: {
+        attributes: {
+          exclude: ['updatedAt', 'createdAt']
+        }
+      }
+    }
   });
   return Attendance;
 };

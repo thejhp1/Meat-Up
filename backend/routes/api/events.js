@@ -387,7 +387,6 @@ router.delete("/:eventId", async (req, res, next) => {
 
 router.get("/:eventId/attendees", async (req, res, next) => {
   const { user } = req;
-  const { Op } = require('sequelize')
   const event = await Event.findByPk(req.params.eventId)
   if (!event) {
     res.status(404);
@@ -435,9 +434,8 @@ router.get("/:eventId/attendees", async (req, res, next) => {
           model: Attendance,
           attributes: ['status'],
           where: {
-            status: {
-              [Op.notLike]: 'pending'
-            }
+            status: "attending",
+            status: "waitlist"
           },
           include: {
             model: User
@@ -508,9 +506,8 @@ router.get("/:eventId/attendees", async (req, res, next) => {
           model: Attendance,
           attributes: ['status'],
           where: {
-            status: {
-              [Op.notLike]: 'pending'
-            }
+            status: "attending",
+            status: "waitlist"
           },
           include: {
             model: User
@@ -678,11 +675,7 @@ router.put("/:eventId/attendance", async (req, res, next) => {
 
       for (let ele of attendees) {
         if (ele.id === userId && ele.status == 'pending'){
-          const attendance = await Attendance.findByPk(userId, {
-            attributes: {
-              exclude: ['updatedAt','createdAt']
-            }
-          })
+          const attendance = await Attendance.scope("noDates").findByPk(userId)
           attendance.status = status
           final.push(attendance)
           await attendance.save()
