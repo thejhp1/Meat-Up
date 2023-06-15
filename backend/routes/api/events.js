@@ -397,7 +397,6 @@ router.get("/:eventId/attendees", async (req, res, next) => {
   const membership = await Membership.findByPk(user.id)
   if (user.id <= 6) {
     const group = await Group.findByPk(user.id)
-
     if ((group.toJSON().organizerId === user.id && event.toJSON().groupId === membership.toJSON().groupId) || (event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
       const event = await Event.findByPk(req.params.eventId, {
         include: [{
@@ -424,24 +423,26 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         })
 
       })
-
       res.json({
         Attendees: result
       })
     } else {
+      const { Op } = require('sequelize')
       const event = await Event.findByPk(req.params.eventId, {
-        include: [{
+        include: {
           model: Attendance,
           attributes: ['status'],
           where: {
-            status: "attending",
-            status: "waitlist"
+            status: {
+              [Op.or]: ["attending","waitlist"]
+            }
           },
           include: {
             model: User
           }
-        }]
+        }
       })
+      console.log(event)
       if (!event) {
         res.status(404);
         return res.json({
@@ -547,11 +548,6 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 router.post("/:eventId/attendance", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(user.id, {
-      include: {
-        model: Membership
-      }
-    })
     const event = await Event.findByPk(req.params.eventId)
     if (!event) {
       res.status(404);
@@ -559,8 +555,12 @@ router.post("/:eventId/attendance", async (req, res, next) => {
         message: "Event couldn't be found",
       });
     }
-
-    if (event.toJSON().groupId === group.toJSON().id){
+    const group = await Group.findByPk(event.toJSON().groupId, {
+      include: {
+        model: Membership
+      }
+    })
+    if (event.toJSON().groupId === group.id){
       const event = await Event.findByPk(req.params.eventId, {
         include: [{
           model: Attendance,
@@ -606,7 +606,7 @@ router.post("/:eventId/attendance", async (req, res, next) => {
         userId: user.id,
         status: "pending",
       })
-
+      console.log(attendee)
       return res.json({
         userId: user.id,
         status: 'pending'
