@@ -145,7 +145,10 @@ router.get("/", async (req, res, next) => {
 router.get("/current", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(user.id, {
+    const group = await Group.findAll({
+      where: {
+        organizerId: user.id
+      },
       include: [
         {
           model: Membership,
@@ -162,7 +165,9 @@ router.get("/current", async (req, res, next) => {
       });
     }
     let list = [];
-    list.push(group.toJSON());
+    group.forEach(ele => {
+      list.push(ele.toJSON());
+    })
     list.forEach((group) => {
       let count = 0;
       group.Memberships.forEach((member) => {
@@ -243,12 +248,10 @@ router.get("/:groupId", async (req, res, next) => {
 router.post("/", validateGroupSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    let { organizerId, name, about, type, private, city, state } = req.body;
-    if (!organizerId) {
-      organizerId = 1;
-    }
+    let { name, about, type, private, city, state } = req.body;
+
     const group = await Group.create({
-      organizerId,
+      organizerId: user.id,
       name,
       about,
       type,
@@ -256,9 +259,10 @@ router.post("/", validateGroupSignup, async (req, res, next) => {
       city,
       state,
     });
+
     const safeGroup = {
       id: group.id,
-      organizerId: group.organizerId,
+      organizerId: user.id,
       name: group.name,
       about: group.about,
       type: group.type,
