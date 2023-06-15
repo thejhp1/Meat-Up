@@ -636,4 +636,56 @@ router.put("/:eventId/attendance", async (req, res, next) => {
   }
 });
 
+router.delete("/:eventId/attendance", async (req, res, next) => {
+  const { user } = req
+  if (user) {
+    const { userId } = req.body
+    const group = await Group.findByPk(user.id)
+    const event = await Event.findByPk(req.params.eventId)
+    if (!event) {
+      res.status(404);
+      return res.json({
+        message: "Event couldn't be found",
+      });
+    }
+    const member = await Membership.findByPk(user.id)
+    if (group.toJSON().id === event.toJSON().groupId && user.id === group.toJSON().organizerId
+    || member.toJSON().groupId === event.toJSON().groupId && userId === user.id){
+      const attendee = await Attendance.findAll({
+        where: {
+          eventId: req.params.eventId
+        }
+      })
+      let count = 0
+      attendee.forEach(async attendee => {
+        if (userId === attendee.userId || attendee.userId === user.id) {
+          count++
+          await attendee.destroy()
+        }
+      })
+      if (count <= 0) {
+        res.status(404)
+        res.json({
+          message: "Attendance does not exist for this User"
+        })
+      } else {
+        res.json({
+          message: "Successfully deleted attendance from event"
+        })
+      }
+
+    } else {
+      res.status(403);
+      return res.json({
+        message: "Only the User or organizer may delete an Attendance",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
+});
+
 module.exports = router;
