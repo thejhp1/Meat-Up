@@ -545,8 +545,6 @@ router.get("/:eventId/attendees", async (req, res, next) => {
       })
     }
   }
-  console.log(membership.toJSON())
-  console.log(event.toJSON())
 });
 
 router.post("/:eventId/attendance", async (req, res, next) => {
