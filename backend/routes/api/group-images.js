@@ -2,11 +2,7 @@ const express = require("express");
 
 const {
   Group,
-  GroupImage,
-  Event,
-  EventImage,
-  Membership,
-  User
+  GroupImage
 } = require("../../db/models");
 
 const router = express.Router();
@@ -26,8 +22,6 @@ router.delete("/:imageId", async (req, res, next) => {
       });
     }
     if (user.id === group.toJSON().organizerId){
-      let list = []
-
       group.toJSON().GroupImages.forEach(async image => {
         if (image.id === Number(req.params.imageId)){
           const image = await GroupImage.findByPk(req.params.imageId)
@@ -38,7 +32,7 @@ router.delete("/:imageId", async (req, res, next) => {
         } else {
           res.status(404);
           res.json({
-            message: "Image cannot be found.",
+            message: "Group Image cannot be found.",
           });
         }
       })
