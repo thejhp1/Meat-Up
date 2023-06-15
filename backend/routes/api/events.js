@@ -396,7 +396,12 @@ router.get("/:eventId/attendees", async (req, res, next) => {
     });
   }
   const group = await Group.findByPk(user.id)
-
+  if (!group) {
+    res.status(404);
+    return res.json({
+      message: "Group couldn't be found",
+    });
+  }
   if (group.toJSON().organizerId === user.id && event.toJSON().groupId === group.id) {
     const event = await Event.findByPk(req.params.eventId, {
       include: [{
@@ -407,7 +412,6 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         }
       }]
     })
-
     const list = [], result = []
     event.toJSON().Attendances.forEach(attendee => {
       list.push(attendee)

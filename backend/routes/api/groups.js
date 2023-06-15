@@ -434,7 +434,7 @@ router.get("/:groupId/venues", async (req, res, next) => {
     if (
       group.toJSON().organizerId === user.id ||
       (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === req.params.groupId)
+        userCheck.toJSON().groupId === Number(req.params.groupId))
     ) {
       const venues = await Venue.findAll({
         where: {
@@ -479,7 +479,7 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
     if (
       group.toJSON().organizerId === user.id ||
       (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === req.params.groupId)
+        userCheck.toJSON().groupId === Number(req.params.groupId))
     ) {
       const { address, city, state, lat, lng } = req.body;
       const groupId = req.params.groupId;
@@ -610,7 +610,7 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
     if (
       group.toJSON().organizerId === user.id ||
       (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === req.params.groupId)
+        userCheck.toJSON().groupId === Number(req.params.groupId))
     ) {
       const {
         venueId,
