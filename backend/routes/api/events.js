@@ -502,13 +502,15 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         Attendees: result
       })
     } else {
+      const { Op } = require('sequelize')
       const event = await Event.findByPk(req.params.eventId, {
         include: [{
           model: Attendance,
           attributes: ['status'],
           where: {
-            status: "attending",
-            status: "waitlist"
+            status: {
+              [Op.or]: ["attending","waitlist"]
+            }
           },
           include: {
             model: User
