@@ -389,6 +389,12 @@ router.get("/:eventId/attendees", async (req, res, next) => {
   const { user } = req;
   const { Op } = require('sequelize')
   const event = await Event.findByPk(req.params.eventId)
+  if (!event) {
+    res.status(404);
+    return res.json({
+      message: "Event couldn't be found",
+    });
+  }
   const group = await Group.findByPk(user.id)
 
   if (group.toJSON().organizerId === user.id && event.toJSON().groupId === group.id) {
@@ -437,14 +443,19 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         }
       }]
     })
-
-    const list = [], result = {}, final = []
+    if (!event) {
+      res.status(404);
+      return res.json({
+        message: "Event couldn't be found",
+      });
+    }
+    const list = [], result = []
     event.toJSON().Attendances.forEach(attendee => {
       list.push(attendee)
     })
 
     list.forEach(attendee => {
-      final.push({
+      result.push({
         id: attendee.User.id,
         firstName: attendee.User.firstName,
         lastName: attendee.User.lastName,
@@ -456,7 +467,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
     })
 
     res.json({
-      Attendees: final
+      Attendees: result
     })
   }
 });
@@ -503,8 +514,6 @@ router.post("/:eventId/attendance", async (req, res, next) => {
 
       })
 
-      console.log(result)
-
       for (let ele of result) {
         console.log(ele.id)
         if (ele.id === user.id && ele.status == 'pending'){
@@ -525,7 +534,7 @@ router.post("/:eventId/attendance", async (req, res, next) => {
         userId: user.id,
         status: "pending",
       })
-      
+
       return res.json({
         userId: user.id,
         status: 'pending'
@@ -544,6 +553,87 @@ router.post("/:eventId/attendance", async (req, res, next) => {
     });
   }
 
+});
+
+router.put("/:eventId/attendance", async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(user.id)
+    const event = await Event.findByPk(req.params.eventId)
+    if (!event) {
+      res.status(404);
+      return res.json({
+        message: "Event couldn't be found",
+      });
+    }
+    const member = await Membership.findByPk(user.id)
+
+    if (group.toJSON().id === event.toJSON().groupId && user.id === group.toJSON().organizerId
+    || member.toJSON().groupId === event.toJSON().groupId && member.toJSON().status == 'co-host'){
+      const { userId, status } = req.body
+      if (status == 'pending') {
+        res.status(400);
+        return res.json({
+          message: "Cannot change an attendance status to pending",
+        });
+      }
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [{
+          model: Attendance,
+          attributes: ['status'],
+          include: {
+            model: User
+          }
+        }]
+      })
+
+      const list = [], attendees = [], final = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
+      })
+
+      list.forEach(attendee => {
+        attendees.push({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          status: attendee.status
+        })
+      })
+
+      for (let ele of attendees) {
+        if (ele.id === userId && ele.status == 'pending'){
+          const attendance = await Attendance.findByPk(userId, {
+            attributes: {
+              exclude: ['updatedAt','createdAt']
+            }
+          })
+          attendance.status = status
+          final.push(attendance)
+          await attendance.save()
+        }
+      }
+
+      if (final.length <= 0) {
+        res.status(404);
+        return res.json({
+          message: "Attendance between the user and the event does not exist",
+        });
+      } else {
+        return res.json(final[0])
+      }
+    } else {
+      res.status(403);
+      return res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
 });
 
 module.exports = router;
