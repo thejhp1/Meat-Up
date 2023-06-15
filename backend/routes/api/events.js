@@ -402,13 +402,13 @@ router.get("/:eventId/attendees", async (req, res, next) => {
       }]
     })
 
-    const list = [], result = {}, final = []
+    const list = [], result = []
     event.toJSON().Attendances.forEach(attendee => {
       list.push(attendee)
     })
 
     list.forEach(attendee => {
-      final.push({
+      result.push({
         id: attendee.User.id,
         firstName: attendee.User.firstName,
         lastName: attendee.User.lastName,
@@ -420,7 +420,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
     })
 
     res.json({
-      Attendees: final
+      Attendees: result
     })
   } else {
     const event = await Event.findByPk(req.params.eventId, {
@@ -459,6 +459,91 @@ router.get("/:eventId/attendees", async (req, res, next) => {
       Attendees: final
     })
   }
+});
+
+router.post("/:eventId/attendance", async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const group = await Group.findByPk(user.id, {
+      include: {
+        model: Membership
+      }
+    })
+    const event = await Event.findByPk(req.params.eventId)
+    if (!event) {
+      res.status(404);
+      return res.json({
+        message: "Event couldn't be found",
+      });
+    }
+
+    if (event.toJSON().groupId === group.id){
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [{
+          model: Attendance,
+          attributes: ['status'],
+          include: {
+            model: User
+          }
+        }]
+      })
+
+      const list = [], result = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
+      })
+
+      list.forEach(attendee => {
+        result.push({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          status: attendee.status
+        })
+
+      })
+
+      console.log(result)
+
+      for (let ele of result) {
+        console.log(ele.id)
+        if (ele.id === user.id && ele.status == 'pending'){
+          res.status(404)
+          return res.json({
+            message: "Attendance has already been requested"
+          })
+        } else if (ele.id === user.id && (ele.status == 'attending' || ele.status == 'waitlist')) {
+          res.status(404)
+          return res.json({
+            message: "User is already an attendee of the event"
+          })
+        }
+      }
+
+      const attendee = await Attendance.create({
+        eventId: req.params.eventId,
+        userId: user.id,
+        status: "pending",
+      })
+      
+      return res.json({
+        userId: user.id,
+        status: 'pending'
+      })
+
+    } else {
+      res.status(403);
+      return res.json({
+        message: "Forbidden",
+      });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Authentication required",
+    });
+  }
+
 });
 
 module.exports = router;
