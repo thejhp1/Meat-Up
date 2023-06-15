@@ -65,8 +65,95 @@ const validateEventSignup = [
   handleValidationErrors,
 ];
 
+const validateQueryFilter = [
+  check("page")
+    .custom(val => {
+      if (val <= 0){
+        throw new Error("Page must be greater than or equal to 1");
+      }
+      return true
+    }),
+  check("size")
+    .custom(val => {
+      if (val <= 0){
+        throw new Error("size must be greater than or equal to 1");
+      }
+      return true
+    }),
+  check("name")
+    .isString()
+    .withMessage("Name must be a string"),
+  check("type")
+    .custom(val => {
+      if (val && val !== 'Online' && val !== 'In person'){
+        throw new Error("Type must be 'Online' or 'In person'");
+      }
+      return true
+    }),
+  check("startDate")
+    .custom((val) => {
+      const todayDate = new Date();
+      const startDate = new Date(val);
+      if (startDate < todayDate) {
+        throw new Error("Start date must be in the future");
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
+
 router.get("/", async (req, res, next) => {
+  const { Op } = require('sequelize')
+  let { page, size, name, type, startDate } = req.query;
+  page = parseInt(page);
+  size = parseInt(size);
+
+  if (!(Number.isNaN(page)) && page > 10 || page <= 0) page = 1;
+  if (!(Number.isNaN(size)) && size > 20 || size <= 0) size = 20;
+  if (isNaN(page)){
+    page = 1
+  }
+  if (isNaN(size)){
+    size = 20
+  }
+  let errors = {}
+  const where = {};
+  if (name) {
+    if (typeof name !== 'string'){
+      errors.name = "Name must be a string"
+    } else {
+      where.name = {[Op.substring]: name}
+    }
+  }
+
+  if (type) {
+    if (typeof name !== 'string' || type !== 'Online' && type !== "In person"){
+      errors.type = "Type must be 'Online' or 'In person'"
+    } else {
+      where.type = {[Op.substring]: type}
+    }
+  }
+
+  if (startDate) {
+    const todayDate = new Date();
+    const theStartDate = new Date(startDate);
+    if (theStartDate < todayDate) {
+      errors.startDate = "Start date must be a valid datetime";
+    } else {
+      where.startDate = new Date(startDate)
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+      res.status(400)
+      res.json({
+        message: "Bad request",
+        errors: errors
+      })
+  }
+  console.log(where)
   const events = await Event.findAll({
+    where,
     include: [
       {
         model: Attendance,
@@ -104,6 +191,8 @@ router.get("/", async (req, res, next) => {
     attributes: {
       exclude: ["description", "capacity", "price", "createdAt", "updatedAt"],
     },
+    limit: size,
+    offset: (page - 1) * size,
   });
 
   let list = [];
