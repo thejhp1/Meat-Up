@@ -395,79 +395,158 @@ router.get("/:eventId/attendees", async (req, res, next) => {
       message: "Event couldn't be found",
     });
   }
-  const group = await Group.findByPk(user.id)
-  if (group.toJSON().organizerId === user.id && event.toJSON().groupId === group.id) {
-    const event = await Event.findByPk(req.params.eventId, {
-      include: [{
-        model: Attendance,
-        attributes: ['status'],
-        include: {
-          model: User
-        }
-      }]
-    })
-    const list = [], result = []
-    event.toJSON().Attendances.forEach(attendee => {
-      list.push(attendee)
-    })
+  const membership = await Membership.findByPk(user.id)
+  if (user.id <= 6) {
+    const group = await Group.findByPk(user.id)
 
-    list.forEach(attendee => {
-      result.push({
-        id: attendee.User.id,
-        firstName: attendee.User.firstName,
-        lastName: attendee.User.lastName,
-        Attendance: {
-          status: attendee.status
-        }
-      })
-
-    })
-
-    res.json({
-      Attendees: result
-    })
-  } else {
-    const event = await Event.findByPk(req.params.eventId, {
-      include: [{
-        model: Attendance,
-        attributes: ['status'],
-        where: {
-          status: {
-            [Op.notLike]: 'pending'
+    if ((group.toJSON().organizerId === user.id && event.toJSON().groupId === membership.toJSON().groupId) || (event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [{
+          model: Attendance,
+          attributes: ['status'],
+          include: {
+            model: User
           }
-        },
-        include: {
-          model: User
-        }
-      }]
-    })
-    if (!event) {
-      res.status(404);
-      return res.json({
-        message: "Event couldn't be found",
-      });
-    }
-    const list = [], result = []
-    event.toJSON().Attendances.forEach(attendee => {
-      list.push(attendee)
-    })
-
-    list.forEach(attendee => {
-      result.push({
-        id: attendee.User.id,
-        firstName: attendee.User.firstName,
-        lastName: attendee.User.lastName,
-        Attendance: {
-          status: attendee.status
-        }
+        }]
+      })
+      const list = [], result = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
       })
 
-    })
+      list.forEach(attendee => {
+        result.push({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        })
 
-    res.json({
-      Attendees: result
-    })
+      })
+
+      res.json({
+        Attendees: result
+      })
+    } else {
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [{
+          model: Attendance,
+          attributes: ['status'],
+          where: {
+            status: {
+              [Op.notLike]: 'pending'
+            }
+          },
+          include: {
+            model: User
+          }
+        }]
+      })
+      if (!event) {
+        res.status(404);
+        return res.json({
+          message: "Event couldn't be found",
+        });
+      }
+      const list = [], result = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
+      })
+
+      list.forEach(attendee => {
+        result.push({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        })
+
+      })
+
+      res.json({
+        Attendees: result
+      })
+    }
+  } else {
+    if ((event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [{
+          model: Attendance,
+          attributes: ['status'],
+          include: {
+            model: User
+          }
+        }]
+      })
+      const list = [], result = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
+      })
+
+      list.forEach(attendee => {
+        result.push({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        })
+
+      })
+
+      res.json({
+        Attendees: result
+      })
+    } else {
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [{
+          model: Attendance,
+          attributes: ['status'],
+          where: {
+            status: {
+              [Op.notLike]: 'pending'
+            }
+          },
+          include: {
+            model: User
+          }
+        }]
+      })
+      if (!event) {
+        res.status(404);
+        return res.json({
+          message: "Event couldn't be found",
+        });
+      }
+      const list = [], result = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
+      })
+
+      list.forEach(attendee => {
+        result.push({
+          id: attendee.User.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        })
+
+      })
+
+      res.json({
+        Attendees: result
+      })
+    }
   }
+  console.log(membership.toJSON())
+  console.log(event.toJSON())
 });
 
 router.post("/:eventId/attendance", async (req, res, next) => {
