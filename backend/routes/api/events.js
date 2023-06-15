@@ -6,7 +6,8 @@ const {
   Group,
   EventImage,
   Venue,
-  Membership
+  Membership,
+  User
 } = require("../../db/models");
 
 const { check } = require("express-validator");
@@ -385,7 +386,79 @@ router.delete("/:eventId", async (req, res, next) => {
 });
 
 router.get("/:eventId/attendees", async (req, res, next) => {
+  const { user } = req;
+  const { Op } = require('sequelize')
+  const event = await Event.findByPk(req.params.eventId)
+  const group = await Group.findByPk(user.id)
 
+  if (group.toJSON().organizerId === user.id && event.toJSON().groupId === group.id) {
+    const event = await Event.findByPk(req.params.eventId, {
+      include: [{
+        model: Attendance,
+        attributes: ['status'],
+        include: {
+          model: User
+        }
+      }]
+    })
+
+    const list = [], result = {}, final = []
+    event.toJSON().Attendances.forEach(attendee => {
+      list.push(attendee)
+    })
+
+    list.forEach(attendee => {
+      final.push({
+        id: attendee.User.id,
+        firstName: attendee.User.firstName,
+        lastName: attendee.User.lastName,
+        Attendance: {
+          status: attendee.status
+        }
+      })
+
+    })
+
+    res.json({
+      Attendees: final
+    })
+  } else {
+    const event = await Event.findByPk(req.params.eventId, {
+      include: [{
+        model: Attendance,
+        attributes: ['status'],
+        where: {
+          status: {
+            [Op.notLike]: 'pending'
+          }
+        },
+        include: {
+          model: User
+        }
+      }]
+    })
+
+    const list = [], result = {}, final = []
+    event.toJSON().Attendances.forEach(attendee => {
+      list.push(attendee)
+    })
+
+    list.forEach(attendee => {
+      final.push({
+        id: attendee.User.id,
+        firstName: attendee.User.firstName,
+        lastName: attendee.User.lastName,
+        Attendance: {
+          status: attendee.status
+        }
+      })
+
+    })
+
+    res.json({
+      Attendees: final
+    })
+  }
 });
 
 module.exports = router;
