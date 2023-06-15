@@ -2,11 +2,9 @@ const express = require("express");
 
 const {
   Group,
-  GroupImage,
   Event,
   EventImage,
   Membership,
-  User
 } = require("../../db/models");
 
 const router = express.Router();
