@@ -130,7 +130,7 @@ router.get("/", async (req, res, next) => {
     if (typeof name !== 'string' || type !== 'Online' && type !== "In person"){
       errors.type = "Type must be 'Online' or 'In person'"
     } else {
-      where.type = {[Op.substring]: type}
+      where.type = type
     }
   }
 
