@@ -494,13 +494,14 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
         });
       }
       const venue = await Venue.create({
-        groupId,
+        groupId: Number(req.params.groupId),
         address,
         city,
         state,
         lat,
         lng,
       });
+      console.log(venue.toJSON())
       const newVenue = {
         id: venue.id,
         groupId: venue.groupId,

@@ -31,15 +31,17 @@ const validateVenueSignup = [
 router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(user.id);
-    if (!group){
-      res.status(404);
-      return res.json({
-        message: "Current User is not organizer of this group or a member with a status of 'co-host'",
-      });
-    }
-    const userCheck = await Membership.findByPk(user.id)
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === user.id)){
+    const group = await Group.findAll({
+      where: {
+        organizerId: user.id
+      }
+    });
+
+    const venue = await Venue.findByPk(req.params.venueId)
+    console.log(group[0].toJSON())
+    const member = await Membership.findByPk(user.id)
+    if (group[0].toJSON().organizerId === user.id && venue.toJSON().groupId === group[0].toJSON().id ||
+    (member.toJSON().status == 'co-host' && member.toJSON().groupId === user.id)){
       const { address, city, state, lat, lng } = req.body;
       const venue = await Venue.findByPk(req.params.venueId, {
         attributes: {
