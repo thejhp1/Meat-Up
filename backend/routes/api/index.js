@@ -33,7 +33,7 @@ router.get("/csrf/restore", (req, res) => {
 });
 
 router.post('/test', (req, res) => {
-  res.json({ requestBody: req.body });
+  return res.json({ requestBody: req.body });
 });
 
 module.exports = router;

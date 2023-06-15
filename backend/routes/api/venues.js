@@ -34,7 +34,7 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
     const group = await Group.findByPk(user.id);
     if (!group){
       res.status(404);
-      res.json({
+      return res.json({
         message: "Current User is not organizer of this group or a member with a status of 'co-host'",
       });
     }
@@ -49,7 +49,7 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
 
       if (!venue) {
         res.status(404);
-        res.json({
+        return res.json({
           message: "Venue couldn't be found",
         });
       }
@@ -76,13 +76,13 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
 
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }

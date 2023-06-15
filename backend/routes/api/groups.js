@@ -138,7 +138,7 @@ router.get("/", async (req, res, next) => {
     delete group.Memberships;
     delete group.GroupImages;
   });
-  res.json({
+  return res.json({
     Groups: list,
   });
 });
@@ -158,7 +158,7 @@ router.get("/current", async (req, res, next) => {
     });
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "No groups exist for this user",
       });
     }
@@ -182,13 +182,13 @@ router.get("/current", async (req, res, next) => {
       delete group.GroupImages;
     });
     if (list) {
-      res.json({
+      return res.json({
         Groups: list,
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -274,7 +274,7 @@ router.post("/", validateGroupSignup, async (req, res, next) => {
     return res.json(safeGroup);
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -286,7 +286,7 @@ router.post("/:groupId/images", async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -311,19 +311,19 @@ router.post("/:groupId/images", async (req, res, next) => {
         res.json(result);
       } else {
         res.status(404);
-        res.json({
+        return res.json({
           message: "Group couldn't be found",
         });
       }
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -335,7 +335,7 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -345,7 +345,7 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
 
       if (!group) {
         res.status(404);
-        res.json({
+        return res.json({
           message: "Group couldn't be found",
         });
       }
@@ -377,13 +377,13 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
       res.json(group);
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -403,18 +403,18 @@ router.delete("/:groupId", async (req, res, next) => {
       }
 
       await group.destroy();
-      res.json({
+      return res.json({
         message: "Successfully deleted",
       });
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -426,7 +426,7 @@ router.get("/:groupId/venues", async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -450,16 +450,16 @@ router.get("/:groupId/venues", async (req, res, next) => {
           message: "Group couldn't be found",
         });
       }
-      res.json({ Venues: venues });
+      return res.json({ Venues: venues });
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -471,7 +471,7 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -486,7 +486,7 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
       const group = await Group.findByPk(groupId);
       if (!group) {
         res.status(404);
-        res.json({
+        return res.json({
           message: "Group couldn't be found",
         });
       }
@@ -510,13 +510,13 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
       res.json(newVenue);
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -591,7 +591,7 @@ router.get("/:groupId/events", async (req, res, next) => {
       message: "Group couldn't be found.",
     });
   }
-  res.json({
+  return res.json({
     Events: list,
   });
 });
@@ -602,7 +602,7 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -625,7 +625,7 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
       const group = await Group.findByPk(req.params.groupId);
       if (!group) {
         res.status(404);
-        res.json({
+        return res.json({
           message: "Group couldn't be found",
         });
       }
@@ -645,13 +645,13 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
       res.json(event);
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -690,7 +690,7 @@ router.get("/:groupId/members", async (req, res, next) => {
       },
     });
   }
-  res.json({ Members });
+  return res.json({ Members });
 });
 
 router.post("/:groupId/membership", async (req, res, next) => {
@@ -728,7 +728,7 @@ router.post("/:groupId/membership", async (req, res, next) => {
     res.json(newMember);
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -832,7 +832,6 @@ router.put("/:groupId/membership", async (req, res, next) => {
       }
       const list = [];
       memberCheck.Memberships.forEach((member) => {
-        console.log(member);
         if (
           member.groupId === Number(req.params.groupId) &&
           member.status == "pending" &&
@@ -869,7 +868,7 @@ router.put("/:groupId/membership", async (req, res, next) => {
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -916,7 +915,7 @@ router.delete("/:groupId/membership", async (req, res, next) => {
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }

@@ -25,18 +25,23 @@ router.delete("/:imageId", async (req, res, next) => {
     })
 
     if (user.id === group.toJSON().organizerId || (member.toJSON().status == 'co-host' && member.toJSON().groupId === group.id)){
-
       group.toJSON().Events.forEach(event => {
+        if (event.EventImages.length <= 0){
+          res.status(404);
+          return res.json({
+            message: "Event Image cannot be found",
+          });
+        }
         event.EventImages.forEach(async image => {
             if (image.id === Number(req.params.imageId)){
                 const image = await EventImage.findByPk(req.params.imageId)
                 await image.destroy()
-                res.json({
+                return res.json({
                   message: "Successfully deleted."
                 })
             } else {
                 res.status(404);
-                res.json({
+                return res.json({
                   message: "Event Image cannot be found.",
                 });
             }
@@ -44,13 +49,13 @@ router.delete("/:imageId", async (req, res, next) => {
       })
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }

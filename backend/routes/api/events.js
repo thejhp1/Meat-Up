@@ -146,12 +146,12 @@ router.get("/", async (req, res, next) => {
 
   if (Object.keys(errors).length > 0) {
       res.status(400)
-      res.json({
+      return res.json({
         message: "Bad request",
         errors: errors
       })
   }
-  console.log(where)
+
   const events = await Event.findAll({
     where,
     include: [
@@ -215,7 +215,7 @@ router.get("/", async (req, res, next) => {
     delete event.Attendances;
   });
 
-  res.json({
+  return res.json({
     Events: list,
   });
 });
@@ -277,7 +277,7 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
     const event = await Event.findByPk(req.params.eventId)
     if (!event) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Event couldn't be found",
       });
     }
@@ -304,19 +304,19 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
         res.json(eventImage);
       } else {
         res.status(404);
-        res.json({
+        return res.json({
           message: "Event couldn't be found",
         });
       }
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -329,14 +329,14 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
     const event = await Event.findByPk(req.params.eventId);
     if (!event) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Event couldn't be found",
       });
     }
     const group = await Group.findByPk(event.toJSON().groupId)
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -417,13 +417,13 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
 
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -435,14 +435,14 @@ router.delete("/:eventId", async (req, res, next) => {
     const event = await Event.findByPk(req.params.eventId);
     if (!event) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Event couldn't be found",
       });
     }
     const group = await Group.findByPk(event.toJSON().groupId)
     if (!group) {
       res.status(404);
-      res.json({
+      return res.json({
         message: "Group couldn't be found",
       });
     }
@@ -457,18 +457,18 @@ router.delete("/:eventId", async (req, res, next) => {
           });
       }
       await event.destroy();
-      res.json({
+      return res.json({
           message: "Successfully deleted",
       });
     } else {
       res.status(403);
-      res.json({
+      return res.json({
         message: "Forbidden",
       });
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -512,7 +512,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         })
 
       })
-      res.json({
+      return res.json({
         Attendees: result
       })
     } else {
@@ -531,7 +531,6 @@ router.get("/:eventId/attendees", async (req, res, next) => {
           }
         }
       })
-      console.log(event)
       if (!event) {
         res.status(404);
         return res.json({
@@ -555,7 +554,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 
       })
 
-      res.json({
+      return res.json({
         Attendees: result
       })
     }
@@ -587,7 +586,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 
       })
 
-      res.json({
+      return res.json({
         Attendees: result
       })
     } else {
@@ -629,7 +628,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 
       })
 
-      res.json({
+      return res.json({
         Attendees: result
       })
     }
@@ -678,7 +677,6 @@ router.post("/:eventId/attendance", async (req, res, next) => {
       })
 
       for (let ele of result) {
-        console.log(ele.id)
         if (ele.id === user.id && ele.status == 'pending'){
           res.status(404)
           return res.json({
@@ -697,7 +695,7 @@ router.post("/:eventId/attendance", async (req, res, next) => {
         userId: user.id,
         status: "pending",
       })
-      console.log(attendee)
+
       return res.json({
         userId: user.id,
         status: 'pending'
@@ -711,7 +709,7 @@ router.post("/:eventId/attendance", async (req, res, next) => {
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -845,7 +843,7 @@ router.put("/:eventId/attendance", async (req, res, next) => {
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
@@ -880,11 +878,11 @@ router.delete("/:eventId/attendance", async (req, res, next) => {
       })
       if (count <= 0) {
         res.status(404)
-        res.json({
+        return res.json({
           message: "Attendance does not exist for this User"
         })
       } else {
-        res.json({
+        return res.json({
           message: "Successfully deleted attendance from event"
         })
       }
@@ -897,7 +895,7 @@ router.delete("/:eventId/attendance", async (req, res, next) => {
     }
   } else {
     res.status(401);
-    res.json({
+    return res.json({
       message: "Authentication required",
     });
   }
