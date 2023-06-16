@@ -2,7 +2,8 @@ const express = require("express");
 
 const {
   Group,
-  GroupImage
+  GroupImage,
+  Membership
 } = require("../../db/models");
 
 const router = express.Router();
@@ -10,10 +11,15 @@ const router = express.Router();
 router.delete("/:imageId", async (req, res, next) => {
   const { user } = req
   if (user) {
-    const group = await Group.findByPk(user.id, {
-      include: {
+    const group = await Group.findAll({
+      where: {
+        organizerId: user.id
+      },
+      include: [{
         model: GroupImage
-      }
+      }, {
+        model: Membership
+      }]
     })
     if (!group) {
       res.status(404);
@@ -21,6 +27,9 @@ router.delete("/:imageId", async (req, res, next) => {
         message: "Group couldn't be found",
       });
     }
+
+    console.log()
+    return res.json(group)
     if (user.id === group.toJSON().organizerId){
       if (group.GroupImages.length <= 0){
         res.status(404);

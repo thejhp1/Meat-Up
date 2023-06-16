@@ -144,33 +144,40 @@ router.get("/", async (req, res, next) => {
 
 router.get("/current", async (req, res, next) => {
   const { user } = req;
+  const { Op, sequelize } = require('sequelize')
   if (user) {
-    const group = await Group.findAll({
+    const group = await Membership.findAll({
+      where: {
+        userId: user.id
+      },
+      include: {
+        model: Group,
+        include: [{
+          model: GroupImage
+        }, {
+        model: Membership
+      }]
+      }
+    })
+    const groups = await Group.findAll({
       where: {
         organizerId: user.id
       },
-      include: [
-        {
-          model: Membership,
-        },
-        {
-          model: GroupImage,
-        },
-      ],
-    });
-    if (!group) {
-      res.status(404);
-      return res.json({
-        message: "No groups exist for this user",
-      });
-    }
-    let list = [];
-    group.forEach(ele => {
-      list.push(ele.toJSON());
+      include: [{
+        model: Membership
+      }, {
+        model: GroupImage
+      }]
     })
-    list.forEach((group) => {
+
+    let list = [], list1 = [], result = [];
+    groups.forEach(ele => {
+      list1.push(ele.toJSON())
+    })
+    list1.forEach((group) => {
       let count = 0;
       group.Memberships.forEach((member) => {
+        console.log('asdasd')
         count++;
         group.numMembers = count;
       });
@@ -182,13 +189,45 @@ router.get("/current", async (req, res, next) => {
       if (!group.previewImage) {
         group.previewImage = "no preview image";
       }
-      delete group.Memberships;
+      group.numMembers = count
       delete group.GroupImages;
+      delete group.Memberships;
+
+      result.push(group)
     });
-    if (list) {
-      return res.json({
-        Groups: list,
+
+    group.forEach(ele => {
+      list.push(ele.toJSON())
+    })
+    list.forEach((group) => {
+      let count = 0;
+      group.Group.Memberships.forEach((member) => {
+        count++;
+        group.Group.numMembers = count;
       });
+      group.Group.GroupImages.forEach((image) => {
+        if (image.preview === true) {
+          group.Group.previewImage = image.url;
+        }
+      });
+      if (!group.previewImage) {
+        group.Group.previewImage = "no preview image";
+      }
+      delete group.Group.GroupImages;
+      delete group.Group.Memberships;
+
+      result.push(group.Group)
+    });
+
+    if (result.length >= 1) {
+      return res.json({
+        Groups: result,
+      });
+    } else {
+        res.status(404);
+        return res.json({
+          message: "No groups exist for this user",
+        });
     }
   } else {
     res.status(401);

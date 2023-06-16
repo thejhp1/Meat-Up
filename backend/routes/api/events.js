@@ -654,127 +654,64 @@ router.post("/:eventId/attendance", async (req, res, next) => {
 router.put("/:eventId/attendance", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(user.id)
-    const event = await Event.findByPk(req.params.eventId)
+    const event = await Event.findByPk(req.params.eventId, {
+      include: [{
+        model: Group,
+        include: {
+          model: Membership
+        }
+      }, {
+        model: Attendance
+      }]
+    })
+
+    let flag = false
+    for (let member of event.toJSON().Group.Memberships) {
+      if (member.userId === user.id && member.status == "co-host") {
+        flag = true
+      }
+    }
     if (!event) {
       res.status(404);
       return res.json({
         message: "Event couldn't be found",
       });
     }
-    const member = await Membership.findByPk(user.id)
-    if (user.id <= 6) {
-      if (group.toJSON().id === event.toJSON().groupId && user.id === group.toJSON().organizerId
-      || member.toJSON().groupId === event.toJSON().groupId && member.toJSON().status == 'co-host'){
-        const { userId, status } = req.body
-        if (status == 'pending') {
-          res.status(400);
-          return res.json({
-            message: "Cannot change an attendance status to pending",
-          });
-        }
-        const event = await Event.findByPk(req.params.eventId, {
-          include: [{
-            model: Attendance,
-            attributes: ['status'],
-            include: {
-              model: User
-            }
-          }]
-        })
-
-        const list = [], attendees = [], final = []
-        event.toJSON().Attendances.forEach(attendee => {
-          list.push(attendee)
-        })
-
-        list.forEach(attendee => {
-          attendees.push({
-            id: attendee.User.id,
-            firstName: attendee.User.firstName,
-            lastName: attendee.User.lastName,
-            status: attendee.status
-          })
-        })
-
-        for (let ele of attendees) {
-          if (ele.id === userId && ele.status == 'pending'){
-            const attendance = await Attendance.scope("noDates").findByPk(userId)
-            attendance.status = status
-            final.push(attendance.toJSON())
-            await attendance.save()
-          }
-        }
-
-        if (final.length <= 0) {
-          res.status(404);
-          return res.json({
-            message: "Attendance between the user and the event does not exist",
-          });
-        } else {
-          return res.json(final[0])
-        }
-      } else {
-        res.status(403);
+    if (event.toJSON().Group.organizerId === user.id || flag === true) {
+      const { userId, status } = req.body
+      if (status == 'pending') {
+        res.status(400);
         return res.json({
-          message: "Forbidden",
+          message: "Cannot change an attendance status to pending",
         });
       }
+      let count = 0
+      for (let attendee of event.toJSON().Attendances){
+        if (userId === attendee.userId && status == 'attending'){
+          count++
+          const attendance = await Attendance.findByPk(attendee.id)
+          attendance.status = status
+          await attendance.save()
+          return res.json({
+            id: attendance.id,
+            eventId: attendance.eventId,
+            userId: userId,
+            status: status
+          })
+        }
+      }
+      if (count <= 0) {
+        res.status(404);
+        return res.json({
+        message: "Attendance between the user and the event does not exist",
+        });
+      }
+      res.json(event)
     } else {
-      if (member.toJSON().groupId === event.toJSON().groupId && member.toJSON().status == 'co-host'){
-        const { userId, status } = req.body
-        if (status == 'pending') {
-          res.status(400);
-          return res.json({
-            message: "Cannot change an attendance status to pending",
-          });
-        }
-        const event = await Event.findByPk(req.params.eventId, {
-          include: [{
-            model: Attendance,
-            attributes: ['status'],
-            include: {
-              model: User
-            }
-          }]
-        })
-
-        const list = [], attendees = [], final = []
-        event.toJSON().Attendances.forEach(attendee => {
-          list.push(attendee)
-        })
-
-        list.forEach(attendee => {
-          attendees.push({
-            id: attendee.User.id,
-            firstName: attendee.User.firstName,
-            lastName: attendee.User.lastName,
-            status: attendee.status
-          })
-        })
-
-        for (let ele of attendees) {
-          if (ele.id === userId && ele.status == 'pending'){
-            const attendance = await Attendance.scope("noDates").findByPk(userId)
-            attendance.status = status
-            final.push(attendance.toJSON())
-            await attendance.save()
-          }
-        }
-        if (final.length <= 0) {
-          res.status(404);
-          return res.json({
-            message: "Attendance between the user and the event does not exist",
-          });
-        } else {
-          return res.json(final[0])
-        }
-      } else {
-        res.status(403);
-        return res.json({
-          message: "Forbidden",
-        });
-      }
+      res.status(403);
+      return res.json({
+        message: "Forbidden",
+      });
     }
   } else {
     res.status(401);
