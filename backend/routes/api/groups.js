@@ -743,25 +743,34 @@ router.get("/:groupId/members", async (req, res, next) => {
 router.post("/:groupId/membership", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
+    const group = await Group.findByPk(req.params.groupId, {
+      include: {
+        model: Membership
+      }
+    });
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    const memberCheck = await Membership.findByPk(user.id);
-    if (memberCheck.status == "co-host" || memberCheck.status == "member") {
-      res.status(400);
-      return res.json({
-        message: "User is already a member of the group",
-      });
-    } else if (memberCheck.status == "pending") {
-      res.status(400);
-      return res.json({
-        message: "Membership has already been requested",
-      });
+    // res.json(group)
+    // const memberCheck = await Membership.findByPk(user.id);
+    for (let member of group.toJSON().Memberships){
+      console.log(member)
+      if (member.status == 'co-host' && member.userId === user.id || member.status == "member" && member.userId === user.id ){
+        res.status(400);
+        return res.json({
+          message: "User is already a member of the group",
+        });
+      } else if (member.status == "pending" && member.userId === user.id) {
+        res.status(400);
+        return res.json({
+          message: "Membership has already been requested",
+        });
+      }
     }
+
     const member = await Membership.create({
       userId: user.id,
       groupId: req.params.groupId,
@@ -771,7 +780,7 @@ router.post("/:groupId/membership", async (req, res, next) => {
       memberId: member.id,
       status: member.status,
     };
-
+    console.log(group.toJSON())
     res.json(newMember);
   } else {
     res.status(401);
