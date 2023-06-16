@@ -499,163 +499,227 @@ router.delete("/:eventId", async (req, res, next) => {
 
 router.get("/:eventId/attendees", async (req, res, next) => {
   const { user } = req;
-  const event = await Event.findByPk(req.params.eventId)
+  const event = await Event.findByPk(req.params.eventId, {
+    include: [{
+      model: Attendance,
+      include: {
+        model: User
+      }
+    }, {
+      model: Group,
+      include: {
+        model: Membership
+      }
+    }]
+  })
   if (!event) {
     res.status(404);
     return res.json({
       message: "Event couldn't be found",
     });
   }
-  const membership = await Membership.findByPk(user.id)
-  if (user.id <= 6) {
-    const group = await Group.findByPk(user.id)
-    if ((group.toJSON().organizerId === user.id && event.toJSON().groupId === membership.toJSON().groupId) || (event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
-      const event = await Event.findByPk(req.params.eventId, {
-        include: [{
-          model: Attendance,
-          attributes: ['status'],
-          include: {
-            model: User
-          }
-        }]
-      })
-      const list = [], result = []
-      event.toJSON().Attendances.forEach(attendee => {
-        list.push(attendee)
-      })
-
-      list.forEach(attendee => {
-        result.push({
-          id: attendee.User.id,
-          firstName: attendee.User.firstName,
-          lastName: attendee.User.lastName,
-          Attendance: {
-            status: attendee.status
-          }
-        })
-
-      })
-      return res.json({
-        Attendees: result
-      })
-    } else {
-      const { Op } = require('sequelize')
-      const event = await Event.findByPk(req.params.eventId, {
-        include: {
-          model: Attendance,
-          attributes: ['status'],
-          where: {
-            status: {
-              [Op.or]: ["attending","waitlist"]
-            }
-          },
-          include: {
-            model: User
-          }
-        }
-      })
-      if (!event) {
-        res.status(404);
-        return res.json({
-          message: "Event couldn't be found",
-        });
-      }
-      const list = [], result = []
-      event.toJSON().Attendances.forEach(attendee => {
-        list.push(attendee)
-      })
-
-      list.forEach(attendee => {
-        result.push({
-          id: attendee.User.id,
-          firstName: attendee.User.firstName,
-          lastName: attendee.User.lastName,
-          Attendance: {
-            status: attendee.status
-          }
-        })
-
-      })
-
-      return res.json({
-        Attendees: result
-      })
-    }
-  } else {
-    if ((event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
-      const event = await Event.findByPk(req.params.eventId, {
-        include: [{
-          model: Attendance,
-          attributes: ['status'],
-          include: {
-            model: User
-          }
-        }]
-      })
-      const list = [], result = []
-      event.toJSON().Attendances.forEach(attendee => {
-        list.push(attendee)
-      })
-
-      list.forEach(attendee => {
-        result.push({
-          id: attendee.User.id,
-          firstName: attendee.User.firstName,
-          lastName: attendee.User.lastName,
-          Attendance: {
-            status: attendee.status
-          }
-        })
-
-      })
-
-      return res.json({
-        Attendees: result
-      })
-    } else {
-      const { Op } = require('sequelize')
-      const event = await Event.findByPk(req.params.eventId, {
-        include: [{
-          model: Attendance,
-          attributes: ['status'],
-          where: {
-            status: {
-              [Op.or]: ["attending","waitlist"]
-            }
-          },
-          include: {
-            model: User
-          }
-        }]
-      })
-      if (!event) {
-        res.status(404);
-        return res.json({
-          message: "Event couldn't be found",
-        });
-      }
-      const list = [], result = []
-      event.toJSON().Attendances.forEach(attendee => {
-        list.push(attendee)
-      })
-
-      list.forEach(attendee => {
-        result.push({
-          id: attendee.User.id,
-          firstName: attendee.User.firstName,
-          lastName: attendee.User.lastName,
-          Attendance: {
-            status: attendee.status
-          }
-        })
-
-      })
-
-      return res.json({
-        Attendees: result
-      })
+  let flag = false
+  for (let member of event.toJSON().Group.Memberships){
+    if (member.userId === user.id && member.status == 'co-host'){
+      flag = true
     }
   }
+
+  if (event.toJSON().Group.organizerId === user.id || flag === true){
+      const list = [], result = []
+      event.toJSON().Attendances.forEach(attendee => {
+        list.push(attendee)
+      })
+      list.forEach(attendee => {
+        console.log(attendee)
+        result.push({
+          id: attendee.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        })
+
+      })
+      return res.json({
+        Attendees: result
+      })
+  } else {
+
+    // res.json(event)
+    const list = [], result = []
+    event.toJSON().Attendances.forEach(attendee => {
+      list.push(attendee)
+    })
+    list.forEach(attendee => {
+      if (attendee.status !== 'pending') {
+        result.push({
+          id: attendee.id,
+          firstName: attendee.User.firstName,
+          lastName: attendee.User.lastName,
+          Attendance: {
+            status: attendee.status
+          }
+        })
+      }
+    })
+
+    return res.json({
+      Attendees: result
+    })
+  }
+
+  // const membership = await Membership.findByPk(user.id)
+  // if (user.id <= 6) {
+  //   const group = await Group.findByPk(user.id)
+  //   if ((group.toJSON().organizerId === user.id && event.toJSON().groupId === membership.toJSON().groupId) || (event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
+  //     const event = await Event.findByPk(req.params.eventId, {
+  //       include: [{
+  //         model: Attendance,
+  //         attributes: ['status'],
+  //         include: {
+  //           model: User
+  //         }
+  //       }]
+  //     })
+  //     const list = [], result = []
+  //     event.toJSON().Attendances.forEach(attendee => {
+  //       list.push(attendee)
+  //     })
+
+  //     list.forEach(attendee => {
+  //       result.push({
+  //         id: attendee.User.id,
+  //         firstName: attendee.User.firstName,
+  //         lastName: attendee.User.lastName,
+  //         Attendance: {
+  //           status: attendee.status
+  //         }
+  //       })
+
+  //     })
+  //     return res.json({
+  //       Attendees: result
+  //     })
+  //   } else {
+  //     const { Op } = require('sequelize')
+  //     const event = await Event.findByPk(req.params.eventId, {
+  //       include: {
+  //         model: Attendance,
+  //         attributes: ['status'],
+  //         where: {
+  //           status: {
+  //             [Op.or]: ["attending","waitlist"]
+  //           }
+  //         },
+  //         include: {
+  //           model: User
+  //         }
+  //       }
+  //     })
+  //     if (!event) {
+  //       res.status(404);
+  //       return res.json({
+  //         message: "Event couldn't be found",
+  //       });
+  //     }
+  //     const list = [], result = []
+  //     event.toJSON().Attendances.forEach(attendee => {
+  //       list.push(attendee)
+  //     })
+
+  //     list.forEach(attendee => {
+  //       result.push({
+  //         id: attendee.User.id,
+  //         firstName: attendee.User.firstName,
+  //         lastName: attendee.User.lastName,
+  //         Attendance: {
+  //           status: attendee.status
+  //         }
+  //       })
+
+  //     })
+
+  //     return res.json({
+  //       Attendees: result
+  //     })
+  //   }
+  // } else {
+  //   if ((event.toJSON().groupId === membership.toJSON().groupId && membership.toJSON().status == 'co-host')) {
+  //     const event = await Event.findByPk(req.params.eventId, {
+  //       include: [{
+  //         model: Attendance,
+  //         attributes: ['status'],
+  //         include: {
+  //           model: User
+  //         }
+  //       }]
+  //     })
+  //     const list = [], result = []
+  //     event.toJSON().Attendances.forEach(attendee => {
+  //       list.push(attendee)
+  //     })
+
+  //     list.forEach(attendee => {
+  //       result.push({
+  //         id: attendee.User.id,
+  //         firstName: attendee.User.firstName,
+  //         lastName: attendee.User.lastName,
+  //         Attendance: {
+  //           status: attendee.status
+  //         }
+  //       })
+
+  //     })
+
+  //     return res.json({
+  //       Attendees: result
+  //     })
+  //   } else {
+  //     const { Op } = require('sequelize')
+  //     const event = await Event.findByPk(req.params.eventId, {
+  //       include: [{
+  //         model: Attendance,
+  //         attributes: ['status'],
+  //         where: {
+  //           status: {
+  //             [Op.or]: ["attending","waitlist"]
+  //           }
+  //         },
+  //         include: {
+  //           model: User
+  //         }
+  //       }]
+  //     })
+  //     if (!event) {
+  //       res.status(404);
+  //       return res.json({
+  //         message: "Event couldn't be found",
+  //       });
+  //     }
+  //     const list = [], result = []
+  //     event.toJSON().Attendances.forEach(attendee => {
+  //       list.push(attendee)
+  //     })
+
+  //     list.forEach(attendee => {
+  //       result.push({
+  //         id: attendee.User.id,
+  //         firstName: attendee.User.firstName,
+  //         lastName: attendee.User.lastName,
+  //         Attendance: {
+  //           status: attendee.status
+  //         }
+  //       })
+
+  //     })
+
+  //     return res.json({
+  //       Attendees: result
+  //     })
+  //   }
+  // }
 });
 
 router.post("/:eventId/attendance", async (req, res, next) => {
