@@ -13,6 +13,7 @@ const {
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const e = require("express");
 
 const router = express.Router();
 
@@ -147,32 +148,40 @@ router.get("/current", async (req, res, next) => {
   if (user) {
     const group = await Membership.findAll({
       where: {
-        userId: user.id
+        userId: user.id,
       },
       include: {
         model: Group,
-        include: [{
-          model: GroupImage
-        }, {
-        model: Membership
-      }]
-      }
-    })
+        include: [
+          {
+            model: GroupImage,
+          },
+          {
+            model: Membership,
+          },
+        ],
+      },
+    });
     const groups = await Group.findAll({
       where: {
-        organizerId: user.id
+        organizerId: user.id,
       },
-      include: [{
-        model: Membership
-      }, {
-        model: GroupImage
-      }]
-    })
+      include: [
+        {
+          model: Membership,
+        },
+        {
+          model: GroupImage,
+        },
+      ],
+    });
 
-    let list = [], list1 = [], result = [];
-    groups.forEach(ele => {
-      list1.push(ele.toJSON())
-    })
+    let list = [],
+      list1 = [],
+      result = [];
+    groups.forEach((ele) => {
+      list1.push(ele.toJSON());
+    });
     list1.forEach((group) => {
       let count = 0;
       group.Memberships.forEach((member) => {
@@ -187,16 +196,16 @@ router.get("/current", async (req, res, next) => {
       if (!group.previewImage) {
         group.previewImage = "no preview image";
       }
-      group.numMembers = count
+      group.numMembers = count;
       delete group.GroupImages;
       delete group.Memberships;
 
-      result.push(group)
+      result.push(group);
     });
 
-    group.forEach(ele => {
-      list.push(ele.toJSON())
-    })
+    group.forEach((ele) => {
+      list.push(ele.toJSON());
+    });
     list.forEach((group) => {
       let count = 0;
       group.Group.Memberships.forEach((member) => {
@@ -214,7 +223,7 @@ router.get("/current", async (req, res, next) => {
       delete group.Group.GroupImages;
       delete group.Group.Memberships;
 
-      result.push(group.Group)
+      result.push(group.Group);
     });
 
     if (result.length >= 1) {
@@ -222,10 +231,10 @@ router.get("/current", async (req, res, next) => {
         Groups: result,
       });
     } else {
-        res.status(404);
-        return res.json({
-          message: "No groups exist for this user",
-        });
+      res.status(404);
+      return res.json({
+        message: "No groups exist for this user",
+      });
     }
   } else {
     res.status(401);
@@ -544,7 +553,7 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
         lat,
         lng,
       });
-      console.log(venue.toJSON())
+      console.log(venue.toJSON());
       const newVenue = {
         id: venue.id,
         groupId: venue.groupId,
@@ -745,8 +754,8 @@ router.post("/:groupId/membership", async (req, res, next) => {
   if (user) {
     const group = await Group.findByPk(req.params.groupId, {
       include: {
-        model: Membership
-      }
+        model: Membership,
+      },
     });
     if (!group) {
       res.status(404);
@@ -754,11 +763,13 @@ router.post("/:groupId/membership", async (req, res, next) => {
         message: "Group couldn't be found",
       });
     }
-    // res.json(group)
-    // const memberCheck = await Membership.findByPk(user.id);
-    for (let member of group.toJSON().Memberships){
-      console.log(member)
-      if (member.status == 'co-host' && member.userId === user.id || member.status == "member" && member.userId === user.id ){
+
+    for (let member of group.toJSON().Memberships) {
+      console.log(member);
+      if (
+        (member.status == "co-host" && member.userId === user.id) ||
+        (member.status == "member" && member.userId === user.id)
+      ) {
         res.status(400);
         return res.json({
           message: "User is already a member of the group",
@@ -777,10 +788,10 @@ router.post("/:groupId/membership", async (req, res, next) => {
       status: "pending",
     });
     const newMember = {
-      memberId: member.id,
+      memberId: member.userId,
       status: member.status,
     };
-    console.log(group.toJSON())
+    console.log(group.toJSON());
     res.json(newMember);
   } else {
     res.status(401);
@@ -803,14 +814,17 @@ router.put("/:groupId/membership", async (req, res, next) => {
   }
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
+    const group = await Group.findByPk(req.params.groupId, {
+      include: {
+        model: Membership,
+      },
+    });
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id);
     if (group.toJSON().organizerId === user.id && status == "co-host") {
       const { memberId, status } = req.body;
       const group = await Group.findByPk(req.params.groupId, {
@@ -826,7 +840,7 @@ router.put("/:groupId/membership", async (req, res, next) => {
       if (memberCheck.Memberships.length <= 0) {
         res.status(404);
         return res.json({
-          message: "Membership between the user and the group does not exist"
+          message: "Membership between the user and the group does not exist",
         });
       }
       const list = [];
@@ -859,7 +873,8 @@ router.put("/:groupId/membership", async (req, res, next) => {
         });
       }
     }
-
+    res.json(group)
+    console.log(group)
     if (
       (group.toJSON().organizerId === user.id && status == "member") ||
       (userCheck.toJSON().status == "co-host" &&
@@ -883,7 +898,7 @@ router.put("/:groupId/membership", async (req, res, next) => {
       if (memberCheck.Memberships.length <= 0) {
         res.status(404);
         return res.json({
-          message: "Membership between the user and the group does not exist"
+          message: "Membership between the user and the group does not exist",
         });
       }
       const list = [];
@@ -932,41 +947,97 @@ router.put("/:groupId/membership", async (req, res, next) => {
 
 router.delete("/:groupId/membership", async (req, res, next) => {
   const { user } = req;
-  if (user){
+  if (user) {
     const { memberId } = req.body;
-    const group = await Group.findByPk(req.params.groupId)
+    const group = await Group.findByPk(req.params.groupId, {
+      include: [
+        {
+          model: Membership,
+        },
+        {
+          model: User,
+          as: "Organizer",
+        },
+      ],
+    });
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    if (user.id === memberId || group.toJSON().organizerId === user.id) {
-      const membership = await Membership.findByPk(memberId)
-      if (!membership) {
-        res.status(400)
-        return res.json({
-          message: "Validation Error",
-          errors: {
-            memberId: "User couldn't be found"
-          }
-        })
+    let flag = false,
+      count = 0,
+      flag2 = false;
+    if (group.toJSON().Memberships.length <= 0) {
+      res.status(404);
+      return res.json({
+        message: "Membership does not exist for this User",
+      });
+    }
+    for (let member of group.toJSON().Memberships) {
+      if (member.userId === user.id) {
+        flag = true;
       }
-      if (membership.toJSON().groupId === Number(req.params.groupId)) {
-        await membership.destroy()
-        return res.json({
-          message: "Successfully deleted membership from group",
-        });
+    }
+
+    if (flag === true || group.toJSON().organizerId === user.id) {
+      if (group.toJSON().organizerId === user.id) {
+        for (let member of group.toJSON().Memberships) {
+          if (memberId === member.userId) {
+            count++;
+          }
+        }
+        if (count <= 0) {
+          res.status(400);
+          return res.json({
+            message: "Validation Error",
+            errors: {
+              memberId: "User couldn't be found",
+            },
+          });
+        } else {
+          const membership = await Membership.findOne({
+            where: {
+              userId: memberId,
+            },
+          });
+
+          await membership.destroy();
+          return res.json({
+            message: "Successfully deleted membership from group",
+          });
+        }
       } else {
-        res.status(404);
-        return res.json({
-          message: "Membership does not exist for this User",
-        });
+        for (let member of group.toJSON().Memberships) {
+          if (member.userId === user.id && memberId === member.userId) {
+            count++;
+          }
+        }
+        if (count <= 0) {
+          res.status(400);
+          return res.json({
+            message: "Validation Error",
+            errors: {
+              memberId: "User couldn't be found",
+            },
+          });
+        } else {
+          const membership = await Membership.findOne({
+            where: {
+              userId: memberId,
+            },
+          });
+          await membership.destroy();
+          return res.json({
+            message: "Successfully deleted membership from group",
+          });
+        }
       }
     } else {
-      res.status(403);
+      res.status(404);
       return res.json({
-        message: "Forbidden",
+        message: "Membership does not exist for this User",
       });
     }
   } else {
@@ -975,7 +1046,6 @@ router.delete("/:groupId/membership", async (req, res, next) => {
       message: "Authentication required",
     });
   }
-
 });
 
 module.exports = router;
