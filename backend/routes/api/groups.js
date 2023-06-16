@@ -144,7 +144,6 @@ router.get("/", async (req, res, next) => {
 
 router.get("/current", async (req, res, next) => {
   const { user } = req;
-  const { Op, sequelize } = require('sequelize')
   if (user) {
     const group = await Membership.findAll({
       where: {
@@ -177,7 +176,6 @@ router.get("/current", async (req, res, next) => {
     list1.forEach((group) => {
       let count = 0;
       group.Memberships.forEach((member) => {
-        console.log('asdasd')
         count++;
         group.numMembers = count;
       });
