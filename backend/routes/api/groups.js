@@ -802,13 +802,23 @@ router.post("/:groupId/membership", async (req, res, next) => {
 });
 
 router.put("/:groupId/membership", async (req, res, next) => {
-  const { memberId, status } = req.body;
-  if (status === "pending") {
+  const { status } = req.body;
+  if (status == "pending") {
     res.status(400);
     return res.json({
       message: "Validations Error",
       errors: {
         status: "Cannot change a membership status to pending",
+      },
+    });
+  }
+
+  if (status !== 'member' && status !== 'co-host'){
+    res.status(400);
+    return res.json({
+      message: "Validations Error",
+      errors: {
+        status: "Status must be either member or co-host",
       },
     });
   }
@@ -825,116 +835,88 @@ router.put("/:groupId/membership", async (req, res, next) => {
         message: "Group couldn't be found",
       });
     }
-    if (group.toJSON().organizerId === user.id && status == "co-host") {
-      const { memberId, status } = req.body;
-      const group = await Group.findByPk(req.params.groupId, {
-        include: { model: Membership },
-      });
-      if (!group) {
-        res.status(404);
-        return res.json({
-          message: "Group couldn't be found",
-        });
-      }
-      const memberCheck = group.toJSON();
-      if (memberCheck.Memberships.length <= 0) {
-        res.status(404);
-        return res.json({
-          message: "Membership between the user and the group does not exist",
-        });
-      }
-      const list = [];
-      memberCheck.Memberships.forEach((member) => {
-        if (
-          member.groupId === Number(req.params.groupId) &&
-          member.status == "member"
-        ) {
-          if (status == "co-host") {
-            member.status = status;
-            list.push(member);
-          }
-        }
-      });
-      if (list.length >= 1) {
-        const updatedMember = {
-          id: list[0].id,
-          groupId: list[0].groupId,
-          memberId: memberId,
-          status: list[0].status,
-        };
-        res.json(updatedMember);
-      } else {
-        res.status(400);
-        return res.json({
-          message: "Validations Error",
-          errors: {
-            status: "User couldn't be found",
-          },
-        });
+    let flag = false
+    for (let member of group.toJSON().Memberships){
+      if (member.status == 'co-host' && member.userId === user.id){
+        flag = true
       }
     }
-    res.json(group)
-    console.log(group)
-    if (
-      (group.toJSON().organizerId === user.id && status == "member") ||
-      (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === Number(req.params.groupId) &&
-        status == "member")
-    ) {
+
+    if (group.toJSON().organizerId === user.id && status == "co-host") {
       const { memberId, status } = req.body;
-      const group = await Group.findByPk(req.params.groupId, {
-        include: {
-          model: Membership,
-          attributes: { exclude: ["updatedAt", "createdAt"] },
-        },
-      });
-      if (!group) {
-        res.status(404);
-        return res.json({
-          message: "Group couldn't be found",
-        });
-      }
       const memberCheck = group.toJSON();
-      if (memberCheck.Memberships.length <= 0) {
-        res.status(404);
-        return res.json({
-          message: "Membership between the user and the group does not exist",
-        });
-      }
-      const list = [];
-      memberCheck.Memberships.forEach((member) => {
-        if (
-          member.groupId === Number(req.params.groupId) &&
-          member.status == "pending" &&
-          member.userId === memberId
-        ) {
-          if (status == "member") {
-            member.status = status;
-            list.push(member);
-          }
+      let count = 0, list = [];
+      for (let members of memberCheck.Memberships) {
+        if (memberId === members.userId && members.status == "member") {
+          count++;
+          const member = await Membership.findOne({
+            where: {
+              userId: memberId,
+              groupId: req.params.groupId
+            }
+          })
+          member.status = status;
+          await member.save()
+          list.push(members)
         }
-      });
-      if (list.length >= 1) {
-        const updatedMember = {
-          id: list[0].id,
-          groupId: list[0].groupId,
-          memberId: memberId,
-          status: list[0].status,
-        };
-        res.json(updatedMember);
-      } else {
+      }
+      if (count <= 0) {
         res.status(400);
         return res.json({
-          message: "Validations Error",
+          message: "Validation Error",
           errors: {
-            status: "User couldn't be found",
+            memberId: "User couldn't be found",
           },
         });
+      } else {
+        const updatedMember = {
+          id: list[0].userId,
+          groupId: list[0].groupId,
+          memberId: memberId,
+          status: status
+        }
+        return res.json(updatedMember)
+      }
+
+    } else if (group.toJSON().organizerId === user.id && status == "member" || flag === true && status == 'member') {
+      const { memberId, status } = req.body;
+      const memberCheck = group.toJSON();
+      let count = 0, list = [];
+      for (let members of memberCheck.Memberships) {
+        if (memberId === members.userId && members.status == "pending") {
+          count++;
+          const member = await Membership.findOne({
+            where: {
+              userId: memberId,
+              groupId: req.params.groupId
+            }
+          })
+          member.status = status
+          await member.save()
+          list.push(member.toJSON())
+        }
+      }
+      if (count <= 0) {
+        res.status(400);
+        return res.json({
+          message: "Validation Error",
+          errors: {
+            memberId: "User couldn't be found",
+          },
+        });
+      } else {
+        const updatedMember = {
+          id: list[0].userId,
+          groupId: list[0].groupId,
+          memberId: memberId,
+          status: status
+        }
+        return res.json(updatedMember)
       }
     } else {
-      res.status(403);
+      res.status(404);
       return res.json({
-        message: "Forbidden",
+        message: "Membership does not exist for this User",
       });
     }
   } else {
