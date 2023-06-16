@@ -273,16 +273,40 @@ router.get("/:eventId", async (req, res, next) => {
 router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const event = await Event.findByPk(req.params.eventId)
+    const event = await Event.findByPk(req.params.eventId, {
+      include: {
+        model: Group,
+        include: {
+          model: User,
+          include: {
+            model: Attendance
+          },
+          as: "Organizer",
+        }
+      }
+    })
     if (!event) {
       res.status(404);
       return res.json({
         message: "Event couldn't be found",
       });
     }
-    const membership = await Membership.findByPk(user.id)
-    const userCheck = await Attendance.findByPk(user.id)
-    if (userCheck.toJSON().status == 'attending' && userCheck.toJSON().eventId === Number(req.params.eventId) || (membership.toJSON().status == 'co-host' && (membership.toJSON().groupId === event.toJSON().groupId))){
+    const attendee = await Attendance.findAll({
+      where: {
+        userId: user.id
+      }
+    })
+    let flag = false
+    if (attendee){
+      attendee.forEach(attendee => {
+        console.log(attendee)
+        if (attendee.toJSON().status == 'attending' && attendee.toJSON().eventId === Number(req.params.eventId)){
+          flag = true
+        }
+      })
+    }
+
+    if (flag === true || event.toJSON().Group.Organizer.id === user.id){
       let { url, preview } = req.body;
 
       const event = await Event.findByPk(req.params.eventId);
