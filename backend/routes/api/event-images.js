@@ -79,7 +79,7 @@ router.delete("/:imageId", async (req, res, next) => {
     if (count <= 0) {
       res.status(404)
       return res.json({
-        message: "Group Image cannot be found."
+        message: "Event Image cannot be found."
       })
     }
   } else {

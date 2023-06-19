@@ -594,7 +594,6 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         list.push(attendee)
       })
       list.forEach(attendee => {
-        console.log(attendee)
         result.push({
           id: attendee.id,
           firstName: attendee.User.firstName,

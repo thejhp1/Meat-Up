@@ -575,7 +575,6 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
         lat,
         lng,
       });
-      console.log(venue.toJSON());
       const newVenue = {
         id: venue.id,
         groupId: venue.groupId,
@@ -815,7 +814,6 @@ router.post("/:groupId/membership", async (req, res, next) => {
     }
 
     for (let member of group.toJSON().Memberships) {
-      console.log(member);
       if (
         (member.status == "co-host" && member.userId === user.id) ||
         (member.status == "member" && member.userId === user.id)
@@ -841,7 +839,6 @@ router.post("/:groupId/membership", async (req, res, next) => {
       memberId: member.userId,
       status: member.status,
     };
-    console.log(group.toJSON());
     res.json(newMember);
   } else {
     res.status(401);
