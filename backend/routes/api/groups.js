@@ -299,7 +299,7 @@ router.get("/:groupId", async (req, res, next) => {
     delete item.Memberships;
   });
 
-  res.json(list[0]);
+  return res.json(list[0]);
 });
 
 router.post("/", validateGroupSignup, async (req, res, next) => {
@@ -368,7 +368,7 @@ router.post("/:groupId/images", async (req, res, next) => {
         await GroupImage.create({ groupId, url, preview });
 
         result.id = group.id;
-        res.json(result);
+        return res.json(result);
       } else {
         res.status(404);
         return res.json({
@@ -434,7 +434,7 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
 
       await group.save();
 
-      res.json(group);
+      return res.json(group);
     } else {
       res.status(403);
       return res.json({
@@ -584,7 +584,7 @@ router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
         lat: venue.lat,
         lng: venue.lng,
       };
-      res.json(newVenue);
+      return res.json(newVenue);
     } else {
       res.status(403);
       return res.json({
@@ -724,7 +724,7 @@ router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
         endDate,
       });
 
-      res.json(event);
+      return res.json(event);
     } else {
       res.status(403);
       return res.json({
@@ -839,7 +839,7 @@ router.post("/:groupId/membership", async (req, res, next) => {
       memberId: member.userId,
       status: member.status,
     };
-    res.json(newMember);
+    return res.json(newMember);
   } else {
     res.status(401);
     return res.json({

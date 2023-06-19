@@ -279,7 +279,7 @@ router.get("/:eventId", async (req, res, next) => {
     delete item.Attendances;
   });
 
-  res.json(list[0]);
+  return res.json(list[0]);
 });
 
 router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
@@ -336,7 +336,7 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
           preview: image.preview,
         };
 
-        res.json(eventImage);
+        return res.json(eventImage);
       } else {
         res.status(404);
         return res.json({
@@ -490,7 +490,7 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
         endDate: event.endDate
       };
 
-      res.json(updatedEvent)
+      return res.json(updatedEvent)
 
     } else {
       res.status(403);
@@ -776,7 +776,7 @@ router.put("/:eventId/attendance", async (req, res, next) => {
         message: "Attendance between the user and the event does not exist",
         });
       }
-      res.json(event)
+      return res.json(event)
     } else {
       res.status(403);
       return res.json({

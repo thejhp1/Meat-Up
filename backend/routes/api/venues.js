@@ -86,7 +86,7 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
       }
 
       await venue.save()
-      res.json(venue);
+      return res.json(venue);
 
     } else {
       res.status(403);
