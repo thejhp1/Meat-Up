@@ -57,9 +57,12 @@ const validateEventSignup = [
   check("venueId")
     .exists({ checkFalsy: true })
     .custom(async (val, { req }) => {
-      const venue = await Venue.findByPk(req.body.venueId);
-      if (!venue) {
-        throw new Error("Venue couldn't be found");
+      const venue = await Venue.findByPk(req.body.venueId, {
+        include: Group
+      });
+      const { user } = req
+      if (!venue || venue.toJSON().Group.organizerId !== (user.id)) {
+        throw new Error("Venue does not exist");
       }
       return true;
     }),
@@ -666,19 +669,24 @@ router.get("/:groupId/events", async (req, res, next) => {
 router.post("/:groupId/events", validateEventSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
+    const group = await Group.findByPk(req.params.groupId, {
+      include: {
+        model: Membership
+      }
+    });
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id);
-    if (
-      group.toJSON().organizerId === user.id ||
-      (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === Number(req.params.groupId))
-    ) {
+    let flag = false
+    for (let member of group.toJSON().Memberships) {
+      if (member.status == 'co-host' && member.userId == user.id) {
+        flag = true
+      }
+    }
+    if ( group.toJSON().organizerId === user.id || flag === true) {
       const {
         venueId,
         name,
