@@ -1,76 +1,87 @@
 const express = require("express");
 
-const { Group, Event, EventImage, Membership } = require("../../db/models");
+const { Group, Event, EventImage, Membership, User, Attendance } = require("../../db/models");
 
 const router = express.Router();
 
 router.delete("/:imageId", async (req, res, next) => {
   const { user } = req;
   if (user) {
-      const group = await Group.findAll({
-        where: {
-          organizerId: user.id
-        },
-        include: [{
-          model: Event,
-          include: {
-            model: EventImage
-          }
-        }, {
-          model: Membership
-        }]
-      })
 
-      const member = await Membership.findAll({
-        where: {
-          userId: user.id
-        },
+    const groups = await Group.findAll({
+      include: [{
+        model: Event,
         include: {
-          model: Group,
+          model: EventImage
+        }
+      }, {
+        model: Membership,
+        include: {
+          model: User,
           include: {
-            model: Event,
+            model: Attendance,
             include: {
-              model: EventImage
+              model: Event,
+              include: {
+                model: EventImage
+              }
             }
           }
         }
-      })
-
-    if (group.length > 0){
-      if (group[0].toJSON().organizerId === user.id){
-
-        for (let event of group[0].toJSON().Events){
-          for (let image of event.EventImages) {
-            if (image.id === Number(req.params.imageId)){
-              const image = await EventImage.findByPk(req.params.imageId);
-              await image.destroy();
-              return res.json({
-                message: "Successfully deleted.",
-              });
-            }
-          }
-        }
-      }
-    } else {
-      if (member[0].toJSON().status == 'co-host'){
-        for (let event of member[0].toJSON().Group.Events){
-          for (let image of event.EventImages){
-            if (image.id === Number(req.params.imageId)){
-              const image = await EventImage.findByPk(req.params.imageId);
-              await image.destroy();
-              return res.json({
-                message: "Successfully deleted.",
-              });
-            }
-          }
-        }
-      }
+      }]
+    })
+    if (!groups) {
+      res.status(404);
+      return res.json({
+        message: "Event Image cannot be found",
+      });
     }
 
-    res.status(404);
-    return res.json({
-      message: "Event Image couldn't be found",
-    });
+    const list = [], list1 = []
+    groups.forEach(group => {
+      list.push(group.toJSON())
+    })
+    list.forEach(group => {
+      if (group.organizerId === user.id ) {
+        group.Events.forEach(event => {
+          event.EventImages.forEach(image => {
+            list1.push(image)
+
+          })
+        })
+      }
+    })
+
+    list.forEach(group => {
+      group.Memberships.forEach(member => {
+        if (member.userId === user.id && member.status == 'co-host') {
+          member.User.Attendances.forEach(attendee => {
+            attendee.Event.EventImages.forEach(image => {
+              list1.push(image)
+            })
+          })
+        }
+      })
+    })
+
+    let count = 0
+    list1.forEach(async image => {
+      if (image.id === Number(req.params.imageId)) {
+        count++
+        const imageDestroy = await EventImage.findByPk(image.id)
+        await imageDestroy.destroy()
+        return res.json({
+          message: "Successfully deleted."
+        })
+      }
+    })
+
+    if (count <= 0) {
+      res.status(404)
+      return res.json({
+        message: "Group Image cannot be found."
+      })
+    }
   } else {
     res.status(401);
     return res.json({

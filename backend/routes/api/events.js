@@ -362,16 +362,39 @@ router.put("/:eventId", validateEventSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
     const { venueId } = req.body
-    const venueCheck = await Venue.findByPk(venueId, {
-      include: Group
-    })
-
-    if (!venueCheck || venueCheck.toJSON().Group.organizerId !== (user.id)) {
+    const venueCheck = await Event.findByPk(req.params.eventId)
+    if (!venueCheck) {
       res.status(404);
       return res.json({
         message: "Venue couldn't be found",
       });
     }
+    const venueCheck1 = await Group.findByPk(venueCheck.toJSON().groupId, {
+      include: {
+        model: Venue
+      }
+    })
+    if (!venueCheck1) {
+      res.status(404);
+      return res.json({
+        message: "Venue couldn't be found",
+      });
+    }
+
+    let flag1 = false
+    for (let venue of venueCheck1.toJSON().Venues){
+      if (venue.id === venueId){
+        flag1 = true
+      }
+    }
+
+    if (!venueCheck || flag1 === false) {
+      res.status(404);
+      return res.json({
+        message: "Venue couldn't be found",
+      });
+    }
+
     const event = await Event.findByPk(req.params.eventId);
     if (!event) {
       res.status(404);
@@ -493,16 +516,25 @@ router.delete("/:eventId", async (req, res, next) => {
         message: "Event couldn't be found",
       });
     }
-    const group = await Group.findByPk(event.toJSON().groupId)
+    const group = await Group.findByPk(event.toJSON().groupId, {
+      include: {
+        model: Membership
+      }
+    })
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id)
+    let flag = false;
+    for (let member of group.toJSON().Memberships) {
+      if (member.status == "co-host" && member.userId == user.id) {
+        flag = true;
+      }
+    }
 
-    if (group.toJSON().organizerId === user.id || (userCheck.toJSON().status == 'co-host' && userCheck.toJSON().groupId === event.toJSON().groupId)){
+    if (group.toJSON().organizerId === user.id || flag === true){
       const event = await Event.findByPk(req.params.eventId);
       if (!event) {
           res.status(404);
@@ -604,19 +636,28 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 router.post("/:eventId/attendance", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const event = await Event.findByPk(req.params.eventId)
+    const event = await Event.findByPk(req.params.eventId, {
+      include: {
+        model: Group,
+        include: {
+          model: Membership
+        }
+      }
+    })
     if (!event) {
       res.status(404);
       return res.json({
         message: "Event couldn't be found",
       });
     }
-    const group = await Group.findByPk(event.toJSON().groupId, {
-      include: {
-        model: Membership
+    let flag = false
+    for (let member of event.toJSON().Group.Memberships){
+      if (member.userId === user.id) {
+        flag = true
       }
-    })
-    if (event.toJSON().groupId === group.id){
+    }
+
+    if (flag === true){
       const event = await Event.findByPk(req.params.eventId, {
         include: [{
           model: Attendance,
@@ -644,12 +685,12 @@ router.post("/:eventId/attendance", async (req, res, next) => {
 
       for (let ele of result) {
         if (ele.id === user.id && ele.status == 'pending'){
-          res.status(404)
+          res.status(400)
           return res.json({
             message: "Attendance has already been requested"
           })
         } else if (ele.id === user.id && (ele.status == 'attending' || ele.status == 'waitlist')) {
-          res.status(404)
+          res.status(400)
           return res.json({
             message: "User is already an attendee of the event"
           })
@@ -695,18 +736,17 @@ router.put("/:eventId/attendance", async (req, res, next) => {
         model: Attendance
       }]
     })
-
-    let flag = false
-    for (let member of event.toJSON().Group.Memberships) {
-      if (member.userId === user.id && member.status == "co-host") {
-        flag = true
-      }
-    }
     if (!event) {
       res.status(404);
       return res.json({
         message: "Event couldn't be found",
       });
+    }
+    let flag = false
+    for (let member of event.toJSON().Group.Memberships) {
+      if (member.userId === user.id && member.status == "co-host") {
+        flag = true
+      }
     }
     if (event.toJSON().Group.organizerId === user.id || flag === true) {
       const { userId, status } = req.body
@@ -783,7 +823,7 @@ router.delete("/:eventId/attendance", async (req, res, next) => {
       for (let attendee of event.toJSON().Attendances){
         if ((userId === attendee.userId && event.toJSON().Group.organizerId === user.id) || (userId === attendee.userId && attendee.userId === user.id)) {
           count++
-          const attendance = await Attendance.findByPk(attendee.userId)
+          const attendance = await Attendance.findByPk(attendee.id)
           await attendance.destroy()
         }
       }
