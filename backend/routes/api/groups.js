@@ -655,7 +655,7 @@ router.get("/:groupId/events", async (req, res, next) => {
   if (list.length === 0) {
     res.status(404);
     return res.json({
-      message: "Group couldn't be found.",
+      message: "Group couldn't be found or no events exist.",
     });
   }
   return res.json({

@@ -31,17 +31,30 @@ const validateVenueSignup = [
 router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findAll({
-      where: {
-        organizerId: user.id
-      }
-    });
+    const venue = await Venue.findByPk(req.params.venueId, {
+      include: [{
+        model: Group,
+        include: {
+          model: Membership
+        }
+      }]
+    })
+    if (!venue) {
+      res.status(404);
+      return res.json({
+        message: "Venue couldn't be found",
+      });
+    }
 
-    const venue = await Venue.findByPk(req.params.venueId)
-    console.log(group[0].toJSON())
-    const member = await Membership.findByPk(user.id)
-    if (group[0].toJSON().organizerId === user.id && venue.toJSON().groupId === group[0].toJSON().id ||
-    (member.toJSON().status == 'co-host' && member.toJSON().groupId === user.id)){
+    let flag = false
+    for (let member of venue.toJSON().Group.Memberships) {
+      if (member.status == 'co-host' && member.userId == user.id) {
+        flag = true
+      }
+    }
+
+    if (venue.toJSON().Group.organizerId === user.id ||
+    flag === true){
       const { address, city, state, lat, lng } = req.body;
       const venue = await Venue.findByPk(req.params.venueId, {
         attributes: {
@@ -73,7 +86,6 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
       }
 
       await venue.save()
-
       res.json(venue);
 
     } else {
