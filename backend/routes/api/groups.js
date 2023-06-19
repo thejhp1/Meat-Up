@@ -529,19 +529,24 @@ router.get("/:groupId/venues", async (req, res, next) => {
 router.post("/:groupId/venues", validateVenueSignup, async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
+    const group = await Group.findByPk(req.params.groupId, {
+      include: {
+        model: Membership
+      }
+    });
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id);
-    if (
-      group.toJSON().organizerId === user.id ||
-      (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === Number(req.params.groupId))
-    ) {
+    let flag = false
+    for (let member of group.toJSON().Memberships) {
+      if (member.status == 'co-host' && member.userId == user.id) {
+        flag = true
+      }
+    }
+    if (group.toJSON().organizerId === user.id || flag === true) {
       const { address, city, state, lat, lng } = req.body;
       const groupId = req.params.groupId;
       const group = await Group.findByPk(groupId);
