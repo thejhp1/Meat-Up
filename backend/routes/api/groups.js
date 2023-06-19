@@ -478,19 +478,25 @@ router.delete("/:groupId", async (req, res, next) => {
 router.get("/:groupId/venues", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const group = await Group.findByPk(req.params.groupId);
+    const group = await Group.findByPk(req.params.groupId, {
+      include: {
+        model: Membership
+      }
+    });
     if (!group) {
       res.status(404);
       return res.json({
         message: "Group couldn't be found",
       });
     }
-    const userCheck = await Membership.findByPk(user.id);
-    if (
-      group.toJSON().organizerId === user.id ||
-      (userCheck.toJSON().status == "co-host" &&
-        userCheck.toJSON().groupId === Number(req.params.groupId))
-    ) {
+    let flag = false
+    for (let member of group.toJSON().Memberships) {
+      if (member.status == 'co-host' && member.userId == user.id) {
+        flag = true
+      }
+    }
+
+    if (group.toJSON().organizerId === user.id || flag === true) {
       const venues = await Venue.findAll({
         where: {
           groupId: req.params.groupId,
@@ -502,7 +508,7 @@ router.get("/:groupId/venues", async (req, res, next) => {
       if (venues.length === 0) {
         res.status(404);
         return res.json({
-          message: "Group couldn't be found",
+          message: "Group has no venues",
         });
       }
       return res.json({ Venues: venues });
