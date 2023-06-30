@@ -38,12 +38,16 @@ function ProfileButton({ user }) {
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
-
+  const ulClassNames = "fas fa-regular fa-angle-" + (showMenu ? "down fa-xl" : "left fa-xl");
+  console.log(ulClassNames)
   return (
     <>
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
-      </button>
+      <div className="navi-icons">
+        <button onClick={openMenu} className="navi-button">
+          <i className="fas fa-user-circle fa-xl" />
+        </button>
+        <i className={ulClassNames}></i>
+      </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
