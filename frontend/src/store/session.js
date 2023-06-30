@@ -1,8 +1,10 @@
 import { csrfFetch } from "./csrf";
 
+// constant to avoid debugging typos
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
 
+//regular action creator
 const setUser = (user) => {
   return {
     type: SET_USER,
@@ -16,6 +18,7 @@ const removeUser = () => {
   };
 };
 
+// thunk action creator
 export const login = (user) => async (dispatch) => {
   const { credential, password } = user;
   const response = await csrfFetch("/api/session", {
@@ -30,8 +33,17 @@ export const login = (user) => async (dispatch) => {
   return response;
 };
 
+export const restoreUser = () => async (dispatch) => {
+  const response = await csrfFetch("/api/session");
+  const data = await response.json();
+  dispatch(setUser(data.user));
+  return response;
+};
+
+// state object
 const initialState = { user: null };
 
+// reducer
 const sessionReducer = (state = initialState, action) => {
   let newState;
   switch (action.type) {
