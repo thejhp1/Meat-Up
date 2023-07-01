@@ -25,13 +25,13 @@ function Navigation({ isLoaded }) {
               <div className="navi-login-container">
                 <div className="navi-login-login">
                 <OpenModalMenuItem
-                  itemText="Log In"
+                  itemText="Log in"
                   modalComponent={<LoginFormModal />}
                 />
                 </div>
                 <div className="navi-login-signup">
                 <OpenModalMenuItem
-                  itemText="Sign Up"
+                  itemText="Sign up"
                   modalComponent={<SignupFormModal />}
                 />
                 </div>
