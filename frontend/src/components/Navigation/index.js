@@ -14,7 +14,7 @@ function Navigation({ isLoaded }) {
     <div className="navi-bar">
         <div className="navi-home">
           <NavLink style={{ textDecoration: "none" }} exact to="/">
-            <img src={Logo} className="navi-logo"></img>
+            <img src={Logo} alt="" className="navi-logo"></img>
           </NavLink>
         </div>
         {isLoaded && (

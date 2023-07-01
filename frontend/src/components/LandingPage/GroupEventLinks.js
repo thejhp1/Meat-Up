@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import GroupImage from "../../images/handsUp.svg";
 import EventImage from "../../images/ticket.svg";
@@ -17,7 +17,7 @@ export const GroupEventLinks = () => {
       </p>
       <div className="link-container">
         <div className="group-image">
-          <img src={GroupImage}></img>
+          <img alt="" src={GroupImage}></img>
           <Link className="link" to={"/groups"}>
             See all groups
           </Link>
@@ -27,7 +27,7 @@ export const GroupEventLinks = () => {
           </p>
         </div>
         <div className="event-image">
-          <img src={EventImage}></img>
+          <img alt="" src={EventImage}></img>
           <Link className="link" to={"/events"}>
             Find an event
           </Link>
@@ -37,7 +37,7 @@ export const GroupEventLinks = () => {
           </p>
         </div>
         <div className="join-image">
-          <img src={NewGroupImage}></img>
+          <img alt="" src={NewGroupImage}></img>
           {sessionUser ? (
             <Link
               className="link"

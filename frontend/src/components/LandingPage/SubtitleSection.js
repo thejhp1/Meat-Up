@@ -9,7 +9,7 @@ export const SubtitleSection = () => {
         <p>Whatever your interest, from hiking and reading to networking and skill sharing, there are thousands of people who share it on Meatup. Events are happening every day—sign up to join the fun.</p>
 
       </div>
-      <img src={SubtitleImage}></img>
+      <img alt="" src={SubtitleImage}></img>
     </div>
   );
 };

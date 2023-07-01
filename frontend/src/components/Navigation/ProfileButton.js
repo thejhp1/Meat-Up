@@ -39,7 +39,6 @@ function ProfileButton({ user }) {
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
   const ulClassNames = "fas fa-regular fa-angle-" + (showMenu ? "down fa-xl" : "left fa-xl");
-  console.log(ulClassNames)
   return (
     <>
       <div className="navi-icons">
