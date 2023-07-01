@@ -105,6 +105,10 @@
     cursor: pointer;
 }
 
+.landing-page-span {
+    list-style-type: none;
+}
+
 
 /***************    HOVER EFFECTS    **************/
 
