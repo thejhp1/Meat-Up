@@ -7,6 +7,10 @@
     display: none
 }
 
+.navi-home {
+    width: 500px;
+}
+
 .navi-bar {
 
     height: 70px;
@@ -17,8 +21,11 @@
 .navi-login-container {
     list-style-type: none;
     display: flex;
+    justify-content: flex-end;
     flex-direction: row;
     cursor: pointer;
+    margin-left: 50rem;
+    margin-top: -3rem;
 }
 
 .navi-login-login, .navi-login-signup {
