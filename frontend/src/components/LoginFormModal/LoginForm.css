@@ -1,0 +1,228 @@
+/***************   MODAL LOG IN CONTENT  ***************/
+#modal-content {
+    width: 404px;
+    max-height: 784px;
+    padding: 0px 2.5rem;
+    padding-bottom: 2rem;
+    padding-top: 2.25rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    border-radius: .5rem;
+}
+
+.login-modal-icon > i {
+    color:#e32359;
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    margin-bottom: .5rem;
+}
+
+.login-modal-title {
+    margin-top: 0px;
+    font-size: 1.75rem;
+    margin-bottom: .5rem;
+}
+
+.login-modal-signup {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+
+}
+
+.login-modal-header-container {
+    margin-bottom: 2rem;
+}
+
+.login-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup-modal {
+    color: #00798A;
+    margin-left: .5rem;
+    cursor: pointer;
+}
+
+.login-modal-label-login {
+    width: 21.5rem;
+    margin-bottom: .25rem;
+    font-weight: 500;
+}
+
+.login-modal-label-password {
+    width: 15rem;
+    margin-bottom: .25rem;
+    font-weight: 500;
+}
+
+.login-modal-input {
+    width: 19.75rem;
+    height: 1.25rem;
+    padding: 8px 12px;
+    margin-bottom: 1rem;
+    border-radius: .5rem;
+    border: 1px solid #CCCCCC
+}
+
+.login-modal-input:focus  {
+    outline: none;
+    border: 1px solid #00798A;
+}
+
+.login-modal-input:hover {
+    border: 1px solid black;
+    transition-duration: .5s;
+}
+
+.login-modal-button {
+    width: 21.5rem;
+    background-color: #e32359;
+    color: white;
+    border-radius: .5rem;
+    margin-top: 16px;
+    height: 3rem;
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.login-modal-button:disabled {
+    background-color: #999999;
+    cursor: text;
+}
+
+.login-modal-button:hover:enabled{
+    background-color: #de3a68
+}
+
+.login-modal-separator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+}
+
+.login-modal-separator-center {
+    padding: 0px .75rem;
+    color: #CCCCCC
+}
+
+.login-modal-separator-border {
+    border: 0.1em solid #CCCCCC;
+    width: 9.2rem;
+    max-height: 0.1px;
+    margin-bottom: 11px;
+}
+
+.login-modal-link-container {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-modal-link {
+    background-color: white;
+    width: 21.5rem;
+    border-radius: .5rem;
+    height: 3.25rem;
+    font-size: 1rem;
+    padding-left: 1rem;
+    border: 1px solid #CCCCCC;
+    cursor: pointer;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.login-modal-keep-signed-in {
+    display: flex;
+    align-items: center;
+    width: 21.25rem;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.login-modal-keep-signed-in > span {
+    margin-left: .5rem;
+}
+
+.login-modal-keep-signed-in-checkout {
+    opacity: 0;
+    z-index: 2;
+    box-shadow: 0 0 2px 1px #00798A
+}
+
+.login-modal-keep-signed-in-icon{
+    z-index: 1;
+    position: absolute;
+    fill: #00798A;
+}
+
+.login-modal-keep-signed-in-icon::shadow {
+    box-shadow: 0 0 2px 1px rgb(0, 121, 138)
+}
+
+.fa-facebook-f {
+    color: rgb(66, 103, 178);
+    position: absolute;
+    margin-right: 17rem;
+    margin-top: 1.6rem;
+}
+
+.fa-g {
+    position: absolute;
+    margin-right: 17rem;
+    margin-top: 5.1rem;
+}
+
+.fa-apple {
+    position: absolute;
+    margin-right: 17rem;
+    margin-top: 10rem;
+}
+
+.fa-xmark {
+    position: fixed;
+    margin-left: 25.9rem;
+    margin-top: -16px;
+    color: #999999;
+    cursor: pointer;
+}
+
+.login-modal-reveal-pass-container {
+    position: fixed;
+    margin-top: 7rem;
+    margin-left: 19.3rem;
+    z-index: 2;
+}
+
+.login-modal-reveal-pass {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.reveal-pass {
+    position: absolute;
+    margin-left: 19.3rem;
+    margin-top: 7.6rem;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.login-modal-label-container {
+    display: flex;
+}
+
+.login-modal-label-forgot-password {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: 14px;
+    color: #00798A;
+    margin-bottom: .25rem;
+    cursor: pointer;
+}

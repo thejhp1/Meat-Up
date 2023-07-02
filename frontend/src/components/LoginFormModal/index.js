@@ -20,6 +20,7 @@ function LoginFormModal() {
   const [showPass, setShowPass] = useState("password");
   const { closeModal } = useModal();
   const history = useHistory();
+
   useEffect(() => {
     const validateError = {};
     if (credential.length < 4) {
