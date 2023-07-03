@@ -19,7 +19,7 @@ export const Groups = () => {
       <div className="group-list-header-container">
         <Link className="group-list-header-events" to="/events">Events</Link>
         <Link className="group-list-header-groups" to="/groups">Groups</Link>
-        <p style={{marginBottom:".5rem"}}>Groups in Meetup</p>
+        <p>Groups in Meetup</p>
       </div>
       <p className="group-list-border"></p>
       {groups.map((group) => (

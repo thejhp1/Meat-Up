@@ -37,7 +37,9 @@
 
 .group-list-header-container > p {
     color: #999999;
-    margin-left: .25rem;
+    margin-top: 1rem;
+
+    margin-bottom: .5rem;
 }
 
 .group-list-header-groups {
