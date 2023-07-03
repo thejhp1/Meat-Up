@@ -33,18 +33,21 @@ function LoginFormModal() {
 
   // NEED TO IMPLEMENT A PAGE TO "ISSUE WITH LOGIN PAGE" TO IN FUTURE
   const loginIssue = () => {
-    closeModal();
-    history.push("/groups");
+    alert('Feature coming soon!')
+    // closeModal();
+    // history.push("/groups");
   };
 
   //NEED TO IMPLEMENT A "FORGOT PASSWORD" PAGE
   const forgotPassword = () => {
-    closeModal();
-    history.push("/groups");
+    alert('Feature coming soon!')
+    // closeModal();
+    // history.push("/groups");
   };
 
   //NEED TO IMPLEMENT KEEPING SIGNED IN FUTURE IF BOX IS CHECKED
   const keepSignedInSwitch = () => {
+    alert('Feature coming soon!')
     if (keepSignedIn1 === "hidden") {
       setKeepSignedIn1("");
       setKeepSignedIn2("hidden");
@@ -80,13 +83,16 @@ function LoginFormModal() {
   };
 
   const sendToFB = () => {
-    window.location.href = "https://facebook.com";
+    alert('Feature coming soon!')
+    // window.location.href = "https://facebook.com";
   };
   const sendToG = () => {
-    window.location.href = "https://google.com";
+    alert('Feature coming soon!')
+    // window.location.href = "https://google.com";
   };
   const sendToA = () => {
-    window.location.href = "https://apple.com";
+    alert('Feature coming soon!')
+    // window.location.href = "https://apple.com";
   };
 
   return (
