@@ -1,0 +1,261 @@
+/*************************** LOADING PAGE **********************************/
+.loading-icon-header {
+    display: flex;
+    justify-content: center;
+    color:rgb(255, 91, 95);
+    margin-top: 5rem;
+    margin-bottom: 0rem;
+    font-size: 5rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-shadow: 1px 1px 2px #00798A, 0 0 1em #00798A, 0 0 0.2em #00798A;
+}
+
+.loading-icon {
+    display: flex;
+    justify-content: center;
+    color:#00798A;
+}
+
+/*************************** HEADER CONTENT *******************************/
+.group-list {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.group-list-border {
+    border: 1.5px solid #999999;
+    margin: 1rem 12rem;
+}
+
+.group-list-header-container {
+    display: grid;
+    grid-template-areas:
+    'link'
+    'header';
+    margin: 0rem 12rem;
+    margin-top: 3rem;
+}
+
+.group-list-header-container > p {
+    color: #999999;
+    margin-left: .25rem;
+}
+
+.group-list-header-groups {
+    grid-area: link;
+    margin-left: 5.5rem;
+    font-size: 1.6rem;
+    color: #00798A;
+    font-weight: 500;
+}
+
+.group-list-header-events {
+    grid-area: link;
+    font-size: 1.6rem;
+    text-decoration: none;
+    color: #999999;
+    font-weight: 500;
+}
+
+/**************************** GROUP LIST *********************************/
+.group-list-container {
+    display: grid;
+    grid-template-areas:
+    'image name name'
+    'image location ...'
+    'image descrip descrip'
+    'image event ...';
+    margin: 0rem 12rem;
+    column-gap: .5rem;
+}
+
+.group-list-image {
+    grid-area: image;
+    cursor: pointer;
+}
+
+.group-list-name {
+    grid-area: name;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align:initial;
+    cursor: pointer;
+    color: #00798A;
+}
+
+.group-list-location {
+    grid-area: location;
+    margin: 0px;
+    cursor: pointer;
+    color:#999999
+}
+
+.group-list-descrip {
+    grid-area: descrip;
+    margin: .5rem 0rem;
+    cursor: pointer;
+}
+
+.group-list-event {
+    grid-area: event;
+    margin: 0px;
+    cursor: pointer;
+    color:#999999
+}
+
+/************************* GROUP DETAILS HEADERS **********************************/
+
+.group-detail-container {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0rem 8rem;
+    margin-top: 2rem;
+}
+
+.group-detail-breadcrumb {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: .2rem;
+}
+
+.group-detail-breadcrumb > p {
+    font-size: 12px;
+    padding-right: .1rem;
+    margin: 0px;
+}
+
+.group-detail-header-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+    'img info'
+    'img info'
+    'img button';
+    column-gap: .5rem;
+}
+
+.group-detail-header-info > h2 {
+    margin: 0rem;
+}
+
+.group-detail-header-info > p {
+    margin: .25rem 0rem;
+    font-size: 14px;
+    color:#999999
+}
+
+.group-detail-header-image {
+    grid-area: img;
+    width: 475px;
+}
+
+.group-detail-header-info {
+    grid-area: info;
+}
+
+.group-detail-header-button {
+    grid-area: button;
+    width: 9rem;
+    height: 2.5rem;
+    background-color: #FF5A5F;
+    color: white;
+    border: 2.5px solid black;
+    box-shadow: 2px 2px black;
+}
+
+.group-detail-header-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: .25rem;
+}
+
+/************************** GROUP DETAILS INFO ******************************/
+
+.group-detail-body-container {
+    margin-top: 1.25rem;
+    background-color: rgb(238, 238, 238);
+    height: 50rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.group-detail-organizer-container{
+    margin: 0px 8rem;
+}
+
+.group-detail-organizer-container > h2, p {
+    margin: 0px;
+    margin-bottom: .25rem;
+}
+
+.group-detail-organizer-container > p {
+    font-size: 12px;
+    color:#999999;
+}
+
+.group-detail-about-container {
+    margin: 1rem 8rem;
+}
+
+.group-detail-about-container > h2 {
+    margin: 0px;
+}
+
+.group-detail-about-container > p {
+    font-size: 12px;
+}
+
+.group-detail-event-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8rem;
+    margin-right: 27rem;
+}
+
+.event-cards {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-areas:
+    'img info'
+    'descrip descrip';
+    column-gap: .5rem;
+    grid-template-columns: 1fr 2fr;
+    background-color: white;
+    border-radius: 1rem;
+}
+
+.event-cards-image {
+    grid-area: img;
+}
+
+.event-cards-info {
+    grid-area: info;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.25rem;
+}
+
+.event-cards-info-time {
+    color:#00798A;
+    font-size: 14px;
+}
+
+.event-cards-info-name {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.event-cards-info-location {
+    color:#999999;
+    font-size: 14px;
+}
+
+.event-cards-description {
+    grid-area: descrip;
+    margin-left: 1rem;
+    display: flex;
+    word-wrap: normal;
+    width:auto;
+}
+
+.event-cards-description > p {
+    font-size: 12px;
+}

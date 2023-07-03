@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import { LandingPage } from "./components/LandingPage";
 import { Route } from "react-router-dom/cjs/react-router-dom.min";
 import { Groups } from "./components/Groups";
+import { GroupDetail } from "./components/Groups/GroupDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ function App() {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
+
   return (
     <>
       <Navigation isLoaded={isLoaded} />
@@ -21,6 +23,9 @@ function App() {
       <Switch>
         <Route exact path="/">
           <LandingPage />
+        </Route>
+        <Route path="/groups/:groupId">
+          <GroupDetail />
         </Route>
         <Route path="/groups">
           <Groups />

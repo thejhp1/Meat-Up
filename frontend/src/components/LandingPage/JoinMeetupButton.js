@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export const JoinMeetupButton = () => {
     const sessionUser = useSelector((state) => state.session.user);
-    console.log(sessionUser)
+
     return (
         <div className="button-container">
             {sessionUser ? null : <button className="landing-page-button"><span className="landing-page-span">

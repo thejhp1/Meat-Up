@@ -36,7 +36,7 @@ function SignupFormModal() {
 
     setValidateError(validateError);
   }, [email, username, firstName, lastName, password, confirmPassword]);
-  console.log(validateError);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
