@@ -40,6 +40,12 @@ function ProfileButton({ user }) {
     history.push("/")
   };
 
+  const toGroups = (e) => {
+    e.preventDefault()
+    closeMenu()
+    history.push("/groups")
+  }
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
   const ulClassNames = "fas fa-regular fa-angle-" + (showMenu ? "up fa-xl" : "down fa-xl");
   return (
@@ -54,9 +60,13 @@ function ProfileButton({ user }) {
             <div className="profile-dropdown-container">
               <li>Hello, {user.firstName}</li>
               <li>{user.email}</li>
+              <li className="profile-dropdown-group-container">
+                <span  onClick={toGroups}>View groups</span>
+                </li>
               <li className="profile-dropdown-logout-container">
                 <span  onClick={logout}>Log out</span>
               </li>
+
             </div>
           ) : (
             <>

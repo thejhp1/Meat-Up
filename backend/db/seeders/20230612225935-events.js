@@ -76,7 +76,18 @@ module.exports = {
         price: 0,
         startDate: "06/29/2023",
         endDate: "06/29/2023"
-      }
+      },
+      {
+        groupId: 1,
+        venueId: 1,
+        name: 'Tennis Tournament',
+        type: 'In person',
+        description: 'Come play against your fellow tennis mates for a secret grand prize!',
+        capacity: 20,
+        price: 100,
+        startDate: "06/28/2023",
+        endDate: "06/29/2023"
+      },
     ], options).catch((err) => {
       throw new Error(err)
     })

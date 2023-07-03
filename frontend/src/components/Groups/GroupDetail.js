@@ -35,7 +35,7 @@ export const GroupDetail = () => {
       return "events: Public";
     }
   };
-  console.log(flag)
+
   return (
     <>
       {flag === true ? (
@@ -105,7 +105,7 @@ export const GroupDetail = () => {
               <p>{group.about}</p>
             </div>
             <div className="group-detail-event-container">
-                <GroupDetailPageEvents events={group.Events} group={group}/>
+                <GroupDetailPageEvents events={group.Events}/>
             </div>
           </div>
         </>

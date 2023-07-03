@@ -53,12 +53,12 @@
 }
 
 .profile-dropdown {
-    list-style-type: none;
     background-color: white;
     border: 1px solid black;
     position: absolute;
     margin-top: 146px;
     padding-left: 0px;
+    list-style-type: none;
 }
 
 .navi-icons {
@@ -68,11 +68,10 @@
     margin-top: -3.3rem;
 }
 
-/* .profile-dropdown-container {
-    display: flex;
-    flex-direction: column; */
-    /* padding-left: 100px; */
-/* } */
+.profile-dropdown-group-container {
+    border-top: 1px solid black;
+    cursor: pointer;
+}
 
 .profile-dropdown-container > li {
     padding: 4px 15px;
@@ -80,7 +79,5 @@
 
 .profile-dropdown-logout-container {
     border-top: 1px solid black;
+    cursor: pointer;
 }
-
-
-
