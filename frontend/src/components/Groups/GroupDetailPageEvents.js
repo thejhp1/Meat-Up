@@ -61,7 +61,7 @@ export const GroupDetailPageEvents = ({ events }) => {
           </div>
         ))}
       </div>
-      <div style={{ marginTop: "2rem" }}>
+      <div style={{ marginTop: "1.5rem" }}>
         <h2 style={{ marginTop: "0px", marginBottom: "0px" }}>
           {pastEvent.length > 0 ? `Past Events (${pastEvent.length})` : ""}
         </h2>
