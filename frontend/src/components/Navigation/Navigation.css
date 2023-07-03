@@ -77,6 +77,10 @@
     padding: 4px 15px;
 }
 
+.profile-dropdown-event-container {
+    cursor: pointer;
+}
+
 .profile-dropdown-logout-container {
     border-top: 1px solid black;
     cursor: pointer;

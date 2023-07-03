@@ -44,6 +44,8 @@
 
 .group-list-header-groups {
     grid-area: link;
+    display: flex;
+    max-width: fit-content;
     margin-left: 5.5rem;
     font-size: 1.6rem;
     color: #00798A;
@@ -53,6 +55,7 @@
 .group-list-header-events {
     grid-area: link;
     font-size: 1.6rem;
+    max-width: fit-content;
     text-decoration: none;
     color: #999999;
     font-weight: 500;

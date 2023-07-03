@@ -22,10 +22,12 @@
     font-size: 1.6rem;
     font-weight: 500;
     color: #00798A;
+    max-width: fit-content;
 }
 
 .event-list-header-groups {
     margin-left: 5.5rem;
+    max-width: fit-content;
     grid-area: link;
     color: #999999;
     font-size: 1.6rem;
