@@ -163,6 +163,11 @@
     box-shadow: 2px 2px black;
 }
 
+.group-detail-header-button:hover {
+    background-color: #ff6f74;
+    cursor: pointer;
+}
+
 .group-detail-header-button-container {
     display: flex;
     flex-direction: column;
@@ -170,6 +175,26 @@
     padding-bottom: .25rem;
 }
 
+.group-detail-header-organizer-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.75rem;
+}
+
+.group-detail-header-organizer-button-create-event, .group-detail-header-organizer-button-delete, .group-detail-header-organizer-button-update {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #999999;
+    color:white;
+    border: 2px solid black;
+    box-shadow: 2px 2px black;
+    cursor: pointer;
+}
+
+.group-detail-header-organizer-button-create-event:hover , .group-detail-header-organizer-button-delete:hover , .group-detail-header-organizer-button-update:hover  {
+    background-color: #a4a4a4;
+}
+
+/* .group-detail-header-organizer-button-create-event:hover,  */
 /************************** GROUP DETAILS INFO ******************************/
 
 .group-detail-body-container {
@@ -228,11 +253,19 @@
     grid-area: img;
 }
 
+.event-cards-image:hover {
+    cursor: pointer;
+}
+
 .event-cards-info {
     grid-area: info;
     display: flex;
     flex-direction: column;
     margin-top: 1.25rem;
+}
+
+.event-cards-info > p:hover {
+    cursor: pointer;
 }
 
 .event-cards-info-time {
@@ -260,4 +293,5 @@
 
 .event-cards-description > p {
     font-size: 12px;
+    cursor: pointer;
 }

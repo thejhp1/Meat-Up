@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import ScaleLoader from "react-spinners/PulseLoader";
 import { Link } from "react-router-dom";
 import { GroupDetailPageEvents } from "./GroupDetailPageEvents";
+import { GroupDetailButton } from "./GroupDetailButton";
 
 export const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -87,9 +88,7 @@ export const GroupDetail = () => {
                 </p>
               </div>
               <div className="group-detail-header-button-container">
-                <button className="group-detail-header-button">
-                  Join this group
-                </button>
+                <GroupDetailButton group={group}/>
               </div>
             </div>
           </div>
