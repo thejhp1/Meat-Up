@@ -241,10 +241,14 @@ router.get("/:eventId", async (req, res, next) => {
       {
         model: Group,
         attributes: ["id", "name", "private", "city", "state"],
-        include: {
+        include: [{
           model: GroupImage,
           attributes:["url"]
-        }
+        },{
+          model: User,
+          attributes: ["firstName", "lastName"],
+          as: "Organizer",
+        }]
       },
       {
         model: Venue,
