@@ -4,6 +4,7 @@ const {
   Event,
   Attendance,
   Group,
+  GroupImage,
   EventImage,
   Venue,
   Membership,
@@ -240,6 +241,10 @@ router.get("/:eventId", async (req, res, next) => {
       {
         model: Group,
         attributes: ["id", "name", "private", "city", "state"],
+        include: {
+          model: GroupImage,
+          attributes:["url"]
+        }
       },
       {
         model: Venue,

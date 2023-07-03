@@ -19,7 +19,7 @@ module.exports = {
         capacity: 20,
         price: 0,
         startDate: "07/12/2023",
-        endDate: "07/12/2023"
+        endDate: "07/13/2023"
       },
       {
         groupId: 1,
@@ -53,7 +53,7 @@ module.exports = {
         capacity: 100,
         price: 0,
         startDate: "07/09/2023",
-        endDate: "07/09/2023"
+        endDate: "07/10/2023"
       },
       {
         groupId: 4,
@@ -64,7 +64,7 @@ module.exports = {
         capacity: 99,
         price: 0,
         startDate: "09/14/2023",
-        endDate: "09/14/2023"
+        endDate: "09/15/2023"
       },
       {
         groupId: 5,
@@ -75,7 +75,7 @@ module.exports = {
         capacity: 10,
         price: 0,
         startDate: "06/29/2023",
-        endDate: "06/29/2023"
+        endDate: "06/30/2023"
       },
       {
         groupId: 1,
