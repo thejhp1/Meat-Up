@@ -27,6 +27,9 @@ function App() {
         <Route exact path="/">
           <LandingPage />
         </Route>
+        <Route path="/groups/new">
+          <h1>asd</h1>
+        </Route>
         <Route path="/groups/:groupId">
           <GroupDetail />
         </Route>

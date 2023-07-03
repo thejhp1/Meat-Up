@@ -57,6 +57,7 @@ function ProfileButton({ user }) {
   return (
     <>
       <div className="navi-icons">
+        <span onClick={() => history.push("/groups/new")} className="navi-icon-new-group">Start a new group</span>
         <button onClick={openMenu} className="navi-button">
           <i className="fas fa-user-circle fa-xl" />
         </button>

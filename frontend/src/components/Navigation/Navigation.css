@@ -68,6 +68,14 @@
     margin-top: -3.3rem;
 }
 
+.navi-icon-new-group {
+    color: #00798A;
+    font-weight: 500;
+    padding-right: 1.75rem;
+    cursor: pointer;
+    font-size: 14px;
+}
+
 .profile-dropdown-group-container {
     border-top: 1px solid black;
     cursor: pointer;

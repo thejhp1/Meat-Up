@@ -41,7 +41,7 @@ export const GroupEventLinks = () => {
           {sessionUser ? (
             <Link
               className="link"
-              to={"/groups"}
+              to={"/groups/new"}
             >
               Start a group
             </Link>
