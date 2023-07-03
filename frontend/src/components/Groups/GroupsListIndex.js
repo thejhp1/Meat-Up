@@ -20,8 +20,6 @@ export const GroupsListIndex = ({ group }) => {
     history.push(`/groups/${group.id}`)
   }
 
-
-
   return (
     <div className="group-list-container">
       <img onClick={sentToGroup} className="group-list-image" width="240" height="160" src={`${group.previewImage}`}></img>

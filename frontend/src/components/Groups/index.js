@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import "./Groups.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetAllGroups } from "../../store/groups";
 import { GroupsListIndex } from "./GroupsListIndex";
 import ScaleLoader from "react-spinners/PulseLoader";
+import "./Groups.css";
 
 export const Groups = () => {
   const dispatch = useDispatch();

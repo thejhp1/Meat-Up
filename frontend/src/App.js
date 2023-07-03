@@ -7,6 +7,7 @@ import { LandingPage } from "./components/LandingPage";
 import { Route } from "react-router-dom/cjs/react-router-dom.min";
 import { Groups } from "./components/Groups";
 import { GroupDetail } from "./components/Groups/GroupDetail";
+import { Events } from "./components/Events";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,6 +30,9 @@ function App() {
         </Route>
         <Route path="/groups">
           <Groups />
+        </Route>
+        <Route path="/events">
+          <Events />
         </Route>
       </Switch>
     </>
