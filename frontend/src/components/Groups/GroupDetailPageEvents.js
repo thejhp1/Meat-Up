@@ -1,7 +1,10 @@
+import { useHistory } from "react-router-dom";
+
 export const GroupDetailPageEvents = ({ events }) => {
   const upcomingEvent = [];
   const pastEvent = [];
   const time = new Date();
+  const history = useHistory()
 
   for (let event of events) {
     if (event.previewImage === undefined) {
@@ -23,6 +26,9 @@ export const GroupDetailPageEvents = ({ events }) => {
     return new Date(b.startDate) - new Date(a.startDate)
   })
 
+  // const sendToEvent = () => {
+  //   history.push(`/events/${event.id}`)
+  // }
   return (
     <>
       <div style={{ marginTop: "1.25rem" }}>
@@ -37,6 +43,7 @@ export const GroupDetailPageEvents = ({ events }) => {
             <div className="event-cards">
               <div className="event-cards-image">
                 <img
+                  onClick={() => history.push(`/events/${event.id}`)}
                   src={event.previewImage}
                   width={180}
                   height={120}
@@ -71,6 +78,7 @@ export const GroupDetailPageEvents = ({ events }) => {
             <div className="event-cards">
               <div className="event-cards-image">
                 <img
+                  onClick={() => history.push(`/events/${event.id}`)}
                   src={event.previewImage}
                   width={180}
                   height={120}

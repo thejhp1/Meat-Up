@@ -37,6 +37,30 @@ export const GroupDetail = () => {
     }
   };
 
+  const imageCheck = () => {
+    if (group.GroupImages.length <= 0) {
+      return "https://vishwaentertainers.com/wp-content/uploads/2020/04/No-Preview-Available.jpg";
+    } else {
+      return `${group.GroupImages[0].url}`;
+    }
+  };
+
+  const eventsCheck = () => {
+    if (group.Events === undefined) {
+      return ""
+    } else {
+      return <GroupDetailPageEvents events={group.Events}/>
+    }
+  }
+
+  const eventsLengthCheck = () => {
+    if (group.Events === undefined) {
+      return ""
+    } else {
+      return group.Events.length
+    }
+  }
+
   return (
     <>
       {flag === true ? (
@@ -61,7 +85,7 @@ export const GroupDetail = () => {
             <div className="group-detail-breadcrumb">
               <p>{"<"}</p>
               <Link
-                style={{ fontSize: "12px", fontWeight: "500" }}
+                style={{ fontSize: "12px", fontWeight: "500", color:"#00798A" }}
                 to="/groups"
               >
                 Groups
@@ -72,7 +96,7 @@ export const GroupDetail = () => {
                 className="group-detail-header-image"
                 width="475"
                 height="250"
-                src={`${group.GroupImages[0].url}`}
+                src={imageCheck()}
               ></img>
               <div className="group-detail-header-info">
                 <h2>{group.name}</h2>
@@ -80,7 +104,7 @@ export const GroupDetail = () => {
                   {group.city}, {group.state}
                 </p>
                 <p>
-                  {group.Events.length} · {eventPrivateCheck()}
+                {eventsLengthCheck()} · {eventPrivateCheck()}
                 </p>
                 <p>
                   Organized by {group.Organizer.firstName}{" "}
@@ -104,7 +128,7 @@ export const GroupDetail = () => {
               <p>{group.about}</p>
             </div>
             <div className="group-detail-event-container">
-                <GroupDetailPageEvents events={group.Events}/>
+                {eventsCheck()}
             </div>
           </div>
         </>

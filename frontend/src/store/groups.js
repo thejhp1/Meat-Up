@@ -50,14 +50,21 @@ export const thunkGetAllGroups = () => async (dispatch) => {
 
 export const thunkGetGroupDetail = (groupId) => async (dispatch) => {
   const res = await csrfFetch(`/api/groups/${groupId}`)
-  const res2 = await csrfFetch(`/api/groups/${groupId}/events`)
-  if (res.ok && res2.ok) {
+  if (res.ok) {
+    const res2 = await csrfFetch(`/api/groups/${groupId}/events`)
     const data = await res.json()
-    const data2 = await res2.json()
-    data['numOfEvents'] = data2.Events.length
-    data['Events'] = data2.Events
-    dispatch(getGroupDetail(data))
-    return data
+    if (res2.ok) {
+      console.log('DATAAA', data)
+      const data2 = await res2.json()
+      data['numOfEvents'] = data2.Events.length
+      data['Events'] = data2.Events
+      dispatch(getGroupDetail(data))
+      return data
+    } else {
+      return dispatch(getGroupDetail(data))
+    }
+  } else {
+    return res
   }
 }
 

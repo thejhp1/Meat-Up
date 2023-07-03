@@ -8,6 +8,8 @@ import { Route } from "react-router-dom/cjs/react-router-dom.min";
 import { Groups } from "./components/Groups";
 import { GroupDetail } from "./components/Groups/GroupDetail";
 import { Events } from "./components/Events";
+import { EventDetail } from "./components/Events/EventDetail";
+import { PageNotFound } from "./components/PageNotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,10 +34,13 @@ function App() {
           <Groups />
         </Route>
         <Route path="/events/:eventId">
-
+          <EventDetail />
         </Route>
         <Route path="/events">
           <Events />
+        </Route>
+        <Route>
+          <PageNotFound />
         </Route>
       </Switch>
     </>
