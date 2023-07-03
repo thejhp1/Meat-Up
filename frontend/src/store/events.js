@@ -26,6 +26,8 @@ export const thunkGetAllEvents = () => async (dispatch) => {
     const data = await res.json();
     dispatch(getEvents(data));
     return data;
+  } else {
+    return window.location.href = "/not-found"
   }
 };
 
@@ -35,6 +37,8 @@ export const thunkGetEventDetail = (eventId) => async (dispatch) => {
     const data = await res.json()
     dispatch(getEventDetail(data))
     return data
+  } else {
+    return window.location.href = "/not-found"
   }
 }
 

@@ -26,9 +26,6 @@ export const GroupDetailPageEvents = ({ events }) => {
     return new Date(b.startDate) - new Date(a.startDate)
   })
 
-  // const sendToEvent = () => {
-  //   history.push(`/events/${event.id}`)
-  // }
   return (
     <>
       <div style={{ marginTop: "1.25rem" }}>

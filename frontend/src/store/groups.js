@@ -45,6 +45,8 @@ export const thunkGetAllGroups = () => async (dispatch) => {
     })
     dispatch(getGroups(data));
     return data;
+  } else {
+    return dispatch(groupsReudcer({}, {type: "not-found"}))
   }
 };
 
@@ -54,7 +56,6 @@ export const thunkGetGroupDetail = (groupId) => async (dispatch) => {
     const res2 = await csrfFetch(`/api/groups/${groupId}/events`)
     const data = await res.json()
     if (res2.ok) {
-      console.log('DATAAA', data)
       const data2 = await res2.json()
       data['numOfEvents'] = data2.Events.length
       data['Events'] = data2.Events
@@ -64,7 +65,7 @@ export const thunkGetGroupDetail = (groupId) => async (dispatch) => {
       return dispatch(getGroupDetail(data))
     }
   } else {
-    return res
+    return window.location.href = "/not-found"
   }
 }
 
@@ -74,6 +75,8 @@ export const thunkGetEventDetail = (eventId) => async (dispatch) => {
     const data = await res.json()
     dispatch(getEventDetail(data))
     return data
+  } else {
+    return window.location.href = "/not-found"
   }
 }
 

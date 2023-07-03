@@ -47,13 +47,21 @@ export const EventDetail = () => {
   };
 
   const imageCheck = () => {
-    console.log("asdasdasd");
     if (event.EventImages.length <= 0) {
       return "https://vishwaentertainers.com/wp-content/uploads/2020/04/No-Preview-Available.jpg";
     } else {
       return `${event.EventImages[0].url}`;
     }
   };
+
+  const eventPriceCheck = () => {
+    if (event.price <= 0) {
+      return "FREE";
+    } else {
+      return `Price: $${event.price}`;
+    }
+  };
+
   return (
     <>
       {flag === true ? (
@@ -115,7 +123,35 @@ export const EventDetail = () => {
                 </div>
               </div>
               <div className="event-detail-body-info-event">
-                <h1>asd</h1>
+                <div className="event-detail-body-info-event-time-details">
+                  <i
+                    class="far fa-clock fa-lg"
+                    style={{ color: "#CCCCCC" }}
+                  ></i>
+                  <div className="event-detail-body-info-event-details-time-container">
+                    <div className="event-detail-body-info-event-details-start-time">
+                      <span>START </span>
+                      <div>
+                        {event.startDate.split("T")[0]} · {"<"}
+                        {event.startDate.split("T")[1].split(".")[0]}
+                        {">"}
+                      </div>
+                    </div>
+                    <div className="event-detail-body-info-event-details-end-time">
+                      <span>END </span>
+                      <div>
+                        {event.endDate.split("T")[0]} · {"<"}
+                        {event.endDate.split("T")[1].split(".")[0]}
+                        {">"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="event-detail-body-info-event-price-details">
+                    <i class="fa-solid fa-sack-dollar fa-xl" style={{ color: "#CCCCCC" }}></i>
+                    <p>{eventPriceCheck()}</p>
+                </div>
+
               </div>
             </div>
           </div>
