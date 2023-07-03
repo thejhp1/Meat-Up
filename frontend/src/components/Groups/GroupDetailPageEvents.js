@@ -15,6 +15,14 @@ export const GroupDetailPageEvents = ({ events }) => {
     }
   }
 
+  upcomingEvent.sort((a,b) => {
+    return new Date(a.startDate) - new Date(b.startDate)
+  })
+
+  pastEvent.sort((a,b) => {
+    return new Date(b.startDate) - new Date(a.startDate)
+  })
+
   return (
     <>
       <div style={{ marginTop: "1.25rem" }}>
