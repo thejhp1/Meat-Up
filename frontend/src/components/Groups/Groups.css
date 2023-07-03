@@ -80,6 +80,7 @@
 
 .group-list-name {
     grid-area: name;
+    text-decoration: underline;
     font-size: 1.5rem;
     font-weight: 500;
     text-align:initial;
@@ -194,7 +195,7 @@
 }
 
 .group-detail-header-organizer-button-create-event:hover , .group-detail-header-organizer-button-delete:hover , .group-detail-header-organizer-button-update:hover  {
-    background-color: #a4a4a4;
+    background-color: #b3b3b3;
 }
 
 /************************** GROUP DETAILS INFO ******************************/
@@ -226,6 +227,7 @@
 
 .group-detail-about-container > h2 {
     margin: 0px;
+    margin-bottom: .25rem;
 }
 
 .group-detail-about-container > p {

@@ -5,6 +5,7 @@ import ScaleLoader from "react-spinners/PulseLoader";
 import { Link } from "react-router-dom";
 import { thunkGetEventDetail } from "../../store/events";
 import { useHistory } from "react-router-dom";
+import { EventDetailButton } from "./EventDetailButton.js";
 
 export const EventDetail = () => {
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ export const EventDetail = () => {
             </div>
             <div className="event-detail-header-container">
               <h2>{event.name}</h2>
-              <p>Hosted by asd asd</p>
+              <p>Hosted by {event.Group.Organizer.firstName} {event.Group.Organizer.lastName}</p>
             </div>
           </div>
           <div className="event-detail-body-container">
@@ -148,11 +149,21 @@ export const EventDetail = () => {
                   </div>
                 </div>
                 <div className="event-detail-body-info-event-price-details">
-                    <i class="fa-solid fa-sack-dollar fa-xl" style={{ color: "#CCCCCC" }}></i>
-                    <p>{eventPriceCheck()}</p>
+                  <i class="fa-solid fa-sack-dollar fa-xl" style={{ color: "#CCCCCC" }}></i>
+                  <p>{eventPriceCheck()}</p>
                 </div>
-
+                <div className="event-detail-body-info-event-type-details">
+                  <i class="fa-solid fa-map-pin fa-xl" style={{ color: "#CCCCCC" }}></i>
+                  <p>{event.type}</p>
+                </div>
+                <div className="event-detail-body-info-event-button">
+                  <EventDetailButton event={event}/>
+                </div>
               </div>
+            </div>
+            <div className="event-detail-body-description">
+              <h2 style={{marginBottom: ".25rem"}}>Details</h2>
+              <p>{event.description}</p>
             </div>
           </div>
         </>

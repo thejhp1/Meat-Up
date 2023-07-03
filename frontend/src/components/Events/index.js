@@ -6,13 +6,34 @@ import { EventsListIndex } from "../Events/EventsListIndex";
 import "./Events.css";
 
 export const Events = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const eventStore = useSelector((state) => state.events);
-  const events = Object.values(eventStore);
+  const eventsArr = Object.values(eventStore);
+  const time = new Date();
+  const upcomingEvent = [];
+  const pastEvent = [];
 
   useEffect(() => {
     dispatch(thunkGetAllEvents());
   }, [dispatch]);
+
+  for (let event of eventsArr) {
+    if (new Date(event.startDate) > time) {
+      upcomingEvent.push(event);
+    } else {
+      pastEvent.push(event);
+    }
+  }
+
+  upcomingEvent.sort((a,b) => {
+    return new Date(a.startDate) - new Date(b.startDate)
+  })
+
+  pastEvent.sort((a,b) => {
+    return new Date(b.startDate) - new Date(a.startDate)
+  })
+
+  const events = upcomingEvent.concat(pastEvent)
 
   return (
     <>

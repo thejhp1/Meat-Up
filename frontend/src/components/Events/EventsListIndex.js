@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 export const EventsListIndex = ({ event }) => {
@@ -13,27 +12,26 @@ export const EventsListIndex = ({ event }) => {
   };
   return (
     <>
-      <div className="event-list-container">
+      <div onClick={sentToEvent} style={{cursor:"pointer"}} className="event-list-container">
         <img
-          onClick={sentToEvent}
           className="event-list-image"
           width="240"
           height="160"
           src={`${event.previewImage}`}
         ></img>
         <div className="event-list-info-container">
-        <p className="event-list-info-time" onClick={sentToEvent}>
+        <p className="event-list-info-time">
           {event.startDate.split("T")[0]} · {"<"}
           {event.startDate.split("T")[1].split(".")[0]}
           {">"}
         </p>
-        <Link
+        <span
           className="event-list-name"
           to={{ pathname: `/events/${event.id}`, state: {} }}
         >
           {event.name}
-        </Link>
-        <p className="event-list-info-location" onClick={sentToEvent}>
+        </span>
+        <p className="event-list-info-location">
                   {event.Group.city}, {event.Group.state}
         </p>
         </div>
