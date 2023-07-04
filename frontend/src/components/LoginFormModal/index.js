@@ -62,6 +62,7 @@ function LoginFormModal() {
     setErrors({});
     return dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
+      .then(history.push("/")) // IF IMPLEMENT SOME SORT OF PROFILE, NEED TO PUSH THERE INSTEAD OF LANDING PAGE
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) {

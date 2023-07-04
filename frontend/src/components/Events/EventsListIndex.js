@@ -3,13 +3,15 @@ import { useHistory } from "react-router-dom";
 
 export const EventsListIndex = ({ event }) => {
   const history = useHistory();
-  console.log(event)
   if (event.previewImage === "no preview image" || event.previewImage === undefined){
     event.previewImage = "https://vishwaentertainers.com/wp-content/uploads/2020/04/No-Preview-Available.jpg"
   }
+
   const sentToEvent = () => {
     history.push(`/events/${event.id}`);
   };
+
+  console.log('event', event)
   return (
     <>
       <div onClick={sentToEvent} style={{cursor:"pointer"}} className="event-list-container">
