@@ -10,6 +10,7 @@ import { GroupDetail } from "./components/Groups/GroupDetail";
 import { Events } from "./components/Events";
 import { EventDetail } from "./components/Events/EventDetail";
 import { PageNotFound } from "./components/PageNotFound";
+import { CreateGroup } from "./components/Groups/CreateGroup";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ function App() {
           <LandingPage />
         </Route>
         <Route path="/groups/new">
-          <h1>asd</h1>
+          <CreateGroup />
         </Route>
         <Route path="/groups/:groupId">
           <GroupDetail />
