@@ -318,7 +318,9 @@
     width: 16rem;
     height: 1.25rem;
     background-color: rgb(232, 240, 254);
-    margin: 1rem 0px;
+    /* margin: 1rem 0px; */
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .create-group-borders {
@@ -345,4 +347,45 @@
     border: 2.5px solid black;
     box-shadow: 2px 2px black;
     font-size: 16px;
+}
+
+.create-group-container > button:hover {
+    background-color: #ff6f74;
+    cursor: pointer;
+}
+
+.create-group-errors-section-1 {
+    font-size: 12px;
+    color: rgb(207,42,39);
+    position: absolute;
+    margin-top: 2.65rem;
+    font-weight: 500;
+    margin-left: -16.5rem;
+}
+
+.create-group-errors-section-2 {
+    margin-left: -16.5rem;
+    font-size: 12px;
+    color: rgb(207,42,39);
+    position: absolute;
+    margin-top: 8.6rem;
+    font-weight: 500;
+}
+
+.create-group-errors-section-3 {
+    color: rgb(207,42,39);
+    position: absolute;
+    font-weight: 500;
+    font-size: 12px;
+    margin-left: -6rem;
+    margin-top: 2rem;
+}
+
+.create-group-errors-section-4 {
+    margin-left: -16.5rem;
+    color: rgb(207,42,39);
+    position: absolute;
+    font-weight: 500;
+    font-size: 12px;
+    margin-top: 2rem;
 }
