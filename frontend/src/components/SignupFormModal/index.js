@@ -22,26 +22,48 @@ function SignupFormModal() {
     const validateError = {};
     if (!firstName.length) {
       validateError.firstName = "First name cannot be empty";
-    } else if (!lastName.length) {
+    }
+    if (!lastName.length) {
       validateError.lastName = "Last name cannot be empty";
-    } else if (username.length < 4) {
+    }
+    if (username.length < 4) {
       validateError.username = "Username cannot be less than 4 characters";
-    } else if (password.length < 6) {
-      validateError.password = "Password cannot be less than 6 characters";
-    } else if (password !== confirmPassword) {
-      validateError.password = "Passwords do not match";
-    } else if (!email.length) {
-      validateError.email = "Email cannot be empty";
     }
 
+    if (!password) {
+      validateError.password = "Password cannot be empty";
+    } else if (password.length < 6) {
+      validateError.password = "Password cannot be less than 6 characters";
+    } else if (password.length !== confirmPassword.length) {
+      validateError.password = "Passwords do not match";
+    }
+
+    if (!email.length) {
+      validateError.email = "Email cannot be empty";
+    }
     setValidateError(validateError);
   }, [email, username, firstName, lastName, password, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
+    const errors = {};
+    if (!email.includes("@")) {
+      errors.email = "Invalid email";
+    } else if (
+      !email.endsWith(".org") &&
+      !email.endsWith(".com") &&
+      !email.endsWith(".gov") &&
+      !email.endsWith(".edu") &&
+      !email.endsWith(".net")
+    ) {
+      errors.email = "Invalid email, must end with org/com/gov/net/edu";
+    }
+    if (password !== confirmPassword) {
+      errors.password = "Passwords do not match";
+    }
+
+    if (Object.values(errors).length === 0) {
+      dispatch(
         sessionActions.signup({
           email,
           username,
@@ -58,10 +80,8 @@ function SignupFormModal() {
           }
         });
     }
-    return setErrors({
-      confirmPassword:
-        "Confirm Password field must be the same as the Password field",
-    });
+
+    setErrors(errors);
   };
 
   return (
@@ -87,61 +107,67 @@ function SignupFormModal() {
             <input
               type="text"
               className="signup-modal-inputs"
+              placeholder="First name must be at least 1 character..."
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
             />
           </label>
-          {errors.firstName && <p>{errors.firstName}</p>}
           <label>
             {" "}
             Last Name
             <input
               type="text"
               className="signup-modal-inputs"
+              placeholder="Last name must be at least 1 character..."
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
             />
           </label>
-          {errors.lastName && <p>{errors.lastName}</p>}
           <label>
             {" "}
             Email
             <input
               type="text"
               className="signup-modal-inputs"
+              placeholder="Enter a valid email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </label>
-          {errors.email && <p>{errors.email}</p>}
+          {errors.email && (
+            <p className="signup-modal-errors-email">{errors.email}</p>
+          )}
           <label>
             {" "}
             Username
             <input
               type="text"
               className="signup-modal-inputs"
+              placeholder="Username must be at least 4 characters..."
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </label>
-          {errors.username && <p>{errors.username}</p>}
 
           <label>
             {" "}
             Password
             <input
               type="password"
+              placeholder="Password must be at least 4 characters"
               className="signup-modal-inputs"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </label>
-          {errors.password && <p>{errors.password}</p>}
+          {errors.password && (
+            <p className="signup-modal-errors-password-1">{errors.password}</p>
+          )}
           <label>
             {" "}
             Confirm Password
@@ -153,7 +179,9 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+          {errors.password && (
+            <p className="signup-modal-errors-password-2">{errors.password}</p>
+          )}
           <button
             className="signup-modal-button"
             type="submit"

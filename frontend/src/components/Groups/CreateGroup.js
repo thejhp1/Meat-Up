@@ -159,14 +159,14 @@ export const CreateGroup = () => {
             <p
               style={{ color: "#00798A", marginTop: "1rem", fontSize: "14px" }}
             >
-              BECOME AN ORGANIZER
+              START A NEW GROUP
             </p>
             <p>
               We'll walk you through a few steps to build your local community
             </p>
             <p className="create-group-border"></p>
             <p style={{ marginTop: ".5rem" }}>
-              First, set your group's location.
+              Set your group's location.
             </p>
             <p
               style={{
@@ -175,8 +175,7 @@ export const CreateGroup = () => {
                 marginTop: ".1rem",
               }}
             >
-              Meatup groups meet locally, in person and online. We'll connect
-              you with people in your area, and more can join you online.
+              Meetup groups meet locally, in person, and online. We'll connect you with people in your area.
             </p>
             <input
               placeholder="City, STATE"
@@ -214,7 +213,7 @@ export const CreateGroup = () => {
             </span>
             <p className="create-group-borders"></p>
             <p style={{ marginTop: ".65rem" }}>
-              Now describe what your group will be about
+            Describe the purpose of your group.
             </p>
             <p
               style={{
@@ -282,7 +281,7 @@ export const CreateGroup = () => {
                 marginTop: ".1rem",
               }}
             >
-              Is this an in person or online group?
+              Is this an in-person or online group?
             </p>
             <select
               style={{ height: "1.6rem" }}
@@ -329,7 +328,7 @@ export const CreateGroup = () => {
               Please add an image url for your group below:
             </p>
             <input
-              placeholder="What is your group name?"
+              placeholder="Image URL"
               style={{ fontSize: "11px", marginTop: ".4rem" }}
               value={imageURL}
               onChange={(e) => setImageURL(e.target.value)}
