@@ -47,6 +47,26 @@ function SignupFormModal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = {};
+    if (firstName.length > 30) {
+      errors.firstName = "First name cannot exceed 30 characters"
+    }
+
+    if (lastName.length > 30) {
+      errors.lastName = "Last name cannot exceed 30 characters"
+    }
+
+    if (email.length > 256) {
+      errors.email = "Email cannot exceed 256 characters"
+    }
+
+    if(username.length > 30) {
+      errors.username = "Username cannot exceed 30 characters"
+    }
+
+    if(password.length > 60) {
+      errors.password = "Password cannot exceed 60 characters"
+    }
+
     if (!email.includes("@")) {
       errors.email = "Invalid email";
     } else if (
@@ -57,10 +77,21 @@ function SignupFormModal() {
       !email.endsWith(".net")
     ) {
       errors.email = "Invalid email, must end with org/com/gov/net/edu";
+    } else if (email.includes("@")) {
+      let count = 0
+      for (let ele of email.split("")) {
+        if (ele === "@") {
+          count++
+        }
+      }
+      if (count > 1) {
+        errors.email = "Invalid email"
+      }
     }
     if (password !== confirmPassword) {
       errors.password = "Passwords do not match";
     }
+
 
     if (Object.values(errors).length === 0) {
       dispatch(
@@ -113,6 +144,9 @@ function SignupFormModal() {
               required
             />
           </label>
+          {errors.firstName && (
+            <p className="signup-modal-errors-firstname">{errors.firstName}</p>
+          )}
           <label>
             {" "}
             Last Name
@@ -125,6 +159,9 @@ function SignupFormModal() {
               required
             />
           </label>
+          {errors.lastName && (
+            <p className="signup-modal-errors-lastname">{errors.lastName}</p>
+          )}
           <label>
             {" "}
             Email
@@ -152,7 +189,9 @@ function SignupFormModal() {
               required
             />
           </label>
-
+          {errors.username && (
+            <p className="signup-modal-errors-username">{errors.username}</p>
+          )}
           <label>
             {" "}
             Password
