@@ -55,7 +55,7 @@ export const GroupDetail = () => {
 
   const eventsLengthCheck = () => {
     if (group.Events === undefined) {
-      return ""
+      return "0"
     } else {
       return group.Events.length
     }

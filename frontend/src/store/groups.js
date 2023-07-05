@@ -80,6 +80,27 @@ export const thunkGetEventDetail = (eventId) => async (dispatch) => {
   }
 }
 
+export const thunkCreateGroup = (group) => async () => {
+  const res = await csrfFetch("/api/groups", {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(group)
+  })
+  if (res.ok) {
+    const data = await res.json()
+    const res2 = await csrfFetch(`/api/groups/${data.id}/images`, {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({url:group.url,preview:JSON.parse(group.private)})
+    })
+    if (res2.ok) {
+      return window.location.href = `/groups/${data.id}`
+    }
+  } else {
+    return window.location.href = "/not-found"
+  }
+}
+
 // state object
 const initialState = {};
 

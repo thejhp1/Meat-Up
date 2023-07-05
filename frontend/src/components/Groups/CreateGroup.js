@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
+import { thunkCreateGroup } from "../../store/groups";
 
 export const CreateGroup = () => {
   const session = useSelector((state) => state.session);
   const history = useHistory();
+  const dispatch = useDispatch();
   const [location, setLocation] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -128,15 +130,23 @@ export const CreateGroup = () => {
             cityResult.push(city.replace(city.split("")[0], city.split("")[0].toUpperCase()))
         }
 
+        const nameArr = name.split(",")[0].trim().split(" ")
+        let nameResult = []
+        for (let name of nameArr) {
+            nameResult.push(name.replace(name.split("")[0], name.split("")[0].toUpperCase()))
+        }
+
         const form = {
-            name: name.replace(name.split("")[0], name.split("")[0].toUpperCase()),
+            name: nameResult.join(" "),
             about: description,
             type: groupType,
             private: visibilityType,
             city: cityResult.join(" "),
-            state: location.split(",")[1].trim().toUpperCase()
+            state: location.split(",")[1].trim().toUpperCase(),
+            url: imageURL
         }
-        console.log(form)
+
+        dispatch(thunkCreateGroup(form));
     }
     setErrors(errors);
   };
@@ -303,8 +313,8 @@ export const CreateGroup = () => {
               onChange={(e) => setVisibilityType(e.target.value)}
             >
               <option calue="select">{"(select one)"}</option>
-              <option value="Private">Private</option>
-              <option value="Public">Public</option>
+              <option value="false">Private</option>
+              <option value="true">Public</option>
             </select>
             <span className="create-group-errors-section-3">
               {errors && errors.visibilityType}
