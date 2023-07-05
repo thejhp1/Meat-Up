@@ -226,3 +226,11 @@
     margin-bottom: .25rem;
     cursor: pointer;
 }
+
+.login-modal-errors {
+    font-size: 18px;
+    color: #e32359;
+    position: absolute;
+    font-weight: 700;
+    margin-top: -1.85rem;
+}

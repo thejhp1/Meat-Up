@@ -33,21 +33,21 @@ function LoginFormModal() {
 
   // NEED TO IMPLEMENT A PAGE TO "ISSUE WITH LOGIN PAGE" TO IN FUTURE
   const loginIssue = () => {
-    alert('Feature coming soon!')
+    alert("Feature coming soon!");
     // closeModal();
     // history.push("/groups");
   };
 
   //NEED TO IMPLEMENT A "FORGOT PASSWORD" PAGE
   const forgotPassword = () => {
-    alert('Feature coming soon!')
+    alert("Feature coming soon!");
     // closeModal();
     // history.push("/groups");
   };
 
   //NEED TO IMPLEMENT KEEPING SIGNED IN FUTURE IF BOX IS CHECKED
   const keepSignedInSwitch = () => {
-    alert('Feature coming soon!')
+    alert("Feature coming soon!");
     if (keepSignedIn1 === "hidden") {
       setKeepSignedIn1("");
       setKeepSignedIn2("hidden");
@@ -59,16 +59,25 @@ function LoginFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-      .then(closeModal)
-      .then(history.push("/")) // IF IMPLEMENT SOME SORT OF PROFILE, NEED TO PUSH THERE INSTEAD OF LANDING PAGE
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+    const errors = {};
+    if (credential.length < 4) {
+      errors.credential = "Email must be atleast 4 characters";
+    } else if (password.length < 6) {
+      errors.password = "Password must be atleast 6 characters";
+    }
+
+    if (Object.values(errors).length === 0) {
+      dispatch(sessionActions.login({ credential, password }))
+        .then(closeModal)
+        .then(history.push("/")) // IF IMPLEMENT SOME SORT OF PROFILE, NEED TO PUSH THERE INSTEAD OF LANDING PAGE
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) {
+            setErrors(data.errors);
+          }
+        });
+    }
+    setErrors(errors);
   };
 
   const revealPass = () => {
@@ -84,15 +93,15 @@ function LoginFormModal() {
   };
 
   const sendToFB = () => {
-    alert('Feature coming soon!')
+    alert("Feature coming soon!");
     // window.location.href = "https://facebook.com";
   };
   const sendToG = () => {
-    alert('Feature coming soon!')
+    alert("Feature coming soon!");
     // window.location.href = "https://google.com";
   };
   const sendToA = () => {
-    alert('Feature coming soon!')
+    alert("Feature coming soon!");
     // window.location.href = "https://apple.com";
   };
 
@@ -157,7 +166,7 @@ function LoginFormModal() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {errors.credential && <p>{errors.credential}</p>}
+        {errors.credential && <p className="login-modal-errors">{errors.credential}</p>}
         <div className="login-modal-keep-signed-in">
           <input
             type="checkbox"
