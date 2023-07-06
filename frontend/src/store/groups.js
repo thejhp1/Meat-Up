@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 const GET_GROUPS = "groups/GET GROUPS";
 const GET_GROUP_DETAIL = "groups/GET_GROUP_DETAIL"
 const GET_EVENT_DETAIL = "groups/GET_EVENT_DETAIL"
+const CREATE_EVENT = "groups/CREATE_EVENT"
 
 // regular action creator
 const getGroups = (groups) => {
@@ -23,6 +24,13 @@ const getGroupDetail = (group) => {
 const getEventDetail = (event) => {
   return {
     type: GET_EVENT_DETAIL,
+    event
+  }
+}
+
+const createEvent = (event) => {
+  return {
+    type: CREATE_EVENT,
     event
   }
 }
@@ -81,7 +89,7 @@ export const thunkGetEventDetail = (eventId) => async (dispatch) => {
   }
 }
 
-export const thunkCreateGroup = (group) => async () => {
+export const thunkCreateGroup = (group) => async (dispatch) => {
   const res = await csrfFetch("/api/groups", {
     method: "POST",
     headers: {'Content-Type': 'application/json'},
@@ -95,7 +103,11 @@ export const thunkCreateGroup = (group) => async () => {
       body: JSON.stringify({url:group.url,preview:JSON.parse(group.private)})
     })
     if (res2.ok) {
+      const data2 = await res2.json()
+      dispatch(createEvent(data2))
       return window.location.href = `/groups/${data.id}`
+    } else {
+      dispatch(createEvent(data))
     }
   } else {
     return window.location.href = "/not-found"
@@ -121,6 +133,10 @@ const groupsReudcer = (state = initialState, action) => {
     }
     case GET_EVENT_DETAIL: {
       const newState = { [action.event.id]: action.event}
+      return newState
+    }
+    case CREATE_EVENT: {
+      const newState= { ...state, [action.event.id]: action.event}
       return newState
     }
     default:

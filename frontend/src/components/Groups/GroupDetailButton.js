@@ -10,10 +10,14 @@ export const GroupDetailButton = ({ group }) => {
     flag = false;
   }
 
+  //FEATURE COMING SOON
   const joinGroup = () => {
     alert("Feature coming soon");
   };
 
+  const deleteModal = () => {
+    console.log('asd')
+  }
   return (
     <>
       {flag === true ? (
@@ -28,7 +32,7 @@ export const GroupDetailButton = ({ group }) => {
         <div className="group-detail-header-organizer-buttons">
           <button className="group-detail-header-organizer-button-create-event">Create event</button>
           <button className="group-detail-header-organizer-button-update">Update</button>
-          <button className="group-detail-header-organizer-button-delete">Delete</button>
+          <button onClick={deleteModal()} className="group-detail-header-organizer-button-delete">Delete</button>
         </div>
       )}
     </>
