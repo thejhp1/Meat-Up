@@ -37,6 +37,16 @@
     border: 1px solid #CCCCCC
 }
 
+.signup-modal-inputs:hover {
+    border: 1px solid black;
+    transition-duration: .5s;
+}
+
+.signup-modal-inputs:focus  {
+    outline: none;
+    border: 1px solid #00798A;
+}
+
 .signup-modal-input:focus  {
     outline: none;
     border: 1px solid #00798A;

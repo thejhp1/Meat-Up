@@ -67,14 +67,14 @@ export const CreateGroup = () => {
   ];
 
   const userCheck = () => {
-    if (session.user) {
-      clearTimeout(userCheckTimeout);
-    }
     const userCheckTimeout = setTimeout(() => {
       if (!session.user) {
         return history.push("/not-found");
       }
     }, 500);
+    if (session.user) {
+      clearTimeout(userCheckTimeout);
+    }
   };
 
   const handleSubmit = (e) => {

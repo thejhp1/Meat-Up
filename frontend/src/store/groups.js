@@ -4,7 +4,8 @@ import { csrfFetch } from "./csrf";
 const GET_GROUPS = "groups/GET GROUPS";
 const GET_GROUP_DETAIL = "groups/GET_GROUP_DETAIL"
 const GET_EVENT_DETAIL = "groups/GET_EVENT_DETAIL"
-const CREATE_EVENT = "groups/CREATE_EVENT"
+const CREATE_GROUP = "groups/CREATE_GROUP"
+const DELETE_GROUP = "groups/DELETE_GROUP"
 
 // regular action creator
 const getGroups = (groups) => {
@@ -28,10 +29,17 @@ const getEventDetail = (event) => {
   }
 }
 
-const createEvent = (event) => {
+const createGroup = (group) => {
   return {
-    type: CREATE_EVENT,
-    event
+    type: CREATE_GROUP,
+    group
+  }
+}
+
+const deleteGroup = (groupId) => {
+  return {
+    type: DELETE_GROUP,
+    groupId
   }
 }
 
@@ -104,13 +112,25 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
     })
     if (res2.ok) {
       const data2 = await res2.json()
-      dispatch(createEvent(data2))
+      dispatch(createGroup(data2))
       return window.location.href = `/groups/${data.id}`
     } else {
-      dispatch(createEvent(data))
+      dispatch(createGroup(data))
     }
   } else {
     return window.location.href = "/not-found"
+  }
+}
+
+export const thunkDeleteGroup = (groupId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/groups/${groupId}`, {
+    method: "DELETE"
+  })
+  if (res.ok) {
+    const data = await res.json()
+    console.log('DAATATA', data)
+    dispatch(deleteGroup(groupId))
+    return data
   }
 }
 
@@ -135,8 +155,13 @@ const groupsReudcer = (state = initialState, action) => {
       const newState = { [action.event.id]: action.event}
       return newState
     }
-    case CREATE_EVENT: {
+    case CREATE_GROUP: {
       const newState= { ...state, [action.event.id]: action.event}
+      return newState
+    }
+    case DELETE_GROUP: {
+      const newState = {...state}
+      delete newState[action.groupId];
       return newState
     }
     default:
