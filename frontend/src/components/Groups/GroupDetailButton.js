@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteGroupModal from "../DeleteGroupModal";
 import { useHistory } from "react-router-dom";
+import { EventDetail } from "../Events/EventDetail";
 
 export const GroupDetailButton = ({ group }) => {
   const sessionUser = useSelector((state) => state.session.user);
@@ -19,6 +20,10 @@ export const GroupDetailButton = ({ group }) => {
     alert("Feature coming soon");
   };
 
+  const createGroup = () => {
+    history.push(`/groups/${group.id}/events/new`)
+  }
+
   function updateGroup () {
     history.push(`/groups/${group.id}/edit`)
   };
@@ -34,8 +39,8 @@ export const GroupDetailButton = ({ group }) => {
         </button>
       ) : (
         <div className="group-detail-header-organizer-buttons">
-          <button className="group-detail-header-organizer-button-create-event">
-            Create event
+          <button className="group-detail-header-organizer-button-create-event" onClick={() => createGroup()}>
+            Create Group
           </button>
           <button className="group-detail-header-organizer-button-update" onClick={() => updateGroup()}>
             Update

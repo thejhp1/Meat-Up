@@ -17,10 +17,7 @@ export const GroupForm = ({ formType, group }) => {
   const [visibilityType, setVisibilityType] = useState(
     group ? (group.private === true ? "private" : "public") : ""
   );
-  console.log('asd', visibilityType)
-  console.log('1', group.private)
-  console.log('2',group.private === true)
-  const [imageURL, setImageURL] = useState(group.GroupImages ? group.GroupImages[0].url : "");
+  const [imageURL, setImageURL] = useState(group ? group.GroupImages ? group.GroupImages[0].url: ""  : "");
   const [errors, setErrors] = useState("");
   const states = [
     "AL",
@@ -109,7 +106,9 @@ export const GroupForm = ({ formType, group }) => {
         errors.name = "Name is required";
       } else if (name.length > 60) {
         errors.name = "Name cannot be more than 60 characters";
-      } else if (!description) {
+      }
+
+      if (!description) {
         errors.description = "Description is required";
       } else if (description.length < 50) {
         errors.description = "Description must be at least 50 characters long";
@@ -119,7 +118,7 @@ export const GroupForm = ({ formType, group }) => {
         errors.groupType = "Group Type is required";
       }
 
-      if (!visibilityType && group.private) {
+      if (!visibilityType) {
         errors.visibilityType = "Visibility Type is required";
       }
 
@@ -420,7 +419,7 @@ export const GroupForm = ({ formType, group }) => {
                 value={visibilityType}
                 onChange={(e) => setVisibilityType(e.target.value)}
               >
-                <option calue="select">{"(select one)"}</option>
+                <option value="select">{"(select one)"}</option>
                 <option value="private">Private</option>
                 <option value="public">Public</option>
               </select>
@@ -634,7 +633,7 @@ export const GroupForm = ({ formType, group }) => {
                 value={visibilityType}
                 onChange={(e) => setVisibilityType(e.target.value)}
               >
-                <option calue="select">{"(select one)"}</option>
+                <option value="select">{"(select one)"}</option>
                 <option value={true}>Private</option>
                 <option value={false}>Public</option>
               </select>
