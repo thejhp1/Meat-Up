@@ -47,7 +47,7 @@ export const GroupDetail = () => {
 
   const eventsCheck = () => {
     if (group.Events === undefined) {
-      return ""
+      return <h2 style={{marginTop:".2rem"}}>No Coming Events</h2>
     } else {
       return <GroupDetailPageEvents events={group.Events}/>
     }

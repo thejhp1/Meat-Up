@@ -57,7 +57,7 @@ function LoginFormModal() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {};
     if (credential.length < 4) {
@@ -67,15 +67,13 @@ function LoginFormModal() {
     }
 
     if (Object.values(errors).length === 0) {
-      dispatch(sessionActions.login({ credential, password }))
-        .then(closeModal)
-        .then(history.push("/")) // IF IMPLEMENT SOME SORT OF PROFILE, NEED TO PUSH THERE INSTEAD OF LANDING PAGE
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
-          }
-        });
+      const res = await dispatch(sessionActions.login({ credential, password })).then()
+      if (JSON.stringify(res.ok) === "false") {
+        errors.credential = 'Provided credentials are invalid'
+        return setErrors(errors)
+      } else {
+        closeModal()
+      }
     }
     setErrors(errors);
   };
@@ -166,7 +164,9 @@ function LoginFormModal() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {errors.credential && <p className="login-modal-errors">{errors.credential}</p>}
+        {errors.credential && (
+          <p className="login-modal-errors">{errors.credential}</p>
+        )}
         <div className="login-modal-keep-signed-in">
           <input
             type="checkbox"
