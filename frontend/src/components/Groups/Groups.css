@@ -224,6 +224,7 @@
 
 .group-detail-about-container {
     margin: 1rem 8rem;
+
 }
 
 .group-detail-about-container > h2 {
@@ -233,6 +234,7 @@
 
 .group-detail-about-container > p {
     font-size: 12px;
+    word-wrap: break-word;
 }
 
 .group-detail-event-container {

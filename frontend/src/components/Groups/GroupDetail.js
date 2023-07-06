@@ -30,6 +30,7 @@ export const GroupDetail = () => {
   }
 
   const eventPrivateCheck = () => {
+    console.log(group.private)
     if (group.private === true) {
       return "events: Private";
     } else {

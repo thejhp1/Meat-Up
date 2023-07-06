@@ -6,6 +6,7 @@ const GET_GROUP_DETAIL = "groups/GET_GROUP_DETAIL"
 const GET_EVENT_DETAIL = "groups/GET_EVENT_DETAIL"
 const CREATE_GROUP = "groups/CREATE_GROUP"
 const DELETE_GROUP = "groups/DELETE_GROUP"
+const UPDATE_GROUP = "groups/UPDATE_GROUP"
 
 // regular action creator
 const getGroups = (groups) => {
@@ -40,6 +41,13 @@ const deleteGroup = (groupId) => {
   return {
     type: DELETE_GROUP,
     groupId
+  }
+}
+
+const updateGroup = (group) => {
+  return {
+    type: UPDATE_GROUP,
+    group
   }
 }
 
@@ -128,9 +136,23 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
   })
   if (res.ok) {
     const data = await res.json()
-    console.log('DAATATA', data)
     dispatch(deleteGroup(groupId))
     return data
+  }
+}
+
+export const thunkUpdateGroup = (group) => async (dispatch) => {
+  console.log('group: ', JSON.stringify(group))
+  const res = await csrfFetch(`/api/groups/${group.id}`, {
+    method: "PUT",
+    body: JSON.stringify(group)
+  })
+
+  if (res.ok) {
+    const data = await res.json()
+    dispatch(updateGroup(data))
+    console.log("dataaa", data)
+    return window.location.href = `/groups/${data.id}`
   }
 }
 
@@ -156,14 +178,16 @@ const groupsReudcer = (state = initialState, action) => {
       return newState
     }
     case CREATE_GROUP: {
-      console.log(state, 'state')
-      console.log(action, 'action')
       const newState= { ...state, [action.group.id]: action.group}
       return newState
     }
     case DELETE_GROUP: {
       const newState = {...state}
       delete newState[action.groupId];
+      return newState
+    }
+    case UPDATE_GROUP: {
+      const newState = { ...state, [action.group.id]: action.group}
       return newState
     }
     default:

@@ -20,6 +20,7 @@ export const EventsListIndex = ({ event }) => {
           width="240"
           height="160"
           src={`${event.previewImage}`}
+          alt=""
         ></img>
         <div className="event-list-info-container">
         <p className="event-list-info-time">

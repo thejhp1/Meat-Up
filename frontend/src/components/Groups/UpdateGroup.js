@@ -14,6 +14,6 @@ export const UpdateGroup = () => {
     dispatch(thunkGetGroupDetail(groupId));
   }, [dispatch, groupId]);
   if (!group) return <></>;
-  console.log(group);
+  console.log('the group in update', group);
   return <GroupForm formType="Update" group={group} />;
 };

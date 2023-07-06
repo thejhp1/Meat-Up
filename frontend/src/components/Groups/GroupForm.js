@@ -1,19 +1,26 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PulseLoader from "react-spinners/PulseLoader";
-import { thunkCreateGroup } from "../../store/groups";
+import { thunkCreateGroup, thunkUpdateGroup } from "../../store/groups";
 import { useHistory } from "react-router-dom";
 
 export const GroupForm = ({ formType, group }) => {
   const session = useSelector((state) => state.session);
   const dispatch = useDispatch();
-  const history = useHistory()
-  const [location, setLocation] = useState(group?`${group.city}, ${group.state}` : "");
-  const [name, setName] = useState(group? group.name : "");
-  const [description, setDescription] = useState(group? group.about : "");
-  const [groupType, setGroupType] = useState(group? group.type : "");
-  const [visibilityType, setVisibilityType] = useState(group ? group.private.toString() === "true" ? "false" : "true" : "");
-  const [imageURL, setImageURL] = useState("");
+  const history = useHistory();
+  const [location, setLocation] = useState(
+    group ? `${group.city}, ${group.state}` : ""
+  );
+  const [name, setName] = useState(group ? group.name : "");
+  const [description, setDescription] = useState(group ? group.about : "");
+  const [groupType, setGroupType] = useState(group ? group.type : "");
+  const [visibilityType, setVisibilityType] = useState(
+    group ? (group.private === true ? "private" : "public") : ""
+  );
+  console.log('asd', visibilityType)
+  console.log('1', group.private)
+  console.log('2',group.private === true)
+  const [imageURL, setImageURL] = useState(group.GroupImages ? group.GroupImages[0].url : "");
   const [errors, setErrors] = useState("");
   const states = [
     "AL",
@@ -87,6 +94,8 @@ export const GroupForm = ({ formType, group }) => {
       } else if (!location.includes(",")) {
         errors.location =
           'Location must be in "City, STATE" format. Ex. "New York, NY"';
+      } else if (location.split(",")[0].length < 0) {
+        errors.location = "Must provide a city";
       } else if (location.split(",")[1].trim().length !== 2) {
         errors.location =
           'Location must be in "City, STATE" format. Ex. "New York, NY"';
@@ -100,9 +109,7 @@ export const GroupForm = ({ formType, group }) => {
         errors.name = "Name is required";
       } else if (name.length > 60) {
         errors.name = "Name cannot be more than 60 characters";
-      }
-
-      if (!description) {
+      } else if (!description) {
         errors.description = "Description is required";
       } else if (description.length < 50) {
         errors.description = "Description must be at least 50 characters long";
@@ -112,7 +119,7 @@ export const GroupForm = ({ formType, group }) => {
         errors.groupType = "Group Type is required";
       }
 
-      if (!visibilityType) {
+      if (!visibilityType && group.private) {
         errors.visibilityType = "Visibility Type is required";
       }
 
@@ -152,87 +159,97 @@ export const GroupForm = ({ formType, group }) => {
           state: location.split(",")[1].trim().toUpperCase(),
           url: imageURL,
         };
-
+        console.log("formcreate", form);
         dispatch(thunkCreateGroup(form));
       }
       setErrors(errors);
     } else if (formType === "Update") {
-        const errors = {};
+      const errors = {};
 
-        if (!location) {
-          errors.location = "Location is required";
-        } else if (!location.includes(",")) {
-          errors.location =
-            'Location must be in "City, STATE" format. Ex. "New York, NY"';
-        } else if (location.split(",")[1].trim().length !== 2) {
-          errors.location =
-            'Location must be in "City, STATE" format. Ex. "New York, NY"';
-        } else if (
-          !states.includes(location.split(",")[1].trim().toUpperCase())
-        ) {
-          errors.location = "Must be within the 48 contigous states";
+      if (!location) {
+        errors.location = "Location is required";
+      } else if (!location.includes(",")) {
+        errors.location =
+          'Location must be in "City, STATE" format. Ex. "New York, NY"';
+      } else if (location.split(",")[0].length <= 0) {
+        errors.location = "Must provide a city";
+      } else if (location.split(",")[1].trim().length !== 2) {
+        errors.location =
+          'Location must be in "City, STATE" format. Ex. "New York, NY"';
+      } else if (
+        !states.includes(location.split(",")[1].trim().toUpperCase())
+      ) {
+        errors.location = "Must be within the 48 contigous states";
+      }
+
+      if (!name) {
+        errors.name = "Name is required";
+      } else if (name.length > 60) {
+        errors.name = "Name cannot be more than 60 characters";
+      }
+
+      if (!description) {
+        errors.description = "Description is required";
+      } else if (description.length < 50) {
+        errors.description = "Description must be at least 50 characters long";
+      }
+
+      if (!groupType) {
+        errors.groupType = "Group Type is required";
+      }
+
+      console.log(visibilityType, "<~")
+      if (visibilityType === "nothing") {
+        errors.visibilityType = "Visibility Type is required"
+      }
+
+      if (!imageURL) {
+        errors.imageURL = "Image URL is required";
+      } else if (
+        !imageURL.endsWith(".jpeg") &&
+        !imageURL.endsWith(".jpg") &&
+        !imageURL.endsWith(".png")
+      ) {
+        errors.imageURL = "Image URL must end with .png, .jpg, or .jpeg";
+      }
+
+      if (Object.values(errors).length === 0) {
+        let cityArr = location.split(",")[0].trim().split(" ");
+        let cityResult = [];
+        for (let city of cityArr) {
+          cityResult.push(
+            city.replace(city.split("")[0], city.split("")[0].toUpperCase())
+          );
         }
 
-        if (!name) {
-          errors.name = "Name is required";
-        } else if (name.length > 60) {
-          errors.name = "Name cannot be more than 60 characters";
+        const nameArr = name.split(",")[0].trim().split(" ");
+        let nameResult = [];
+        for (let name of nameArr) {
+          nameResult.push(
+            name.replace(name.split("")[0], name.split("")[0].toUpperCase())
+          );
         }
 
-        if (!description) {
-          errors.description = "Description is required";
-        } else if (description.length < 50) {
-          errors.description = "Description must be at least 50 characters long";
+        if (visibilityType === "private") {
+            setVisibilityType(true)
+        } else if (visibilityType === "public") {
+            setVisibilityType(false)
         }
 
-        if (!groupType) {
-          errors.groupType = "Group Type is required";
-        }
-
-        if (!visibilityType) {
-          errors.visibilityType = "Visibility Type is required";
-        }
-
-        if (!imageURL) {
-          errors.imageURL = "Image URL is required";
-        } else if (
-          !imageURL.endsWith(".jpeg") &&
-          !imageURL.endsWith(".jpg") &&
-          !imageURL.endsWith(".png")
-        ) {
-          errors.imageURL = "Image URL must end with .png, .jpg, or .jpeg";
-        }
-
-        if (Object.values(errors).length === 0) {
-          let cityArr = location.split(",")[0].trim().split(" ");
-          let cityResult = [];
-          for (let city of cityArr) {
-            cityResult.push(
-              city.replace(city.split("")[0], city.split("")[0].toUpperCase())
-            );
-          }
-
-          const nameArr = name.split(",")[0].trim().split(" ");
-          let nameResult = [];
-          for (let name of nameArr) {
-            nameResult.push(
-              name.replace(name.split("")[0], name.split("")[0].toUpperCase())
-            );
-          }
-
-          const form = {
-            name: nameResult.join(" "),
-            about: description,
-            type: groupType,
-            private: visibilityType,
-            city: cityResult.join(" "),
-            state: location.split(",")[1].trim().toUpperCase(),
-            url: imageURL,
-          };
-
-          dispatch(thunkCreateGroup(form));
-        }
-        setErrors(errors);
+        const form = {
+          id: group.id,
+          name: nameResult.join(" "),
+          about: description,
+          type: groupType,
+          private: visibilityType === "private" ? "true" : "false",
+          city: cityResult.join(" "),
+          state: location.split(",")[1].trim().toUpperCase(),
+          url: imageURL,
+        };
+        console.log("formmm", form)
+        dispatch(thunkUpdateGroup(form))
+    }
+      setErrors(errors);
     }
   };
 
@@ -272,7 +289,9 @@ export const GroupForm = ({ formType, group }) => {
                 style={{ fontSize: "11px" }}
                 marginBottom="0px"
                 value={location}
-                onChange={(e) => {setLocation(e.target.value)}}
+                onChange={(e) => {
+                  setLocation(e.target.value);
+                }}
               ></input>
               <span className="create-group-errors-section-1">
                 {errors && errors.location}
@@ -379,7 +398,7 @@ export const GroupForm = ({ formType, group }) => {
                 value={groupType}
                 onChange={(e) => setGroupType(e.target.value)}
               >
-                <option value="">{"(select one)"}</option>
+                <option value="nothing">{"(select one)"}</option>
                 <option value="In person">In person</option>
                 <option value="Online">Online</option>
               </select>
@@ -402,8 +421,8 @@ export const GroupForm = ({ formType, group }) => {
                 onChange={(e) => setVisibilityType(e.target.value)}
               >
                 <option calue="select">{"(select one)"}</option>
-                <option value="false">Private</option>
-                <option value="true">Public</option>
+                <option value="private">Private</option>
+                <option value="public">Public</option>
               </select>
               <span className="create-group-errors-section-3">
                 {errors && errors.visibilityType}
@@ -454,9 +473,8 @@ export const GroupForm = ({ formType, group }) => {
       )}
       {formType === "Create" ? (
         session.user ? (
-          <form onSubmit={handleSubmit}>{
-            console.log(formType,'asdasdasdasd')
-          }
+          <form onSubmit={handleSubmit}>
+            {console.log(formType, "asdasdasdasd")}
             <div className="create-group-container">
               <p
                 style={{
@@ -617,8 +635,8 @@ export const GroupForm = ({ formType, group }) => {
                 onChange={(e) => setVisibilityType(e.target.value)}
               >
                 <option calue="select">{"(select one)"}</option>
-                <option value="true">Private</option>
-                <option value="false">Public</option>
+                <option value={true}>Private</option>
+                <option value={false}>Public</option>
               </select>
               <span className="create-group-errors-section-3">
                 {errors && errors.visibilityType}

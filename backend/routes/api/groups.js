@@ -419,10 +419,10 @@ router.put("/:groupId", validateGroupSignup, async (req, res, next) => {
       if (type) {
         group.type = type;
       }
-      if (private && private == true) {
+      if (private && private === "true") {
         group.private = private;
       } else {
-        private = false;
+        private = "false";
         group.private = private;
       }
       if (city) {
