@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 // constant to avoid debugging typos
 const GET_EVENTS = "events/GET_EVENTS";
 const GET_EVENT_DETAIL = "events/GET_EVENT_DETAIL";
+const CREATE_EVENT = "events/CREATE_EVENT";
 
 // regular action creator
 const getEvents = (events) => {
@@ -18,6 +19,13 @@ const getEventDetail = (event) => {
     event,
   };
 };
+
+const createEvent = (event) => {
+  return {
+    type: CREATE_EVENT,
+    event
+  }
+}
 
 // thunk action creator
 export const thunkGetAllEvents = () => async (dispatch) => {
@@ -42,6 +50,26 @@ export const thunkGetEventDetail = (eventId) => async (dispatch) => {
   }
 }
 
+export const thunkCreateEvent = (event, groupId, imageURL) => async (dispatch) => {
+  const res = await csrfFetch(`/api/groups/${groupId}/events`, {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(event)
+  })
+  if (res.ok){
+    const data = await res.json()
+    const res2 = await csrfFetch(`/api/events/${data.id}/images`, {
+      method:"POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({"url":imageURL.toString(), "preview": true})
+    })
+    if (res2.ok) {
+      const data2 = await res2.json()
+      return window.location.href = `/events/${data.id}`
+    }
+  }
+}
+
 // state object
 const initialState = {};
 
@@ -57,6 +85,10 @@ const eventsReducer = (state = initialState, action) => {
     }
     case GET_EVENT_DETAIL: {
       const newState = { [action.event.id]: action.event}
+      return newState
+    }
+    case CREATE_EVENT: {
+      const newState= { ...state, [action.event.id]: action.event}
       return newState
     }
     default:

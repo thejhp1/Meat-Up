@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkGetGroupDetail } from "../../store/groups";
 import PulseLoader from "react-spinners/PulseLoader";
+import { thunkCreateEvent } from "../../store/events";
 
 export const EventForm = ({ formType }) => {
   const { groupId } = useParams();
@@ -11,7 +12,7 @@ export const EventForm = ({ formType }) => {
   const group = groupStore[groupId] ? groupStore[groupId] : "";
   const [name, setName] = useState("");
   const [eventType, setEventType] = useState("");
-  const [visibilityType, setVisibilityType] = useState("");
+  const [capacity, setCapcity] = useState("");
   const [price, setPrice] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -30,30 +31,34 @@ export const EventForm = ({ formType }) => {
       if (!name) {
         errors.name = "Name is required";
       }
+
       if (!eventType) {
         errors.eventType = "Group Type is required";
       }
 
-      if (!visibilityType && group.private) {
-        errors.visibilityType = "Visibility Type is required";
+      if (!capacity) {
+        errors.capacity = "Capacity is required";
+      } else if (!Number.isInteger(Number(capacity))) {
+        errors.capacity = "Capacity must be a whole number"
       }
 
       if (!price) {
         errors.price = "Price is required";
       }
-      console.log('start', startDate)
-      console.log('end', endDate)
+
       if (!startDate) {
-        errors.startDate = "Start date is required"
+        errors.startDate = "Start date is required";
+      } else if (new Date(startDate) < new Date()) {
+        errors.startDate = "Start date must be in the future"
       }
 
       if (!endDate) {
-        errors.endDate = "End date is required"
+        errors.endDate = "End date is required";
       }
 
       if (startDate > endDate) {
-        errors.startDate = "Start date cannot be after end date"
-        errors.endDate = "End date cannot be before start date"
+        errors.startDate = "Start date cannot be after end date";
+        errors.endDate = "End date cannot be before start date";
       }
 
       if (!imageURL) {
@@ -73,13 +78,19 @@ export const EventForm = ({ formType }) => {
       }
       if (Object.values(errors).length === 0) {
         const form = {
-            venueId: 1,
-            name,
-            type: eventType,
-            capacity: capacity ? capacity : 0
-        }
+          venueId: null,
+          name,
+          type: eventType,
+          capacity,
+          price,
+          description,
+          startDate,
+          endDate,
+        };
+        dispatch(thunkCreateEvent(form, groupId, imageURL))
       }
 
+      // capacity: capacity ? capacity : 0
       setErrors(errors);
     }
   };
@@ -137,21 +148,21 @@ export const EventForm = ({ formType }) => {
                 marginBottom: ".15rem",
               }}
             >
-              Is this event private or public?
+              How many people can attend this event?
             </p>
-            <select
-              style={{ height: "1.6rem" }}
-              className="create-event-select-private"
-              value={visibilityType}
-              onChange={(e) => setVisibilityType(e.target.value)}
-            >
-              <option value="select">{"(select one)"}</option>
-              <option value="private">Private</option>
-              <option value="public">Public</option>
-            </select>
+            <input
+              value={capacity}
+              onChange={(e) => setCapcity(e.target.value)}
+              placeholder="# of people"
+              style={{
+                marginBottom: "1.25rem",
+                width: "5.52rem",
+                fontSize: "12px",
+              }}
+            ></input>
             {errors && (
               <span className="create-event-errors-section-2">
-                {errors.visibilityType}
+                {errors.capacity}
               </span>
             )}
             <p
@@ -165,7 +176,7 @@ export const EventForm = ({ formType }) => {
             <div className="create-event-price-label">
               <span className="create-event-price-symbol">$</span>
               <input
-                style={{ width: "4rem" }}
+                style={{ width: "4.85rem", fontSize: "12px" }}
                 placeholder="0"
                 type="number"
                 min="0"
@@ -230,6 +241,7 @@ export const EventForm = ({ formType }) => {
               Please add an image url for your event below:
             </p>
             <input
+              style={{ fontSize: "12px" }}
               value={imageURL}
               onChange={(e) => setImageURL(e.target.value)}
               placeholder="Image URL"
@@ -262,7 +274,11 @@ export const EventForm = ({ formType }) => {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Please include at least 30 characters"
             ></textarea>
-            {errors && <span className="create-event-errors-section-6">{errors.description}</span>}
+            {errors && (
+              <span className="create-event-errors-section-6">
+                {errors.description}
+              </span>
+            )}
             <div></div>
             <button type="submit">Create event</button>
           </div>

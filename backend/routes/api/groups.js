@@ -54,30 +54,29 @@ const validateVenueSignup = [
 ];
 
 const validateEventSignup = [
-  check("venueId")
-    .exists({ checkFalsy: true })
-    .custom(async (val, { req }) => {
-      const group = await Group.findByPk(req.params.groupId, {
-        include: Venue,
-      });
-      if (!group) {
-        throw new Error("Group does not exist for this venue");
-      }
-      let flag = false
-      for (let venue of group.toJSON().Venues) {
-        if (venue.id === req.body.venueId) {
-          flag = true
-        }
-      }
-      if (flag === false) {
-        throw new Error("Venue does not exist");
-      }
-      return true;
-    }),
+  // NEED TO UNCOMMENT WHEN I HAVE A WAY TO SHOW ALL VENUES
+  // check("venueId")
+  //   .exists({ checkFalsy: true })
+  //   .custom(async (val, { req }) => {
+  //     const group = await Group.findByPk(req.params.groupId, {
+  //       include: Venue,
+  //     });
+  //     if (!group) {
+  //       throw new Error("Group does not exist for this venue");
+  //     }
+  //     let flag = false
+  //     for (let venue of group.toJSON().Venues) {
+  //       if (venue.id === req.body.venueId) {
+  //         flag = true
+  //       }
+  //     }
+  //     if (flag === false) {
+  //       throw new Error("Venue does not exist");
+  //     }
+  //     return true;
+  //   }),
   check("name")
-    .exists({ checkFalsy: true })
-    .isLength({ min: 5 })
-    .withMessage("Name must be at least 5 characters"),
+    .exists({ checkFalsy: true }),
   check("type")
     .exists({ checkFalsy: true })
     .isIn(["In person", "Online"])

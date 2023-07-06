@@ -40,7 +40,7 @@ export const GroupDetailButton = ({ group }) => {
       ) : (
         <div className="group-detail-header-organizer-buttons">
           <button className="group-detail-header-organizer-button-create-event" onClick={() => createGroup()}>
-            Create Group
+            Create Event
           </button>
           <button className="group-detail-header-organizer-button-update" onClick={() => updateGroup()}>
             Update
