@@ -26,11 +26,11 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Switch></Switch>}
       <Switch>
+        <Route exact path="/groups/new">
+          <CreateGroup />
+        </Route>
         <Route exact path="/">
           <LandingPage />
-        </Route>
-        <Route path="/groups/new">
-          <CreateGroup />
         </Route>
         <Route exact path="/groups/:groupId">
           <GroupDetail />

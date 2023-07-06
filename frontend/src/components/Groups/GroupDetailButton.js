@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteGroupModal from "../DeleteGroupModal";
-import { UpdateGroup } from "./UpdateGroup";
 import { useHistory } from "react-router-dom";
 
 export const GroupDetailButton = ({ group }) => {
