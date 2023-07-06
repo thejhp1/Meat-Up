@@ -1,6 +1,8 @@
-#modal-content {
+.signup-modal-outer-container {
     width: 404px;
-    max-height: 784px;
+    padding: 0px 2.5rem;
+    padding-bottom: 2rem;
+    padding-top: 2.25rem;
 }
 
 .signup-modal-container {

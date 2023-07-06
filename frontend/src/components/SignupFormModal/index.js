@@ -116,7 +116,8 @@ function SignupFormModal() {
   };
 
   return (
-    <>
+    <div className="signup-modal-outer-container">
+      <i className="fa-sharp fa-solid fa-xmark fa-xl" onClick={closeModal}></i>
       <section className="signup-modal-container">
         <div className="login-modal-icon">
           <i class="fa-brands fa-meetup"></i>
@@ -168,7 +169,7 @@ function SignupFormModal() {
             <input
               type="text"
               className="signup-modal-inputs"
-              placeholder="Enter a valid email"
+              placeholder="Enter a valid email..."
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -197,7 +198,7 @@ function SignupFormModal() {
             Password
             <input
               type="password"
-              placeholder="Password must be at least 4 characters"
+              placeholder="Password must be at least 4 characters..."
               className="signup-modal-inputs"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -212,6 +213,7 @@ function SignupFormModal() {
             Confirm Password
             <input
               type="password"
+              placeholder="Please make sure that both passwords are matching..."
               className="signup-modal-inputs"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -230,7 +232,7 @@ function SignupFormModal() {
           </button>
         </form>
       </section>
-    </>
+    </div>
   );
 }
 

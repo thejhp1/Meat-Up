@@ -1,12 +1,14 @@
 import { useSelector } from "react-redux";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import DeleteGroupModal from "../DeleteGroupModal";
 
 export const GroupDetailButton = ({ group }) => {
   const sessionUser = useSelector((state) => state.session.user);
   let customStyle;
   let flag = true;
   if (!sessionUser) {
-    return
-  } else if (sessionUser.id === group.organizerId)  {
+    return;
+  } else if (sessionUser.id === group.organizerId) {
     flag = false;
   }
 
@@ -16,8 +18,15 @@ export const GroupDetailButton = ({ group }) => {
   };
 
   const deleteModal = () => {
-    console.log('asd')
-  }
+    return (
+      <span className="delete-modal">
+        <OpenModalMenuItem
+          itemText="Delete Group"
+          modalComponent={<DeleteGroupModal />}
+        />
+      </span>
+    );
+  };
   return (
     <>
       {flag === true ? (
@@ -30,9 +39,18 @@ export const GroupDetailButton = ({ group }) => {
         </button>
       ) : (
         <div className="group-detail-header-organizer-buttons">
-          <button className="group-detail-header-organizer-button-create-event">Create event</button>
-          <button className="group-detail-header-organizer-button-update">Update</button>
-          <button onClick={deleteModal()} className="group-detail-header-organizer-button-delete">Delete</button>
+          <button className="group-detail-header-organizer-button-create-event">
+            Create event
+          </button>
+          <button className="group-detail-header-organizer-button-update">
+            Update
+          </button>
+          <button className="group-detail-header-organizer-button-delete">
+            <OpenModalMenuItem
+              itemText="Delete"
+              modalComponent={<DeleteGroupModal />}
+            />
+          </button>
         </div>
       )}
     </>

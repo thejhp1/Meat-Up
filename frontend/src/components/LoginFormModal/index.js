@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import SignupFormModal from "../SignupFormModal";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import "./LoginForm.css";
 
 function LoginFormModal() {
@@ -19,7 +19,7 @@ function LoginFormModal() {
   const [passState2, setPassState2] = useState("hidden");
   const [showPass, setShowPass] = useState("password");
   const { closeModal } = useModal();
-  const history = useHistory();
+  // const history = useHistory();
 
   useEffect(() => {
     const validateError = {};
@@ -104,7 +104,7 @@ function LoginFormModal() {
   };
 
   return (
-    <>
+    <div className="login-modal-container">
       <i className="fa-sharp fa-solid fa-xmark fa-xl" onClick={closeModal}></i>
       <section className="login-modal-header-container">
         <div className="login-modal-icon">
@@ -237,7 +237,7 @@ function LoginFormModal() {
       >
         Issues with log in?
       </span>
-    </>
+    </div>
   );
 }
 

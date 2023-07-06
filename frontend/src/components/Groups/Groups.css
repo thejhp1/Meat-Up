@@ -187,15 +187,16 @@
 
 .group-detail-header-organizer-button-create-event, .group-detail-header-organizer-button-delete, .group-detail-header-organizer-button-update {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #999999;
+    background-color: rgb(102,102,102);
     color:white;
     border: 2px solid black;
     box-shadow: 2px 2px black;
     cursor: pointer;
+    list-style-type: none;
 }
 
 .group-detail-header-organizer-button-create-event:hover , .group-detail-header-organizer-button-delete:hover , .group-detail-header-organizer-button-update:hover  {
-    background-color: #b3b3b3;
+    background-color: rgb(145, 145, 145);
 }
 
 /************************** GROUP DETAILS INFO ******************************/
