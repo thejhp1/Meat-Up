@@ -1,9 +1,12 @@
 import { useSelector } from "react-redux";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteGroupModal from "../DeleteGroupModal";
+import { UpdateGroup } from "./UpdateGroup";
+import { useHistory } from "react-router-dom";
 
 export const GroupDetailButton = ({ group }) => {
   const sessionUser = useSelector((state) => state.session.user);
+  const history = useHistory()
   let customStyle;
   let flag = true;
   if (!sessionUser) {
@@ -17,15 +20,8 @@ export const GroupDetailButton = ({ group }) => {
     alert("Feature coming soon");
   };
 
-  const deleteModal = () => {
-    return (
-      <span className="delete-modal">
-        <OpenModalMenuItem
-          itemText="Delete Group"
-          modalComponent={<DeleteGroupModal />}
-        />
-      </span>
-    );
+  function updateGroup () {
+    history.push(`/groups/${group.id}/edit`)
   };
   return (
     <>
@@ -42,7 +38,7 @@ export const GroupDetailButton = ({ group }) => {
           <button className="group-detail-header-organizer-button-create-event">
             Create event
           </button>
-          <button className="group-detail-header-organizer-button-update">
+          <button className="group-detail-header-organizer-button-update" onClick={() => updateGroup()}>
             Update
           </button>
           <button className="group-detail-header-organizer-button-delete">

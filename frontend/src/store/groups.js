@@ -156,7 +156,9 @@ const groupsReudcer = (state = initialState, action) => {
       return newState
     }
     case CREATE_GROUP: {
-      const newState= { ...state, [action.event.id]: action.event}
+      console.log(state, 'state')
+      console.log(action, 'action')
+      const newState= { ...state, [action.group.id]: action.group}
       return newState
     }
     case DELETE_GROUP: {
