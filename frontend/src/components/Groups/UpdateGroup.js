@@ -7,11 +7,13 @@ import { useParams } from "react-router-dom";
 export const UpdateGroup = () => {
   const { groupId } = useParams();
   const dispatch = useDispatch();
-  const group = useSelector((state) => state.groups ? state.groups[groupId] : null);
-
+  const group = useSelector((state) =>
+    state.groups ? state.groups[groupId] : null
+  );
   useEffect(() => {
     dispatch(thunkGetGroupDetail(groupId));
-  }, [dispatch]);
-  console.log('asdasd')
+  }, [dispatch, groupId]);
+  if (!group) return <></>;
+  console.log(group);
   return <GroupForm formType="Update" group={group} />;
 };

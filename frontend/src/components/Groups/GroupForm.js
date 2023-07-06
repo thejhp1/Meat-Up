@@ -6,15 +6,13 @@ import { useHistory } from "react-router-dom";
 
 export const GroupForm = ({ formType, group }) => {
   const session = useSelector((state) => state.session);
-  const groups = useSelector(state => state.groups)
-  console.log(groups)
   const dispatch = useDispatch();
   const history = useHistory()
-  let [location, setLocation] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [groupType, setGroupType] = useState("");
-  const [visibilityType, setVisibilityType] = useState("");
+  const [location, setLocation] = useState(group?`${group.city}, ${group.state}` : "");
+  const [name, setName] = useState(group? group.name : "");
+  const [description, setDescription] = useState(group? group.about : "");
+  const [groupType, setGroupType] = useState(group? group.type : "");
+  const [visibilityType, setVisibilityType] = useState(group ? group.private.toString() === "true" ? "false" : "true" : "");
   const [imageURL, setImageURL] = useState("");
   const [errors, setErrors] = useState("");
   const states = [
@@ -273,7 +271,7 @@ export const GroupForm = ({ formType, group }) => {
                 // placeholder={}
                 style={{ fontSize: "11px" }}
                 marginBottom="0px"
-                value={location = `${group.city}, ${group.state}`}
+                value={location}
                 onChange={(e) => {setLocation(e.target.value)}}
               ></input>
               <span className="create-group-errors-section-1">
@@ -297,7 +295,7 @@ export const GroupForm = ({ formType, group }) => {
               <input
                 placeholder="What is your group name?"
                 style={{ fontSize: "11px" }}
-                value={group.name ? group.name : null}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
               ></input>
               <span className="create-group-errors-section-1">
@@ -355,7 +353,7 @@ export const GroupForm = ({ formType, group }) => {
                   backgroundColor: "rgb(232, 240, 254)",
                   border: "2.5px solid black",
                 }}
-                value={group.about ? group.about : null}
+                value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></textarea>
               <span className="create-group-errors-section-2">
@@ -378,7 +376,7 @@ export const GroupForm = ({ formType, group }) => {
               <select
                 style={{ height: "1.6rem" }}
                 className="create-group-select-location"
-                value={group.type === "Online" ? "Online" : "In person"}
+                value={groupType}
                 onChange={(e) => setGroupType(e.target.value)}
               >
                 <option value="">{"(select one)"}</option>
@@ -400,7 +398,7 @@ export const GroupForm = ({ formType, group }) => {
               <select
                 style={{ height: "1.6rem" }}
                 className="create-group-select-private"
-                value={group.private.toString() === "true" ? "false" : "true"}
+                value={visibilityType}
                 onChange={(e) => setVisibilityType(e.target.value)}
               >
                 <option calue="select">{"(select one)"}</option>
