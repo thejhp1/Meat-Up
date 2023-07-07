@@ -36,9 +36,7 @@ const validateEventSignup = [
   //   return true;
   // }),
   check("name")
-    .exists({ checkFalsy: true })
-    .isLength({ min: 5 })
-    .withMessage("Name must be at least 5 characters"),
+    .exists({ checkFalsy: true }),
   check("type")
     .exists({ checkFalsy: true })
     .isIn(["In person", "Online"])
