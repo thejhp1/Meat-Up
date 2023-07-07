@@ -63,15 +63,14 @@ function LoginFormModal() {
     }
 
     if (Object.values(errors).length === 0) {
-      const res = await dispatch(
-        sessionActions.login({ credential, password })
-      ).then();
-      if (JSON.stringify(res.ok) === "false") {
-        errors.credential = "Provided credentials are invalid";
-        return setErrors(errors);
-      } else {
-        closeModal();
-      }
+      dispatch(sessionActions.login({ credential, password }))
+        .then(closeModal)
+        .catch(async (res) => {
+          console.log(res);
+          if (res && res.errors) {
+            setErrors(res.errors);
+          }
+        });
     }
     setErrors(errors);
   };

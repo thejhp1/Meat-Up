@@ -276,8 +276,9 @@
 
 .event-detail-body-description > p {
     font-size: 12px;
+    max-width: 100rem;
+    word-wrap: break-word;
 }
-
 
 /*************************** CREATE EVENT PAGE *****************************/
 

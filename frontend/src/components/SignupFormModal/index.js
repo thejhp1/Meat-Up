@@ -103,17 +103,25 @@ function SignupFormModal() {
         })
       )
         .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
+        .catch( async (res) => {
+          if (res && res.errors) {
+            // console.log(res.errors.email.length > 0)
+            if (res.errors.email && res.errors.email.length > 0) {
+              res.errors.email = res.errors.email.replace(res.errors.email.split("")[0], res.errors.email.split("")[0].toUpperCase())
+              setErrors(res.errors)
+            }
+            if (res.errors.username && res.errors.username.length > 0) {
+              res.errors.username = res.errors.username.replace(res.errors.username.split("")[0], res.errors.username.split("")[0].toUpperCase())
+              setErrors(res.errors)
+            }
+            // setErrors(res.errors);
           }
         });
     }
 
     setErrors(errors);
   };
-
+  // console.log(asd)
   return (
     <div className="signup-modal-outer-container">
       <i className="fa-sharp fa-solid fa-xmark fa-xl" onClick={closeModal}></i>

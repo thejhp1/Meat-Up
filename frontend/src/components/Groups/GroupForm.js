@@ -284,7 +284,6 @@ export const GroupForm = ({ formType, group }) => {
               </p>
               <input
                 style={{ fontSize: "11px" }}
-                marginBottom="0px"
                 value={location}
                 onChange={(e) => {
                   setLocation(e.target.value);
@@ -499,7 +498,6 @@ export const GroupForm = ({ formType, group }) => {
               <input
                 placeholder="City, STATE"
                 style={{ fontSize: "11px" }}
-                marginBottom="0px"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               ></input>
