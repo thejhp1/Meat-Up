@@ -246,7 +246,7 @@ router.get("/:eventId", async (req, res, next) => {
           attributes:["url"]
         },{
           model: User,
-          attributes: ["firstName", "lastName"],
+          attributes: ["firstName", "lastName", "id"],
           as: "Organizer",
         }]
       },

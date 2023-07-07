@@ -48,7 +48,7 @@ export const GroupDetailButton = ({ group }) => {
           <button className="group-detail-header-organizer-button-delete">
             <OpenModalMenuItem
               itemText="Delete"
-              modalComponent={<DeleteGroupModal />}
+              modalComponent={<DeleteGroupModal type={"group"} />}
             />
           </button>
         </div>

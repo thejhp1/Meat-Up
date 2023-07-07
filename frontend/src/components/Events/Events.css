@@ -401,3 +401,8 @@
     margin-top: 8.45rem;
     margin-left: -16.55rem;
 }
+
+/********************************** DELETE MODAL BUTTON FOR EVENT ********************************/
+.delete-modal-button-event {
+    list-style-type: none;
+}

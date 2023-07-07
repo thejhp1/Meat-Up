@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 const GET_EVENTS = "events/GET_EVENTS";
 const GET_EVENT_DETAIL = "events/GET_EVENT_DETAIL";
 const CREATE_EVENT = "events/CREATE_EVENT";
+const DELETE_EVENT = "events/DELETE_EVENT"
 
 // regular action creator
 const getEvents = (events) => {
@@ -24,6 +25,13 @@ const createEvent = (event) => {
   return {
     type: CREATE_EVENT,
     event
+  }
+}
+
+const deleteEvent = (eventId) => {
+  return {
+    type: DELETE_EVENT,
+    eventId
   }
 }
 
@@ -65,8 +73,23 @@ export const thunkCreateEvent = (event, groupId, imageURL) => async (dispatch) =
     })
     if (res2.ok) {
       const data2 = await res2.json()
+      dispatch(createEvent(data2))
       return window.location.href = `/events/${data.id}`
+    } else {
+      dispatch(createEvent(data))
     }
+  } alert("Cannot find group!")
+}
+
+export const thunkDeleteEvent = (eventId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/events/${eventId}`, {
+    method: "DELETE"
+  })
+
+  if (res.ok) {
+    const data = res.json()
+    dispatch(deleteEvent(eventId))
+    return data
   }
 }
 
@@ -89,6 +112,11 @@ const eventsReducer = (state = initialState, action) => {
     }
     case CREATE_EVENT: {
       const newState= { ...state, [action.event.id]: action.event}
+      return newState
+    }
+    case DELETE_EVENT: {
+      const newState = {...state}
+      delete newState[action.eventId];
       return newState
     }
     default:
