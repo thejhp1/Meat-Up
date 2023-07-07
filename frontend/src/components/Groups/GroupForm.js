@@ -75,7 +75,7 @@ export const GroupForm = ({ formType, group }) => {
       if (!session.user) {
         return history.push("/not-found");
       }
-    }, 5000);
+    }, 1000);
     if (session.user) {
       clearTimeout(userCheckTimeout);
     }
