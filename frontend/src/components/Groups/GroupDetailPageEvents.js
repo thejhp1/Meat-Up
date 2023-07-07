@@ -4,7 +4,7 @@ export const GroupDetailPageEvents = ({ events }) => {
   const upcomingEvent = [];
   const pastEvent = [];
   const time = new Date();
-  const history = useHistory()
+  const history = useHistory();
 
   for (let event of events) {
     if (event.previewImage === undefined) {
@@ -18,13 +18,13 @@ export const GroupDetailPageEvents = ({ events }) => {
     }
   }
 
-  upcomingEvent.sort((a,b) => {
-    return new Date(a.startDate) - new Date(b.startDate)
-  })
+  upcomingEvent.sort((a, b) => {
+    return new Date(a.startDate) - new Date(b.startDate);
+  });
 
-  pastEvent.sort((a,b) => {
-    return new Date(b.startDate) - new Date(a.startDate)
-  })
+  pastEvent.sort((a, b) => {
+    return new Date(b.startDate) - new Date(a.startDate);
+  });
   return (
     <>
       <div style={{ marginTop: "1.25rem" }}>
@@ -39,6 +39,7 @@ export const GroupDetailPageEvents = ({ events }) => {
             <div className="event-cards">
               <div className="event-cards-image">
                 <img
+                  alt=""
                   onClick={() => history.push(`/events/${event.id}`)}
                   src={event.previewImage}
                   width={180}
@@ -74,6 +75,7 @@ export const GroupDetailPageEvents = ({ events }) => {
             <div className="event-cards">
               <div className="event-cards-image">
                 <img
+                  alt=""
                   onClick={() => history.push(`/events/${event.id}`)}
                   src={event.previewImage}
                   width={180}

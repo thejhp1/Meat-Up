@@ -5,7 +5,6 @@ import DeleteGroupModal from "../DeleteGroupModal";
 export const EventDetailButton = ({ event }) => {
   const sessionUser = useSelector((state) => state.session.user);
   let flag = false;
-  console.log('evneet',event)
 
   if (!sessionUser) {
     return;
@@ -19,10 +18,12 @@ export const EventDetailButton = ({ event }) => {
         <>
           <button onClick={() => alert("Feature coming soon!")}>Update</button>
           <div></div>
-          <button className="delete-modal-button-event"><OpenModalMenuItem
+          <button className="delete-modal-button-event">
+            <OpenModalMenuItem
               itemText="Delete"
-              modalComponent={<DeleteGroupModal type="event" event={event}/>}
-            /></button>
+              modalComponent={<DeleteGroupModal type="event" event={event} />}
+            />
+          </button>
         </>
       ) : (
         ""

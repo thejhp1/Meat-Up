@@ -32,7 +32,7 @@ export const login = (user) => async (dispatch) => {
   if (response.ok === true) {
     dispatch(setUser(data.user));
   } else {
-    return response
+    return response;
   }
   return response;
 };
@@ -62,8 +62,8 @@ export const signup = (user) => async (dispatch) => {
 };
 
 export const logout = () => async (dispatch) => {
-  const response = await csrfFetch('/api/session', {
-    method: 'DELETE',
+  const response = await csrfFetch("/api/session", {
+    method: "DELETE",
   });
   dispatch(removeUser());
   return response;

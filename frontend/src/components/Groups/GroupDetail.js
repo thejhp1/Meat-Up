@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams, Link } from "react-router-dom";
 import { thunkGetGroupDetail } from "../../store/groups";
-import { useParams } from "react-router-dom";
-import ScaleLoader from "react-spinners/PulseLoader";
-import { Link } from "react-router-dom";
 import { GroupDetailPageEvents } from "./GroupDetailPageEvents";
 import { GroupDetailButton } from "./GroupDetailButton";
+import ScaleLoader from "react-spinners/PulseLoader";
 
 export const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -15,7 +14,7 @@ export const GroupDetail = () => {
 
   useEffect(() => {
     dispatch(thunkGetGroupDetail(groupId));
-  }, [dispatch]);
+  }, [dispatch, groupId]);
 
   const group = groupStore[groupId];
 
@@ -30,7 +29,6 @@ export const GroupDetail = () => {
   }
 
   const eventPrivateCheck = () => {
-    console.log(group.private)
     if (group.private === true) {
       return "events: Private";
     } else {
@@ -48,19 +46,19 @@ export const GroupDetail = () => {
 
   const eventsCheck = () => {
     if (group.Events === undefined) {
-      return <h2 style={{marginTop:".2rem"}}>No Upcoming Events</h2>
+      return <h2 style={{ marginTop: ".2rem" }}>No Upcoming Events</h2>;
     } else {
-      return <GroupDetailPageEvents events={group.Events}/>
+      return <GroupDetailPageEvents events={group.Events} />;
     }
-  }
+  };
 
   const eventsLengthCheck = () => {
     if (group.Events === undefined) {
-      return "0"
+      return "0";
     } else {
-      return group.Events.length
+      return group.Events.length;
     }
-  }
+  };
 
   return (
     <>
@@ -86,7 +84,11 @@ export const GroupDetail = () => {
             <div className="group-detail-breadcrumb">
               <p>{"<"}</p>
               <Link
-                style={{ fontSize: "12px", fontWeight: "500", color:"#00798A" }}
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "500",
+                  color: "#00798A",
+                }}
                 to="/groups"
               >
                 Groups
@@ -94,6 +96,7 @@ export const GroupDetail = () => {
             </div>
             <div className="group-detail-header-container">
               <img
+                alt=""
                 className="group-detail-header-image"
                 width="475"
                 height="250"
@@ -105,7 +108,7 @@ export const GroupDetail = () => {
                   {group.city}, {group.state}
                 </p>
                 <p>
-                {eventsLengthCheck()} · {eventPrivateCheck()}
+                  {eventsLengthCheck()} · {eventPrivateCheck()}
                 </p>
                 <p>
                   Organized by {group.Organizer.firstName}{" "}
@@ -113,7 +116,7 @@ export const GroupDetail = () => {
                 </p>
               </div>
               <div className="group-detail-header-button-container">
-                <GroupDetailButton group={group}/>
+                <GroupDetailButton group={group} />
               </div>
             </div>
           </div>
@@ -128,9 +131,7 @@ export const GroupDetail = () => {
               <h2>What we're about</h2>
               <p>{group.about}</p>
             </div>
-            <div className="group-detail-event-container">
-                {eventsCheck()}
-            </div>
+            <div className="group-detail-event-container">{eventsCheck()}</div>
           </div>
         </>
       )}

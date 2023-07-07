@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from 'react-redux';
-import * as sessionActions from '../../store/session';
-import OpenModalMenuItem from './OpenModalMenuItem';
-import LoginFormModal from '../LoginFormModal';
-import SignupFormModal from '../SignupFormModal';
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import * as sessionActions from "../../store/session";
+import OpenModalMenuItem from "./OpenModalMenuItem";
+import LoginFormModal from "../LoginFormModal";
+import SignupFormModal from "../SignupFormModal";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -26,7 +26,7 @@ function ProfileButton({ user }) {
       }
     };
 
-    document.addEventListener('click', closeMenu);
+    document.addEventListener("click", closeMenu);
 
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
@@ -37,27 +37,33 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
-    history.push("/")
+    history.push("/");
   };
 
   const toGroups = (e) => {
-    e.preventDefault()
-    closeMenu()
-    history.push("/groups")
-  }
+    e.preventDefault();
+    closeMenu();
+    history.push("/groups");
+  };
 
   const toEvents = (e) => {
-    e.preventDefault()
-    closeMenu()
-    history.push("/events")
-  }
+    e.preventDefault();
+    closeMenu();
+    history.push("/events");
+  };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
-  const ulClassNames = "fas fa-regular fa-angle-" + (showMenu ? "up fa-xl" : "down fa-xl");
+  const ulClassNames =
+    "fas fa-regular fa-angle-" + (showMenu ? "up fa-xl" : "down fa-xl");
   return (
     <>
       <div className="navi-icons">
-        <span onClick={() => history.push("/groups/new")} className="navi-icon-new-group">Start a new group</span>
+        <span
+          onClick={() => history.push("/groups/new")}
+          className="navi-icon-new-group"
+        >
+          Start a new group
+        </span>
         <button onClick={openMenu} className="navi-button">
           <i className="fas fa-user-circle fa-xl" />
         </button>
@@ -76,7 +82,6 @@ function ProfileButton({ user }) {
               <li className="profile-dropdown-logout-container">
                 <span onClick={logout}>Log out</span>
               </li>
-
             </div>
           ) : (
             <>

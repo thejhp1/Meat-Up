@@ -1,5 +1,5 @@
-import { GroupForm } from "./GroupForm";
 import { useEffect } from "react";
+import { GroupForm } from "./GroupForm";
 
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetGroupDetail } from "../../store/groups";
@@ -12,14 +12,13 @@ export const UpdateGroup = () => {
     state.groups ? state.groups[groupId] : null
   );
   useEffect(() => {
-    dispatch(thunkGetGroupDetail(groupId));   
+    dispatch(thunkGetGroupDetail(groupId));
   }, [dispatch, groupId]);
   if (!group) return <></>;
-  if (session.user === null) return window.location.href = "/not-found"
+  if (session.user === null) return (window.location.href = "/");
   if (group.organizerId === session.user.id) {
     return <GroupForm formType="Update" group={group} />;
   } else {
-    window.location.href = "/not-found"
+    window.location.href = "/";
   }
-
 };

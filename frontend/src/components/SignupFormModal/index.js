@@ -48,23 +48,23 @@ function SignupFormModal() {
     e.preventDefault();
     const errors = {};
     if (firstName.length > 30) {
-      errors.firstName = "First name cannot exceed 30 characters"
+      errors.firstName = "First name cannot exceed 30 characters";
     }
 
     if (lastName.length > 30) {
-      errors.lastName = "Last name cannot exceed 30 characters"
+      errors.lastName = "Last name cannot exceed 30 characters";
     }
 
     if (email.length > 256) {
-      errors.email = "Email cannot exceed 256 characters"
+      errors.email = "Email cannot exceed 256 characters";
     }
 
-    if(username.length > 30) {
-      errors.username = "Username cannot exceed 30 characters"
+    if (username.length > 30) {
+      errors.username = "Username cannot exceed 30 characters";
     }
 
-    if(password.length > 60) {
-      errors.password = "Password cannot exceed 60 characters"
+    if (password.length > 60) {
+      errors.password = "Password cannot exceed 60 characters";
     }
 
     if (!email.includes("@")) {
@@ -78,20 +78,19 @@ function SignupFormModal() {
     ) {
       errors.email = "Invalid email, must end with org/com/gov/net/edu";
     } else if (email.includes("@")) {
-      let count = 0
+      let count = 0;
       for (let ele of email.split("")) {
         if (ele === "@") {
-          count++
+          count++;
         }
       }
       if (count > 1) {
-        errors.email = "Invalid email"
+        errors.email = "Invalid email";
       }
     }
     if (password !== confirmPassword) {
       errors.password = "Passwords do not match";
     }
-
 
     if (Object.values(errors).length === 0) {
       dispatch(

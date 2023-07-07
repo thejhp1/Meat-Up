@@ -1,12 +1,11 @@
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteGroupModal from "../DeleteGroupModal";
-import { useHistory } from "react-router-dom";
-import { EventDetail } from "../Events/EventDetail";
 
 export const GroupDetailButton = ({ group }) => {
   const sessionUser = useSelector((state) => state.session.user);
-  const history = useHistory()
+  const history = useHistory();
   let customStyle;
   let flag = true;
   if (!sessionUser) {
@@ -21,12 +20,12 @@ export const GroupDetailButton = ({ group }) => {
   };
 
   const createGroup = () => {
-    history.push(`/groups/${group.id}/events/new`)
-  }
-
-  function updateGroup () {
-    history.push(`/groups/${group.id}/edit`)
+    history.push(`/groups/${group.id}/events/new`);
   };
+
+  function updateGroup() {
+    history.push(`/groups/${group.id}/edit`);
+  }
   return (
     <>
       {flag === true ? (
@@ -39,10 +38,16 @@ export const GroupDetailButton = ({ group }) => {
         </button>
       ) : (
         <div className="group-detail-header-organizer-buttons">
-          <button className="group-detail-header-organizer-button-create-event" onClick={() => createGroup()}>
+          <button
+            className="group-detail-header-organizer-button-create-event"
+            onClick={() => createGroup()}
+          >
             Create Event
           </button>
-          <button className="group-detail-header-organizer-button-update" onClick={() => updateGroup()}>
+          <button
+            className="group-detail-header-organizer-button-update"
+            onClick={() => updateGroup()}
+          >
             Update
           </button>
           <button className="group-detail-header-organizer-button-delete">

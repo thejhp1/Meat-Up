@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import PulseLoader from "react-spinners/PulseLoader";
-import { thunkCreateGroup, thunkUpdateGroup } from "../../store/groups";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { thunkCreateGroup, thunkUpdateGroup } from "../../store/groups";
+import PulseLoader from "react-spinners/PulseLoader";
 
 export const GroupForm = ({ formType, group }) => {
   const session = useSelector((state) => state.session);
@@ -17,7 +17,9 @@ export const GroupForm = ({ formType, group }) => {
   const [visibilityType, setVisibilityType] = useState(
     group ? (group.private === true ? "private" : "public") : ""
   );
-  const [imageURL, setImageURL] = useState(group ? group.GroupImages ? group.GroupImages[0].url: ""  : "");
+  const [imageURL, setImageURL] = useState(
+    group ? (group.GroupImages ? group.GroupImages[0].url : "") : ""
+  );
   const [errors, setErrors] = useState("");
   const states = [
     "AL",
@@ -158,7 +160,6 @@ export const GroupForm = ({ formType, group }) => {
           state: location.split(",")[1].trim().toUpperCase(),
           url: imageURL,
         };
-        console.log("formcreate", form);
         dispatch(thunkCreateGroup(form));
       }
       setErrors(errors);
@@ -197,9 +198,8 @@ export const GroupForm = ({ formType, group }) => {
         errors.groupType = "Group Type is required";
       }
 
-      console.log(visibilityType, "<~")
       if (visibilityType === "nothing") {
-        errors.visibilityType = "Visibility Type is required"
+        errors.visibilityType = "Visibility Type is required";
       }
 
       if (!imageURL) {
@@ -230,9 +230,9 @@ export const GroupForm = ({ formType, group }) => {
         }
 
         if (visibilityType === "private") {
-            setVisibilityType(true)
+          setVisibilityType(true);
         } else if (visibilityType === "public") {
-            setVisibilityType(false)
+          setVisibilityType(false);
         }
 
         const form = {
@@ -245,9 +245,8 @@ export const GroupForm = ({ formType, group }) => {
           state: location.split(",")[1].trim().toUpperCase(),
           url: imageURL,
         };
-        console.log("formmm", form)
-        dispatch(thunkUpdateGroup(form))
-    }
+        dispatch(thunkUpdateGroup(form));
+      }
       setErrors(errors);
     }
   };
@@ -284,7 +283,6 @@ export const GroupForm = ({ formType, group }) => {
                 you with people in your area.
               </p>
               <input
-                // placeholder={}
                 style={{ fontSize: "11px" }}
                 marginBottom="0px"
                 value={location}
@@ -473,7 +471,6 @@ export const GroupForm = ({ formType, group }) => {
       {formType === "Create" ? (
         session.user ? (
           <form onSubmit={handleSubmit}>
-            {console.log(formType, "asdasdasdasd")}
             <div className="create-group-container">
               <p
                 style={{

@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import ScaleLoader from "react-spinners/PulseLoader";
-import { Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import { thunkGetEventDetail } from "../../store/events";
-import { useHistory } from "react-router-dom";
 import { EventDetailButton } from "./EventDetailButton.js";
+import ScaleLoader from "react-spinners/PulseLoader";
 
 export const EventDetail = () => {
   const dispatch = useDispatch();
@@ -15,11 +13,9 @@ export const EventDetail = () => {
   const event = eventStore[eventId];
   let flag = false;
 
-  console.log(event);
-
   useEffect(() => {
     dispatch(thunkGetEventDetail(eventId));
-  }, [dispatch]);
+  }, [dispatch, eventId]);
 
   if (event === undefined) {
     flag = true;
@@ -99,7 +95,10 @@ export const EventDetail = () => {
             </div>
             <div className="event-detail-header-container">
               <h2>{event.name}</h2>
-              <p>Hosted by {event.Group.Organizer.firstName} {event.Group.Organizer.lastName}</p>
+              <p>
+                Hosted by {event.Group.Organizer.firstName}{" "}
+                {event.Group.Organizer.lastName}
+              </p>
             </div>
           </div>
           <div className="event-detail-body-container">
@@ -108,6 +107,7 @@ export const EventDetail = () => {
                 className="event-detail-body-image"
                 width="450"
                 height="250"
+                alt=""
                 src={imageCheck()}
               ></img>
               <div className="event-detail-body-info-group">
@@ -115,6 +115,7 @@ export const EventDetail = () => {
                   onClick={sendToGroup}
                   className="event-detail-body-info-group-image"
                   width="100"
+                  alt=""
                   height="75"
                   src={`${event.Group.GroupImages[0].url}`}
                 ></img>
@@ -149,20 +150,26 @@ export const EventDetail = () => {
                   </div>
                 </div>
                 <div className="event-detail-body-info-event-price-details">
-                  <i class="fa-solid fa-sack-dollar fa-xl" style={{ color: "#CCCCCC" }}></i>
+                  <i
+                    class="fa-solid fa-sack-dollar fa-xl"
+                    style={{ color: "#CCCCCC" }}
+                  ></i>
                   <p>{eventPriceCheck()}</p>
                 </div>
                 <div className="event-detail-body-info-event-type-details">
-                  <i class="fa-solid fa-map-pin fa-xl" style={{ color: "#CCCCCC" }}></i>
+                  <i
+                    class="fa-solid fa-map-pin fa-xl"
+                    style={{ color: "#CCCCCC" }}
+                  ></i>
                   <p>{event.type}</p>
                 </div>
                 <div className="event-detail-body-info-event-button">
-                  <EventDetailButton event={event}/>
+                  <EventDetailButton event={event} />
                 </div>
               </div>
             </div>
             <div className="event-detail-body-description">
-              <h2 style={{marginBottom: ".25rem"}}>Details</h2>
+              <h2 style={{ marginBottom: ".25rem" }}>Details</h2>
               <p>{event.description}</p>
             </div>
           </div>

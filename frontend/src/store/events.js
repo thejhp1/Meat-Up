@@ -4,7 +4,7 @@ import { csrfFetch } from "./csrf";
 const GET_EVENTS = "events/GET_EVENTS";
 const GET_EVENT_DETAIL = "events/GET_EVENT_DETAIL";
 const CREATE_EVENT = "events/CREATE_EVENT";
-const DELETE_EVENT = "events/DELETE_EVENT"
+const DELETE_EVENT = "events/DELETE_EVENT";
 
 // regular action creator
 const getEvents = (events) => {
@@ -24,16 +24,16 @@ const getEventDetail = (event) => {
 const createEvent = (event) => {
   return {
     type: CREATE_EVENT,
-    event
-  }
-}
+    event,
+  };
+};
 
 const deleteEvent = (eventId) => {
   return {
     type: DELETE_EVENT,
-    eventId
-  }
-}
+    eventId,
+  };
+};
 
 // thunk action creator
 export const thunkGetAllEvents = () => async (dispatch) => {
@@ -43,55 +43,57 @@ export const thunkGetAllEvents = () => async (dispatch) => {
     dispatch(getEvents(data));
     return data;
   } else {
-    return window.location.href = "/not-found"
+    return (window.location.href = "/not-found");
   }
 };
 
 export const thunkGetEventDetail = (eventId) => async (dispatch) => {
-  const res = await csrfFetch(`/api/events/${eventId}`)
+  const res = await csrfFetch(`/api/events/${eventId}`);
   if (res.ok) {
-    const data = await res.json()
-    dispatch(getEventDetail(data))
-    return data
+    const data = await res.json();
+    dispatch(getEventDetail(data));
+    return data;
   } else {
-    return window.location.href = "/not-found"
+    return (window.location.href = "/not-found");
   }
-}
+};
 
-export const thunkCreateEvent = (event, groupId, imageURL) => async (dispatch) => {
-  const res = await csrfFetch(`/api/groups/${groupId}/events`, {
-    method: "POST",
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(event)
-  })
-  if (res.ok){
-    const data = await res.json()
-    const res2 = await csrfFetch(`/api/events/${data.id}/images`, {
-      method:"POST",
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({"url":imageURL.toString(), "preview": true})
-    })
-    if (res2.ok) {
-      const data2 = await res2.json()
-      dispatch(createEvent(data2))
-      return window.location.href = `/events/${data.id}`
-    } else {
-      dispatch(createEvent(data))
+export const thunkCreateEvent =
+  (event, groupId, imageURL) => async (dispatch) => {
+    const res = await csrfFetch(`/api/groups/${groupId}/events`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(event),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const res2 = await csrfFetch(`/api/events/${data.id}/images`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: imageURL.toString(), preview: true }),
+      });
+      if (res2.ok) {
+        const data2 = await res2.json();
+        dispatch(createEvent(data2));
+        return (window.location.href = `/events/${data.id}`);
+      } else {
+        dispatch(createEvent(data));
+      }
     }
-  } alert("Cannot find group!")
-}
+    alert("Cannot find group!");
+  };
 
 export const thunkDeleteEvent = (eventId) => async (dispatch) => {
   const res = await csrfFetch(`/api/events/${eventId}`, {
-    method: "DELETE"
-  })
+    method: "DELETE",
+  });
 
   if (res.ok) {
-    const data = res.json()
-    dispatch(deleteEvent(eventId))
-    return data
+    const data = res.json();
+    dispatch(deleteEvent(eventId));
+    return data;
   }
-}
+};
 
 // state object
 const initialState = {};
@@ -107,17 +109,17 @@ const eventsReducer = (state = initialState, action) => {
       return newState;
     }
     case GET_EVENT_DETAIL: {
-      const newState = { [action.event.id]: action.event}
-      return newState
+      const newState = { [action.event.id]: action.event };
+      return newState;
     }
     case CREATE_EVENT: {
-      const newState= { ...state, [action.event.id]: action.event}
-      return newState
+      const newState = { ...state, [action.event.id]: action.event };
+      return newState;
     }
     case DELETE_EVENT: {
-      const newState = {...state}
+      const newState = { ...state };
       delete newState[action.eventId];
-      return newState
+      return newState;
     }
     default:
       return state;

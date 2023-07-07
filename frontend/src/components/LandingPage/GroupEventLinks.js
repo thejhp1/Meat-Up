@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import GroupImage from "../../images/handsUp.svg";
 import EventImage from "../../images/ticket.svg";
 import NewGroupImage from "../../images/joinGroup.svg";
-import { useSelector } from "react-redux";
 
 export const GroupEventLinks = () => {
   const sessionUser = useSelector((state) => state.session.user);
@@ -39,10 +39,7 @@ export const GroupEventLinks = () => {
         <div className="join-image">
           <img alt="" src={NewGroupImage}></img>
           {sessionUser ? (
-            <Link
-              className="link"
-              to={"/groups/new"}
-            >
+            <Link className="link" to={"/groups/new"}>
               Start a group
             </Link>
           ) : (

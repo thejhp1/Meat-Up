@@ -25,15 +25,15 @@ export const Events = () => {
     }
   }
 
-  upcomingEvent.sort((a,b) => {
-    return new Date(a.startDate) - new Date(b.startDate)
-  })
+  upcomingEvent.sort((a, b) => {
+    return new Date(a.startDate) - new Date(b.startDate);
+  });
 
-  pastEvent.sort((a,b) => {
-    return new Date(b.startDate) - new Date(a.startDate)
-  })
+  pastEvent.sort((a, b) => {
+    return new Date(b.startDate) - new Date(a.startDate);
+  });
 
-  const events = upcomingEvent.concat(pastEvent)
+  const events = upcomingEvent.concat(pastEvent);
 
   return (
     <>

@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import SignupFormModal from "../SignupFormModal";
-// import { useHistory } from "react-router-dom";
 import "./LoginForm.css";
 
 function LoginFormModal() {
@@ -19,7 +18,6 @@ function LoginFormModal() {
   const [passState2, setPassState2] = useState("hidden");
   const [showPass, setShowPass] = useState("password");
   const { closeModal } = useModal();
-  // const history = useHistory();
 
   useEffect(() => {
     const validateError = {};
@@ -35,14 +33,12 @@ function LoginFormModal() {
   const loginIssue = () => {
     alert("Feature coming soon!");
     // closeModal();
-    // history.push("/groups");
   };
 
   //NEED TO IMPLEMENT A "FORGOT PASSWORD" PAGE
   const forgotPassword = () => {
     alert("Feature coming soon!");
     // closeModal();
-    // history.push("/groups");
   };
 
   //NEED TO IMPLEMENT KEEPING SIGNED IN FUTURE IF BOX IS CHECKED
@@ -67,12 +63,14 @@ function LoginFormModal() {
     }
 
     if (Object.values(errors).length === 0) {
-      const res = await dispatch(sessionActions.login({ credential, password })).then()
+      const res = await dispatch(
+        sessionActions.login({ credential, password })
+      ).then();
       if (JSON.stringify(res.ok) === "false") {
-        errors.credential = 'Provided credentials are invalid'
-        return setErrors(errors)
+        errors.credential = "Provided credentials are invalid";
+        return setErrors(errors);
       } else {
-        closeModal()
+        closeModal();
       }
     }
     setErrors(errors);
@@ -92,15 +90,12 @@ function LoginFormModal() {
 
   const sendToFB = () => {
     alert("Feature coming soon!");
-    // window.location.href = "https://facebook.com";
   };
   const sendToG = () => {
     alert("Feature coming soon!");
-    // window.location.href = "https://google.com";
   };
   const sendToA = () => {
     alert("Feature coming soon!");
-    // window.location.href = "https://apple.com";
   };
 
   return (

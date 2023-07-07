@@ -76,7 +76,6 @@ export const thunkGetAllGroups = () => async (dispatch) => {
 
 export const thunkGetGroupDetail = (groupId) => async (dispatch) => {
   const res = await csrfFetch(`/api/groups/${groupId}`)
-  console.log(res)
   if (res.ok) {
     const data = await res.json()
     const res2 = await csrfFetch(`/api/groups/${groupId}/events`)
@@ -142,7 +141,6 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
 }
 
 export const thunkUpdateGroup = (group) => async (dispatch) => {
-  console.log('group: ', JSON.stringify(group))
   const res = await csrfFetch(`/api/groups/${group.id}`, {
     method: "PUT",
     body: JSON.stringify(group)
@@ -151,7 +149,6 @@ export const thunkUpdateGroup = (group) => async (dispatch) => {
   if (res.ok) {
     const data = await res.json()
     dispatch(updateGroup(data))
-    console.log("dataaa", data)
     return window.location.href = `/groups/${data.id}`
   }
 }

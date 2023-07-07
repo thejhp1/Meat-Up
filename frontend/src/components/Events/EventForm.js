@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkGetGroupDetail } from "../../store/groups";
-import PulseLoader from "react-spinners/PulseLoader";
 import { thunkCreateEvent } from "../../store/events";
+import PulseLoader from "react-spinners/PulseLoader";
 
 export const EventForm = ({ formType }) => {
   const { groupId } = useParams();
@@ -22,7 +22,7 @@ export const EventForm = ({ formType }) => {
 
   useEffect(() => {
     dispatch(thunkGetGroupDetail(groupId));
-  }, [dispatch]);
+  }, [dispatch, groupId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +39,7 @@ export const EventForm = ({ formType }) => {
       if (!capacity) {
         errors.capacity = "Capacity is required";
       } else if (!Number.isInteger(Number(capacity))) {
-        errors.capacity = "Capacity must be a whole number"
+        errors.capacity = "Capacity must be a whole number";
       }
 
       if (!price) {
@@ -49,7 +49,7 @@ export const EventForm = ({ formType }) => {
       if (!startDate) {
         errors.startDate = "Start date is required";
       } else if (new Date(startDate) < new Date()) {
-        errors.startDate = "Start date must be in the future"
+        errors.startDate = "Start date must be in the future";
       }
 
       if (!endDate) {
@@ -87,7 +87,7 @@ export const EventForm = ({ formType }) => {
           startDate,
           endDate,
         };
-        dispatch(thunkCreateEvent(form, groupId, imageURL))
+        dispatch(thunkCreateEvent(form, groupId, imageURL));
       }
 
       // capacity: capacity ? capacity : 0

@@ -1,7 +1,5 @@
-import { EventForm } from "./EventForm"
+import { EventForm } from "./EventForm";
 
 export const CreateEvent = () => {
-  return (
-    <EventForm formType="Create"/>
-  )
-}
+  return <EventForm formType="Create" />;
+};

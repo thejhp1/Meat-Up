@@ -16,7 +16,10 @@ export const Groups = () => {
   }, [dispatch]);
 
   let flag = false;
-  if (Object.values(groupStore).length <= 0 || Object.values(groupStore).length === 1) {
+  if (
+    Object.values(groupStore).length <= 0 ||
+    Object.values(groupStore).length === 1
+  ) {
     flag = true;
   }
 
