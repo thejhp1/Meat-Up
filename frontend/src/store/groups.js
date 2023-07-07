@@ -113,6 +113,11 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
     body: JSON.stringify(group)
   })
   if (res.ok) {
+    if (group.private === "true") {
+      group.private = "false"
+    } else if (group.private === "false") {
+      group.private = "true"
+    }
     const data = await res.json()
     const res2 = await csrfFetch(`/api/groups/${data.id}/images`, {
       method: "POST",
