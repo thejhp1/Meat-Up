@@ -66,7 +66,6 @@ function LoginFormModal() {
       dispatch(sessionActions.login({ credential, password }))
         .then(closeModal)
         .catch(async (res) => {
-          console.log(res);
           if (res && res.errors) {
             setErrors(res.errors);
           }
@@ -126,6 +125,7 @@ function LoginFormModal() {
           className="login-modal-input"
           type="text"
           value={credential}
+          autoComplete="username"
           onChange={(e) => setCredential(e.target.value)}
           required
         />
@@ -155,6 +155,7 @@ function LoginFormModal() {
           className="login-modal-input input-password"
           type={showPass}
           value={password}
+          autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
           required
         />

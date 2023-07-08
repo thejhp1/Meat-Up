@@ -105,7 +105,6 @@ function SignupFormModal() {
         .then(closeModal)
         .catch( async (res) => {
           if (res && res.errors) {
-            // console.log(res.errors.email.length > 0)
             if (res.errors.email && res.errors.email.length > 0) {
               res.errors.email = res.errors.email.replace(res.errors.email.split("")[0], res.errors.email.split("")[0].toUpperCase())
               setErrors(res.errors)
@@ -114,14 +113,13 @@ function SignupFormModal() {
               res.errors.username = res.errors.username.replace(res.errors.username.split("")[0], res.errors.username.split("")[0].toUpperCase())
               setErrors(res.errors)
             }
-            // setErrors(res.errors);
           }
         });
     }
 
     setErrors(errors);
   };
-  // console.log(asd)
+
   return (
     <div className="signup-modal-outer-container">
       <i className="fa-sharp fa-solid fa-xmark fa-xl" onClick={closeModal}></i>
@@ -192,6 +190,7 @@ function SignupFormModal() {
               type="text"
               className="signup-modal-inputs"
               placeholder="Username must be at least 4 characters..."
+              autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -206,6 +205,7 @@ function SignupFormModal() {
             <input
               type="password"
               placeholder="Password must be at least 4 characters..."
+              autoComplete="new-password"
               className="signup-modal-inputs"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -222,6 +222,7 @@ function SignupFormModal() {
               type="password"
               placeholder="Please make sure that both passwords are matching..."
               className="signup-modal-inputs"
+              autoComplete="new-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required

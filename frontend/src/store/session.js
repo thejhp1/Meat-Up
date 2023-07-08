@@ -60,22 +60,14 @@ export const signup = (user) => async (dispatch) => {
       }),
     });
     const data = await response.json();
-    console.log(data);
-    console.log(response);
     if (response.ok === true) {
-      console.log("true");
       dispatch(setUser(data.user));
     }
     return response;
   } catch (error) {
     const data = await error.json();
-    console.log("data1", data);
     throw data;
   }
-  //  else {
-  //   console.log("false")
-  //   return data
-  // }
 };
 
 export const logout = () => async (dispatch) => {
