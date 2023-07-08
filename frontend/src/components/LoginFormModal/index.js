@@ -74,6 +74,16 @@ function LoginFormModal() {
     setErrors(errors);
   };
 
+  const demoUser = () => {
+    dispatch(sessionActions.login({ credential: "Demo", password: "demo1" }))
+        .then(closeModal)
+        .catch(async (res) => {
+          if (res && res.errors) {
+            setErrors(res.errors);
+          }
+        });
+  }
+
   const revealPass = () => {
     if (passState1 === "hidden") {
       setShowPass("password");
@@ -219,19 +229,30 @@ function LoginFormModal() {
           Log in with Apple
         </button>
       </section>
-      <span
-        style={{
-          color: "rgb(0, 121, 138)",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "2rem",
-          fontSize: "14px",
-          cursor: "pointer",
-        }}
-        onClick={loginIssue}
-      >
-        Issues with log in?
-      </span>
+      <div className="login-modal-footer">
+        <span
+          style={{
+            color: "rgb(0, 121, 138)",
+            marginTop: "2rem",
+            fontSize: "14px",
+            cursor: "pointer",
+          }}
+          onClick={loginIssue}
+        >
+          Issues with log in?
+        </span>
+        <span
+          style={{
+            color: "rgb(0, 121, 138)",
+            marginTop: "2rem",
+            fontSize: "14px",
+            cursor: "pointer",
+          }}
+          onClick={demoUser}
+        >
+          Log in as Demo User
+        </span>
+      </div>
     </div>
   );
 }

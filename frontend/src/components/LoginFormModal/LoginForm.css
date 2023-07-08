@@ -232,3 +232,10 @@
     font-weight: 700;
     margin-top: -1.85rem;
 }
+
+/************************************** DEMO USER **************************************/
+
+.login-modal-footer {
+    display: flex;
+    justify-content: space-evenly;
+}
