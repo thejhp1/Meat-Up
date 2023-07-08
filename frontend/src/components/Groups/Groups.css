@@ -86,26 +86,32 @@
     text-align:initial;
     cursor: pointer;
     color: #00798A;
+    max-width: 22.5rem;
+    word-wrap: break-word;
 }
 
 .group-list-location {
     grid-area: location;
     margin: 0px;
     cursor: pointer;
-    color:#999999
+    color:#999999;
+    max-width: 22.5rem;
+    word-wrap: break-word;
 }
 
 .group-list-descrip {
     grid-area: descrip;
     margin: .5rem 0rem;
     cursor: pointer;
+    max-width: 22.5rem;
+    word-wrap: break-word;
 }
 
 .group-list-event {
     grid-area: event;
     margin: 0px;
     cursor: pointer;
-    color:#999999
+    color:#999999;
 }
 
 /************************* GROUP DETAILS HEADERS **********************************/
@@ -140,12 +146,16 @@
 
 .group-detail-header-info > h2 {
     margin: 0rem;
+    max-width: 16rem;
+    word-wrap: break-word;
 }
 
 .group-detail-header-info > p {
     margin: .25rem 0rem;
     font-size: 14px;
-    color:#999999
+    color:#999999;
+    max-width: 16rem;
+    word-wrap: break-word;
 }
 
 .group-detail-header-image {
@@ -254,6 +264,7 @@
     grid-template-columns: 1fr 2fr;
     background-color: white;
     border-radius: 1rem;
+    margin-bottom: 1rem;
 }
 
 .event-cards-image {
@@ -269,6 +280,11 @@
     display: flex;
     flex-direction: column;
     margin-top: 1.25rem;
+}
+
+.event-cards-info > p {
+    word-wrap: break-word;
+    max-width: 13.6rem;
 }
 
 .event-cards-info > p:hover {
@@ -305,6 +321,7 @@
     word-break: break-word;
     margin-bottom: 1rem;
     margin-top: .4rem;
+    max-width: 25rem;
 }
 
 

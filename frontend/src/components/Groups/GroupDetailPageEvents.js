@@ -47,7 +47,7 @@ export const GroupDetailPageEvents = ({ events }) => {
                   style={{ marginLeft: "1rem", marginTop: "1.25rem" }}
                 ></img>
               </div>
-              <div className="event-cards-info">
+              <div className="event-cards-info" onClick={() => history.push(`/events/${event.id}`)}>
                 <p className="event-cards-info-time">
                   {event.startDate.split("T")[0]} · {"<"}
                   {event.startDate.split("T")[1].split(".")[0]}
@@ -58,7 +58,7 @@ export const GroupDetailPageEvents = ({ events }) => {
                   {event.Group.city}, {event.Group.state}
                 </p>
               </div>
-              <div className="event-cards-description">
+              <div className="event-cards-description" onClick={() => history.push(`/events/${event.id}`)}>
                 <p>{event.description}</p>
               </div>
             </div>
@@ -83,7 +83,7 @@ export const GroupDetailPageEvents = ({ events }) => {
                   style={{ marginLeft: "1rem", marginTop: "1.25rem" }}
                 ></img>
               </div>
-              <div className="event-cards-info">
+              <div className="event-cards-info" onClick={() => history.push(`/events/${event.id}`)}>
                 <p className="event-cards-info-time">
                   {event.startDate.split("T")[0]} · {"<"}
                   {event.startDate.split("T")[1].split(".")[0]}
@@ -94,7 +94,7 @@ export const GroupDetailPageEvents = ({ events }) => {
                   {event.Group.city}, {event.Group.state}
                 </p>
               </div>
-              <div className="event-cards-description">
+              <div className="event-cards-description" onClick={() => history.push(`/events/${event.id}`)}>
                 <p>{event.description}</p>
               </div>
             </div>

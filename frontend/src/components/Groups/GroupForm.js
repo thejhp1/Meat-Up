@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { thunkCreateGroup, thunkUpdateGroup } from "../../store/groups";
 import PulseLoader from "react-spinners/PulseLoader";
@@ -7,7 +6,6 @@ import PulseLoader from "react-spinners/PulseLoader";
 export const GroupForm = ({ formType, group }) => {
   const session = useSelector((state) => state.session);
   const dispatch = useDispatch();
-  const history = useHistory();
   const [location, setLocation] = useState(
     group ? `${group.city}, ${group.state}` : ""
   );
@@ -73,14 +71,9 @@ export const GroupForm = ({ formType, group }) => {
   ];
 
   const userCheck = () => {
-    const userCheckTimeout = setTimeout(() => {
       if (!session.user) {
-        return history.push("/not-found");
+        return window.location.href = ("/");
       }
-    }, 1000);
-    if (session.user) {
-      clearTimeout(userCheckTimeout);
-    }
   };
 
   const handleSubmit = (e) => {
@@ -102,6 +95,8 @@ export const GroupForm = ({ formType, group }) => {
         !states.includes(location.split(",")[1].trim().toUpperCase())
       ) {
         errors.location = "Must be within the 48 contigous states";
+      } else if (location.split(",")[0].length > 50) {
+        errors.location = "City cannot be more than 50 characters."
       }
 
       if (!name) {
@@ -180,6 +175,8 @@ export const GroupForm = ({ formType, group }) => {
         !states.includes(location.split(",")[1].trim().toUpperCase())
       ) {
         errors.location = "Must be within the 48 contigous states";
+      } else if (location.split(",")[0].length > 50) {
+        errors.location = "City cannot be more than 50 characters."
       }
 
       if (!name) {

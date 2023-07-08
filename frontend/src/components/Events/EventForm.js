@@ -9,6 +9,7 @@ export const EventForm = ({ formType }) => {
   const { groupId } = useParams();
   const dispatch = useDispatch();
   const groupStore = useSelector((state) => state.groups);
+  const session = useSelector((state) => state.session)
   const group = groupStore[groupId] ? groupStore[groupId] : "";
   const [name, setName] = useState("");
   const [eventType, setEventType] = useState("");
@@ -20,9 +21,12 @@ export const EventForm = ({ formType }) => {
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
 
+
   useEffect(() => {
     dispatch(thunkGetGroupDetail(groupId));
-  }, [dispatch, groupId]);
+  }, [dispatch, groupId,session]);
+
+  // if (session.user === null) return (window.location.href = "/");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +34,8 @@ export const EventForm = ({ formType }) => {
       const errors = {};
       if (!name) {
         errors.name = "Name is required";
+      } else if (name.length > 60) {
+        errors.name = "Name must be less than 60 characters."
       }
 
       if (!eventType) {
@@ -95,9 +101,16 @@ export const EventForm = ({ formType }) => {
     }
   };
 
+  const userCheck = () => {
+    if (!session.user) {
+      return window.location.href = ("/");
+    }
+};
+
   return (
     <>
-      {formType === "Create" ? (
+      {formType === "Create" ?
+       session.user ? (
         <form onSubmit={handleSubmit}>
           <div className="create-event-container">
             <p style={{ marginTop: ".5rem", fontSize: "28px" }}>
@@ -298,9 +311,10 @@ export const EventForm = ({ formType }) => {
               justifyContent: "center",
               marginTop: "1rem",
             }}
+            onAnimationIteration={userCheck}
           />
         </>
-      )}
+      ) : ""}
     </>
   );
 };
