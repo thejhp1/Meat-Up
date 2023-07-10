@@ -10,9 +10,9 @@ export const GroupsListIndex = ({ group }) => {
 
   const eventPrivateCheck = () => {
     if (group.private === true) {
-      return "events: Private";
+      return "Private";
     } else {
-      return "events: Public";
+      return "Public";
     }
   };
 
@@ -44,7 +44,7 @@ export const GroupsListIndex = ({ group }) => {
       </p>
       <p className="group-list-descrip">{group.about}</p>
       <p className="group-list-event">
-        {group.Events.length} · {eventPrivateCheck()}
+        {group.Events.length + " events"} · {eventPrivateCheck()}
       </p>
     </div>
   );

@@ -30,9 +30,9 @@ export const GroupDetail = () => {
 
   const eventPrivateCheck = () => {
     if (group.private === true) {
-      return "events: Private";
+      return "Private";
     } else {
-      return "events: Public";
+      return "Public";
     }
   };
 
@@ -108,7 +108,7 @@ export const GroupDetail = () => {
                   {group.city}, {group.state}
                 </p>
                 <p>
-                  {eventsLengthCheck()} · {eventPrivateCheck()}
+                  {eventsLengthCheck() + " events"} · {eventPrivateCheck()}
                 </p>
                 <p>
                   Organized by {group.Organizer.firstName}{" "}
