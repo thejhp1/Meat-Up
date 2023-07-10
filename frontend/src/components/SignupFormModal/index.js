@@ -74,9 +74,10 @@ function SignupFormModal() {
       !email.endsWith(".com") &&
       !email.endsWith(".gov") &&
       !email.endsWith(".edu") &&
-      !email.endsWith(".net")
+      !email.endsWith(".net") &&
+      !email.endsWith(".io")
     ) {
-      errors.email = "Invalid email, must end with org/com/gov/net/edu";
+      errors.email = "Invalid email, must end with .org/.com/.gov/.net/.edu/.io";
     } else if (email.includes("@")) {
       let count = 0;
       for (let ele of email.split("")) {

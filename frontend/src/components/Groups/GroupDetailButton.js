@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
-import DeleteGroupModal from "../DeleteGroupModal";
+import DeleteModal from "../DeleteModal";
 
 export const GroupDetailButton = ({ group }) => {
   const sessionUser = useSelector((state) => state.session.user);
@@ -53,7 +53,7 @@ export const GroupDetailButton = ({ group }) => {
           <button className="group-detail-header-organizer-button-delete">
             <OpenModalMenuItem
               itemText="Delete"
-              modalComponent={<DeleteGroupModal type={"group"} />}
+              modalComponent={<DeleteModal type={"group"} />}
             />
           </button>
         </div>
