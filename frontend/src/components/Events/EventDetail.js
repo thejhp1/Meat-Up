@@ -96,7 +96,7 @@ export const EventDetail = () => {
             <div className="event-detail-header-container">
               <h2>{event.name}</h2>
               <p>
-                Hosted by {event.Group.Organizer.firstName}{" "}
+                Hosted by: {event.Group.Organizer.firstName}{" "}
                 {event.Group.Organizer.lastName}
               </p>
             </div>
@@ -169,7 +169,7 @@ export const EventDetail = () => {
               </div>
             </div>
             <div className="event-detail-body-description">
-              <h2 style={{ marginBottom: ".25rem" }}>Details</h2>
+              <h2 style={{ marginBottom: ".25rem" }}>Description</h2>
               <p>{event.description}</p>
             </div>
           </div>

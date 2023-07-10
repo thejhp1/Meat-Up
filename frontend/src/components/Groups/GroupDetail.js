@@ -111,7 +111,7 @@ export const GroupDetail = () => {
                   {eventsLengthCheck() + " events"} · {eventPrivateCheck()}
                 </p>
                 <p>
-                  Organized by {group.Organizer.firstName}{" "}
+                  Organized by: {group.Organizer.firstName}{" "}
                   {group.Organizer.lastName}
                 </p>
               </div>

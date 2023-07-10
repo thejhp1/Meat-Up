@@ -291,7 +291,7 @@ export const GroupForm = ({ formType, group }) => {
               </span>
               <p className="create-group-borders"></p>
               <p style={{ marginTop: ".65rem" }}>
-                What will your groups's name be?
+                What will your group's name be?
               </p>
               <p
                 style={{
@@ -503,7 +503,7 @@ export const GroupForm = ({ formType, group }) => {
               </span>
               <p className="create-group-borders"></p>
               <p style={{ marginTop: ".65rem" }}>
-                What will your groups's name be?
+                What will your group's name be?
               </p>
               <p
                 style={{

@@ -184,7 +184,7 @@ export const EventForm = ({ formType }) => {
                 marginBottom: ".15rem",
               }}
             >
-              What is the price for you event?
+              What is the price for your event?
             </p>
             <div className="create-event-price-label">
               <span className="create-event-price-symbol">$</span>
