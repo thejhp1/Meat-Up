@@ -13,8 +13,8 @@ export default function Footer() {
         <div className='footer_inner'>
             <div className='about-developer'>
                 <h3>About Developer: </h3>
-                <i class="fa-brands fa-square-github fa-2xl"></i>
-                <i class="fa-brands fa-linkedin fa-2xl"></i>
+                <i onClick={() => window.location.href="https://github.com/thejhp1"} class="fa-brands fa-square-github fa-2xl"></i>
+                <i onClick={() => window.location.href="https://www.linkedin.com/in/jun-park-3b23b7285/"} class="fa-brands fa-linkedin fa-2xl"></i>
             </div>
             <div className='technologies-used'>
                 <h3>Technologies Used: </h3>
