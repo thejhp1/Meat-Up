@@ -13,6 +13,7 @@ import { PageNotFound } from "./components/PageNotFound";
 import { CreateGroup } from "./components/Groups/CreateGroup";
 import { UpdateGroup } from "./components/Groups/UpdateGroup";
 import { CreateEvent } from "./components/Events/CreateEvent";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ function App() {
           <PageNotFound />
         </Route>
       </Switch>
+      <Footer />
     </>
   );
 }
