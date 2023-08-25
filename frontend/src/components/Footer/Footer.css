@@ -1,9 +1,10 @@
 .footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 99%;
     height: 5rem;            /* Footer height */
     border-top: 2px solid #CCCCCC;
+    background-color: #FFFFFF;
 }
 
 .footer_inner {
