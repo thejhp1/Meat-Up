@@ -33,7 +33,7 @@ This was my first full stack application project. This web app was inspired by M
 * Font Awesome
 
 ## DATABASE SCHEMA
-[db-schema]: /frontend/src/images/meetup_dbdiagram.png
+<img width="840" alt="meetup_dbdiagram" src="https://github.com/thejhp1/Meat-Up/assets/124937654/f3bfbde9-f3fb-4afb-8ef9-08d3348fb332">
 
 ## ENDPOINTS
 | REQUEST | PURPOSE |
