@@ -31,12 +31,9 @@ SimpleFix is an easy ticket management system that can be integrated into any co
 * JavaScript
 * React / Redux
 * Node.js
-* Vite
   
 ## ENVIRONMENT DEPENDENCIES/PACKAGES
-* Google Maps Javascript API
 * Font Awesome
-* Day.js
 
 ## DATABASE SCHEMA
 [db-schema]: /frontend/src/images/meetup_dbdiagram.png
