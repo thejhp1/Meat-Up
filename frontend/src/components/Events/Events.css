@@ -413,3 +413,47 @@
 .delete-modal-button-event {
     list-style-type: none;
 }
+
+@media (min-width: 1500px)
+    and (max-width: 2560px) {
+        .event-list-image {
+            height: 18vh;
+            width: 10vw;
+        }
+
+        .event-list-container {
+            grid-template-columns: 1.5fr 2.5fr 1fr;
+            margin: 0rem 50rem;
+        }
+
+        .event-list-header-container {
+            margin: 0rem 50rem;
+            margin-top: 3rem;
+        }
+
+        .event-list-border {
+            margin: 1rem 49rem;
+        }
+
+        .event-detail-container {
+            margin: 0rem 40rem;
+            margin-top: 3rem;
+        }
+
+        .event-detail-body-container {
+            margin: 0rem 40rem;
+            margin-top: 1.25rem;
+        }
+
+        .event-detail-header-container {
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+        .event-list {
+            padding-bottom: 75px;
+        }
+
+        .event-detail-body-container {
+            margin-bottom: 100px;
+        }
+    }

@@ -115,3 +115,25 @@
 .link:hover {
     text-decoration: underline;
 }
+
+@media (min-width: 1500px)
+    and (max-width: 2560px) {
+        .event-image {
+            width: 350px;
+        }
+
+        .event-image > img {
+            width: 300px;
+            height: 300px;
+        }
+
+        .group-image > img {
+            width: 300px;
+            height: 300px;
+        }
+
+        .join-image > img {
+            width: 300px;
+            height: 300px;
+        }
+    }

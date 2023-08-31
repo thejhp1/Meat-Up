@@ -414,3 +414,47 @@
     font-size: 12px;
     margin-top: 2rem;
 }
+
+@media (min-width: 1500px)
+    and (max-width: 2560px) {
+        .group-list-image {
+            height: 18vh;
+            width: 10vw;
+        }
+
+        .group-list-container {
+            grid-template-columns: 1.5fr 2.5fr 1fr;
+            margin: 0rem 50rem;
+        }
+
+        .group-list-header-container {
+            margin: 0rem 50rem;
+            margin-top: 3rem;
+        }
+
+        .group-list-border {
+            margin: 1rem 49rem;
+        }
+
+        .group-detail-container {
+            margin: 0rem 40rem;
+            margin-top: 3rem;
+        }
+
+        .group-detail-body-container {
+            margin: 0rem 40rem;
+            margin-top: 1.25rem;
+        }
+
+        .group-detail-header-container {
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+        .group-list {
+            padding-bottom: 75px;
+        }
+
+        .group-detail-body-container {
+            margin-bottom: 100px;
+        }
+    }
