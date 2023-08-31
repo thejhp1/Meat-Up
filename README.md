@@ -61,3 +61,4 @@ This was my first full stack application project. This web app was inspired by M
 
 ## FUTURE GOALS
 * Implement sign ups with O-Auth
+* Complete media queries for iPad (768px) and smaller
