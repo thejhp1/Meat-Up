@@ -355,7 +355,6 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
 
 router.put("/:eventId", validateEventSignup, async (req, res, next) => {
   const { user } = req;
-  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
   if (user) {
     // const { venueId } = req.body
     // const venueCheck = await Event.findByPk(req.params.eventId)

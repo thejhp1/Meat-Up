@@ -103,4 +103,18 @@ router.put("/:venueId", validateVenueSignup, async (req, res, next) => {
 
 });
 
+router.delete("/:venueId", async (req, res, next) => {
+  const venue = await Venue.findByPk(req.params.venueId, {
+    include: {
+      model: Group
+    }
+  })
+  
+  await venue.destroy()
+
+  return res.json({
+    id: venue.Group.id,
+    message: "Successfully deleted venue from group"
+  })
+})
 module.exports = router;
