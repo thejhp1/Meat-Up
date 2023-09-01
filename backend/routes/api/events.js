@@ -23,18 +23,6 @@ const validateImageAdd = [
 ];
 
 const validateEventSignup = [
-  // check("venueId")
-  // .exists({ checkFalsy: true })
-  // .custom(async (val, { req }) => {
-  //   const venue = await Venue.findByPk(req.body.venueId, {
-  //     include: Group
-  //   });
-  //   const { user } = req
-  //   if (!venue || venue.toJSON().Group.organizerId !== (user.id)) {
-  //     throw new Error("Venue does not exist");
-  //   }
-  //   return true;
-  // }),
   check("name")
     .exists({ checkFalsy: true }),
   check("type")
@@ -367,40 +355,41 @@ router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
 
 router.put("/:eventId", validateEventSignup, async (req, res, next) => {
   const { user } = req;
+  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
   if (user) {
-    const { venueId } = req.body
-    const venueCheck = await Event.findByPk(req.params.eventId)
-    if (!venueCheck) {
-      res.status(404);
-      return res.json({
-        message: "Venue couldn't be found",
-      });
-    }
-    const venueCheck1 = await Group.findByPk(venueCheck.toJSON().groupId, {
-      include: {
-        model: Venue
-      }
-    })
-    if (!venueCheck1) {
-      res.status(404);
-      return res.json({
-        message: "Venue couldn't be found",
-      });
-    }
+    // const { venueId } = req.body
+    // const venueCheck = await Event.findByPk(req.params.eventId)
+    // if (!venueCheck) {
+    //   res.status(404);
+    //   return res.json({
+    //     message: "Venue couldn't be found",
+    //   });
+    // }
+    // const venueCheck1 = await Group.findByPk(venueCheck.toJSON().groupId, {
+    //   include: {
+    //     model: Venue
+    //   }
+    // })
+    // if (!venueCheck1) {
+    //   res.status(404);
+    //   return res.json({
+    //     message: "Venue couldn't be found",
+    //   });
+    // }
 
-    let flag1 = false
-    for (let venue of venueCheck1.toJSON().Venues){
-      if (venue.id === venueId){
-        flag1 = true
-      }
-    }
+    // let flag1 = false
+    // for (let venue of venueCheck1.toJSON().Venues){
+    //   if (venue.id === venueId){
+    //     flag1 = true
+    //   }
+    // }
 
-    if (!venueCheck || flag1 === false) {
-      res.status(404);
-      return res.json({
-        message: "Venue couldn't be found",
-      });
-    }
+    // if (!venueCheck || flag1 === false) {
+    //   res.status(404);
+    //   return res.json({
+    //     message: "Venue couldn't be found",
+    //   });
+    // }
 
     const event = await Event.findByPk(req.params.eventId);
     if (!event) {

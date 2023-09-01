@@ -19,6 +19,7 @@ export const GroupForm = ({ formType, group }) => {
     group ? (group.GroupImages ? group.GroupImages[0].url : "") : ""
   );
   const [errors, setErrors] = useState("");
+
   const states = [
     "AL",
     "AZ",

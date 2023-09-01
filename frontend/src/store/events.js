@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 const GET_EVENTS = "events/GET_EVENTS";
 const GET_EVENT_DETAIL = "events/GET_EVENT_DETAIL";
 const CREATE_EVENT = "events/CREATE_EVENT";
+const UPDATE_EVENT = "events/UPDATE_EVENT";
 const DELETE_EVENT = "events/DELETE_EVENT";
 
 // regular action creator
@@ -31,6 +32,13 @@ const createEvent = (event) => {
 const deleteEvent = (eventId) => {
   return {
     type: DELETE_EVENT,
+    eventId,
+  };
+};
+
+const updateEvent = (eventId) => {
+  return {
+    type: UPDATE_EVENT,
     eventId,
   };
 };
@@ -95,6 +103,21 @@ export const thunkDeleteEvent = (eventId) => async (dispatch) => {
   }
 };
 
+export const thunkUpdateEvent = (event) => async (dispatch) => {
+  console.log( JSON.stringify(event))
+  const res = await csrfFetch(`/api/events/${event.id}`, {
+    method: "PUT",
+    body: JSON.stringify(event),
+  });
+  if (res.ok) {
+    const data = res.json();
+    dispatch(updateEvent(data));
+    window.location.href=`/events/${event.id}`
+    return data;
+  }
+};
+
+
 // state object
 const initialState = {};
 
@@ -119,6 +142,10 @@ const eventsReducer = (state = initialState, action) => {
     case DELETE_EVENT: {
       const newState = { ...state };
       delete newState[action.eventId];
+      return newState;
+    }
+    case UPDATE_EVENT: {
+      const newState = { ...state, [action.eventId]: action.event };
       return newState;
     }
     default:

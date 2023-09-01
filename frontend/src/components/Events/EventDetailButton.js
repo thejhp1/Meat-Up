@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteModal from "../DeleteModal";
+import { useHistory } from "react-router-dom";
 
 export const EventDetailButton = ({ event }) => {
   const sessionUser = useSelector((state) => state.session.user);
+  const history = useHistory();
   let flag = false;
 
   if (!sessionUser) {
@@ -16,8 +18,7 @@ export const EventDetailButton = ({ event }) => {
     <>
       {flag ? (
         <>
-          <button onClick={() => alert("Feature coming soon!")}>Update</button>
-          <div></div>
+          <button onClick={() => history.push(`/events/${event.id}/edit`)}>Update</button>
           <button className="delete-modal-button-event">
             <OpenModalMenuItem
               itemText="Delete"
