@@ -111,7 +111,7 @@ function LoginFormModal() {
       <i className="fa-sharp fa-solid fa-xmark fa-xl" onClick={closeModal}></i>
       <section className="login-modal-header-container">
         <div className="login-modal-icon">
-          <i class="fa-brands fa-meetup"></i>
+          <i className="fa-brands fa-meetup"></i>
         </div>
         <h1
           className="login-modal-title"
@@ -224,7 +224,7 @@ function LoginFormModal() {
         <button onClick={sendToG} className="login-modal-link g">
           Log in with Google
         </button>
-        <i class="fas fa-brands fa-apple fa-xl"></i>
+        <i className="fas fa-brands fa-apple fa-xl"></i>
         <button onClick={sendToA} className="login-modal-link a">
           Log in with Apple
         </button>

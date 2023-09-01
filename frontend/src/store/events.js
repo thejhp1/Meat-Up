@@ -104,7 +104,6 @@ export const thunkDeleteEvent = (eventId) => async (dispatch) => {
 };
 
 export const thunkUpdateEvent = (event) => async (dispatch) => {
-  console.log( JSON.stringify(event))
   const res = await csrfFetch(`/api/events/${event.id}`, {
     method: "PUT",
     body: JSON.stringify(event),

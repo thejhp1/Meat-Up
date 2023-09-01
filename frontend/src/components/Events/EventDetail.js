@@ -127,7 +127,7 @@ export const EventDetail = () => {
               <div className="event-detail-body-info-event">
                 <div className="event-detail-body-info-event-time-details">
                   <i
-                    class="far fa-clock fa-lg"
+                    className="far fa-clock fa-lg"
                     style={{ color: "#CCCCCC" }}
                   ></i>
                   <div className="event-detail-body-info-event-details-time-container">
@@ -151,14 +151,14 @@ export const EventDetail = () => {
                 </div>
                 <div className="event-detail-body-info-event-price-details">
                   <i
-                    class="fa-solid fa-sack-dollar fa-xl"
+                    className="fa-solid fa-sack-dollar fa-xl"
                     style={{ color: "#CCCCCC" }}
                   ></i>
                   <p>{eventPriceCheck()}</p>
                 </div>
                 <div className="event-detail-body-info-event-type-details">
                   <i
-                    class="fa-solid fa-map-pin fa-xl"
+                    className="fa-solid fa-map-pin fa-xl"
                     style={{ color: "#CCCCCC" }}
                   ></i>
                   <p>{event.type}</p>

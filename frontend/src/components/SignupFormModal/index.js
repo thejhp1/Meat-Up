@@ -126,7 +126,7 @@ function SignupFormModal() {
       <i className="fa-sharp fa-solid fa-xmark fa-xl" onClick={closeModal}></i>
       <section className="signup-modal-container">
         <div className="login-modal-icon">
-          <i class="fa-brands fa-meetup"></i>
+          <i className="fa-brands fa-meetup"></i>
         </div>
         <h1>Sign Up</h1>
         <div className="signup-modal-login">

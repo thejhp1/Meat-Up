@@ -5,12 +5,14 @@ import { thunkGetGroupDetail } from "../../store/groups";
 import { GroupDetailPageEvents } from "./GroupDetailPageEvents";
 import { GroupDetailButton } from "./GroupDetailButton";
 import ScaleLoader from "react-spinners/PulseLoader";
+import VenueButtons from "./VenueButtons";
 
 export const GroupDetail = () => {
   const dispatch = useDispatch();
   const { groupId } = useParams();
   let flag = false;
   const groupStore = useSelector((state) => state.groups);
+  const sessionUser = useSelector((state) => state.session?.user);
 
   useEffect(() => {
     dispatch(thunkGetGroupDetail(groupId));
@@ -59,6 +61,7 @@ export const GroupDetail = () => {
       return group.Events.length;
     }
   };
+
 
   return (
     <>
@@ -130,6 +133,15 @@ export const GroupDetail = () => {
             <div className="group-detail-about-container">
               <h2>What we're about</h2>
               <p>{group.about}</p>
+            </div>
+            <div className="group-detail-header-venue-container">
+              <h2>Venue Info</h2>
+              <p>{`${group.Venues[0]?.address || "No" } ${group.Venues[0]?.city || "venue"} ${group.Venues[0]?.state || "found"}`}</p>
+              {(sessionUser.id === group.organizerId) ?
+              <div className="group-detail-header-venue-menu-options">
+                <VenueButtons group={group}/>
+              </div>
+              : <div className="group-detail-header-venue-menu-options" />}
             </div>
             <div className="group-detail-event-container">{eventsCheck()}</div>
           </div>

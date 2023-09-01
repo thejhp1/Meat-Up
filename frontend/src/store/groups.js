@@ -7,6 +7,9 @@ const GET_EVENT_DETAIL = "groups/GET_EVENT_DETAIL"
 const CREATE_GROUP = "groups/CREATE_GROUP"
 const DELETE_GROUP = "groups/DELETE_GROUP"
 const UPDATE_GROUP = "groups/UPDATE_GROUP"
+const UPDATE_VENUE = "venues/UPDATE_VENUE";
+const CREATE_VENUE = "venues/CREATE_VENUE";
+const DELETE_VENUE = "venues/DELETE_VENUE";
 
 // regular action creator
 const getGroups = (groups) => {
@@ -51,6 +54,7 @@ const updateGroup = (group) => {
   }
 }
 
+
 // thunk action creator
 export const thunkGetAllGroups = () => async (dispatch) => {
   const res = await csrfFetch("/api/groups");
@@ -70,7 +74,7 @@ export const thunkGetAllGroups = () => async (dispatch) => {
     dispatch(getGroups(data));
     return data;
   } else {
-    return dispatch(groupsReudcer({}, {type: "not-found"}))
+    return dispatch(groupsReducer({}, {type: "not-found"}))
   }
 };
 
@@ -164,7 +168,7 @@ export const thunkUpdateGroup = (group) => async (dispatch) => {
 const initialState = {};
 
 // reducer
-const groupsReudcer = (state = initialState, action) => {
+const groupsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_GROUPS: {
       const newState = {}
@@ -194,9 +198,24 @@ const groupsReudcer = (state = initialState, action) => {
       const newState = { ...state, [action.group.id]: action.group}
       return newState
     }
+    case UPDATE_VENUE: {
+      const newState = { ...state}
+      newState[action.venue.groupId].Venues[0] = action.venue
+      return newState
+    }
+    case DELETE_VENUE: {
+      const newState = { ...state}
+      delete newState[action.venue.id].Venues[0]
+      return newState
+    }
+    case CREATE_VENUE: {
+      const newState = { ...state}
+      newState[action.venue.groupId].Venues[0] = action.venue
+      return newState
+    }
     default:
       return state;
   }
 };
 
-export default groupsReudcer;
+export default groupsReducer;

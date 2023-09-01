@@ -8,7 +8,6 @@ export const EventForm = ({ formType, event }) => {
   const { eventId } = useParams();
   const dispatch = useDispatch();
   const session = useSelector((state) => state.session);
-  console.log("EVENT", event)
   const [name, setName] = useState(event ? event.name : "");
   const [eventType, setEventType] = useState(event?.type || "");
   const [capacity, setCapcity] = useState(event?.capacity || "");
@@ -19,7 +18,7 @@ export const EventForm = ({ formType, event }) => {
   const [description, setDescription] = useState(event?.description || "");
   const [errors, setErrors] = useState({});
 
-  console.log("SASDASDAsd", startDate)
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formType === "Create") {
