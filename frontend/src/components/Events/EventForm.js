@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkCreateEvent, thunkUpdateEvent } from "../../store/events";
+import { thunkGetGroupDetail } from "../../store/groups";
 import PulseLoader from "react-spinners/PulseLoader";
 
 export const EventForm = ({ formType, event }) => {
-  const { eventId } = useParams();
+  const { groupId } = useParams();
   const dispatch = useDispatch();
   const session = useSelector((state) => state.session);
+  const eventz = useSelector((state) => state.groups[groupId])
+  // console.log(eventz)
   const [name, setName] = useState(event ? event.name : "");
   const [eventType, setEventType] = useState(event?.type || "");
   const [capacity, setCapcity] = useState(event?.capacity || "");
@@ -19,6 +22,12 @@ export const EventForm = ({ formType, event }) => {
   const [errors, setErrors] = useState({});
 
 
+  useEffect(() => {
+    if (groupId !== undefined) {
+      dispatch(thunkGetGroupDetail(groupId))
+    }
+  }, [dispatch, groupId]);
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formType === "Create") {
@@ -117,7 +126,7 @@ export const EventForm = ({ formType, event }) => {
           <form onSubmit={handleSubmit}>
             <div className="create-event-container">
               <p style={{ marginTop: ".5rem", fontSize: "28px" }}>
-                Create a new event for {event.Group.name}
+                Create a new event for {eventz?.name}
               </p>
               <p style={{ fontSize: "12px", marginBottom: ".15rem" }}>
                 What is the name of your event?

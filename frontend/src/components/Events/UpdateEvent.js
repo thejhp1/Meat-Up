@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-// import { GroupForm } from "./GroupForm";
 import { useDispatch, useSelector } from "react-redux";
-import { thunkGetGroupDetail } from "../../store/groups";
 import { useParams } from "react-router-dom";
 import { EventForm } from "./EventForm";
 import { thunkGetEventDetail } from "../../store/events";

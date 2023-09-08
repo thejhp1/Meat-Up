@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link, useHistory } from "react-router-dom";
-import { thunkGetEventDetail } from "../../store/events";
+import { thunkAttendEvent, thunkGetEventDetail, thunkLeaveEvent } from "../../store/events";
 import { EventDetailButton } from "./EventDetailButton.js";
 import ScaleLoader from "react-spinners/PulseLoader";
 
@@ -10,7 +10,9 @@ export const EventDetail = () => {
   const history = useHistory();
   const { eventId } = useParams();
   const eventStore = useSelector((state) => state.events);
+  const userStore = useSelector((state) => state.session.user);
   const event = eventStore[eventId];
+  const eventStatus = useRef(event?.Attendances.some(attendance => attendance.userId === userStore?.id));
   let flag = false;
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export const EventDetail = () => {
   if (event === undefined) {
     flag = true;
   }
+
 
   for (let event of Object.values(eventStore)) {
     if (!Object.keys(event).includes("EventImages")) {
@@ -57,6 +60,24 @@ export const EventDetail = () => {
     } else {
       return `Price: $${event.price}`;
     }
+  };
+
+  const attendEvent = () => {
+    eventStatus.current = true;
+    const safeEvent = {
+      userId: userStore.id,
+      eventId: event.id,
+    }
+    dispatch(thunkAttendEvent(safeEvent));
+  };
+
+  const leaveEvent = () => {
+    eventStatus.current = false;
+    const safeEvent = {
+      userId: userStore.id,
+      eventId: event.id,
+    }
+    dispatch(thunkLeaveEvent(safeEvent));
   };
 
   return (
@@ -166,6 +187,14 @@ export const EventDetail = () => {
                 <div className="event-detail-body-info-event-button">
                   <EventDetailButton event={event} />
                 </div>
+              </div>
+            </div>
+            <div className="event-detail-body-attendance">
+              <h2>Attendance Info</h2>
+              <div className="event-detail-body-attendance-info">
+                <p>People Attending: {event.Attendances.length}</p>
+                { eventStatus.current === true ? <button onClick={leaveEvent}>Leave Event</button> : <button onClick={attendEvent}>Attend Event</button>}
+
               </div>
             </div>
             <div className="event-detail-body-description">

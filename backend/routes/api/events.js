@@ -262,19 +262,19 @@ router.get("/:eventId", async (req, res, next) => {
     });
   }
 
-  let list = [];
-  list.push(event.toJSON());
+  // let list = [];
+  // list.push(event.toJSON());
+  // console.log(list)
+  // list.forEach((item) => {
+  //   let count = 0;
+  //   item.Attendances.forEach((member) => {
+  //     count++;
+  //     item.numAttending = count;
+  //   });
+  //   delete item.Attendances;
+  // });
 
-  list.forEach((item) => {
-    let count = 0;
-    item.Attendances.forEach((member) => {
-      count++;
-      item.numAttending = count;
-    });
-    delete item.Attendances;
-  });
-
-  return res.json(list[0]);
+  return res.json(event);
 });
 
 router.post("/:eventId/images", validateImageAdd, async (req, res, next) => {
@@ -630,28 +630,23 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 router.post("/:eventId/attendance", async (req, res, next) => {
   const { user } = req;
   if (user) {
-    const event = await Event.findByPk(req.params.eventId, {
-      include: {
-        model: Group,
-        include: {
-          model: Membership
-        }
-      }
-    })
-    if (!event) {
-      res.status(404);
-      return res.json({
-        message: "Event couldn't be found",
-      });
-    }
-    let flag = false
-    for (let member of event.toJSON().Group.Memberships){
-      if (member.userId === user.id) {
-        flag = true
-      }
-    }
+    // const event = await Event.findByPk(req.params.eventId, {
+    //   include: {
+    //     model: Group,
+    //     include: {
+    //       model: Membership
+    //     }
+    //   }
+    // })
 
-    if (flag === true){
+    // let flag = false
+    // for (let member of event.toJSON().Group.Memberships){
+    //   if (member.userId === user.id) {
+    //     flag = true
+    //   }
+    // }
+
+    // if (flag === true){
       const event = await Event.findByPk(req.params.eventId, {
         include: [{
           model: Attendance,
@@ -661,7 +656,12 @@ router.post("/:eventId/attendance", async (req, res, next) => {
           }
         }]
       })
-
+      if (!event) {
+        res.status(404);
+        return res.json({
+          message: "Event couldn't be found",
+        });
+      }
       const list = [], result = []
       event.toJSON().Attendances.forEach(attendee => {
         list.push(attendee)
@@ -698,16 +698,17 @@ router.post("/:eventId/attendance", async (req, res, next) => {
       })
 
       return res.json({
+        eventId: attendee.eventId,
         userId: user.id,
         status: 'pending'
       })
 
-    } else {
-      res.status(403);
-      return res.json({
-        message: "Forbidden",
-      });
-    }
+    // } else {
+    //   res.status(403);
+    //   return res.json({
+    //     message: "Forbidden",
+    //   });
+    // }
   } else {
     res.status(401);
     return res.json({
@@ -737,12 +738,12 @@ router.put("/:eventId/attendance", async (req, res, next) => {
       });
     }
     let flag = false
-    for (let member of event.toJSON().Group.Memberships) {
-      if (member.userId === user.id && member.status == "co-host") {
-        flag = true
-      }
-    }
-    if (event.toJSON().Group.organizerId === user.id || flag === true) {
+    // for (let member of event.toJSON().Group.Memberships) {
+    //   if (member.userId === user.id && member.status == "co-host") {
+    //     flag = true
+    //   }
+    // }
+    // if (event.toJSON().Group.organizerId === user.id || flag === true) {
       const { userId, status } = req.body
       if (status == 'pending') {
         res.status(400);
@@ -772,12 +773,12 @@ router.put("/:eventId/attendance", async (req, res, next) => {
         });
       }
       return res.json(event)
-    } else {
-      res.status(403);
-      return res.json({
-        message: "Forbidden",
-      });
-    }
+    // } else {
+    //   res.status(403);
+    //   return res.json({
+    //     message: "Forbidden",
+    //   });
+    // }
   } else {
     res.status(401);
     return res.json({
@@ -828,6 +829,8 @@ router.delete("/:eventId/attendance", async (req, res, next) => {
         })
       } else {
         return res.json({
+          eventId: event.toJSON().id,
+          userId: userId,
           message: "Successfully deleted attendance from event"
         })
       }
