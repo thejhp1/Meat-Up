@@ -230,9 +230,8 @@ function LoginFormModal() {
         </button>
       </section>
       <div className="login-modal-footer">
-        <span
+        <button
           style={{
-            color: "rgb(0, 121, 138)",
             marginTop: "2rem",
             fontSize: "14px",
             cursor: "pointer",
@@ -240,10 +239,9 @@ function LoginFormModal() {
           onClick={loginIssue}
         >
           Issues with log in?
-        </span>
-        <span
+        </button>
+        <button
           style={{
-            color: "rgb(0, 121, 138)",
             marginTop: "2rem",
             fontSize: "14px",
             cursor: "pointer",
@@ -251,7 +249,7 @@ function LoginFormModal() {
           onClick={demoUser}
         >
           Log in as Demo User
-        </span>
+        </button>
       </div>
     </div>
   );
