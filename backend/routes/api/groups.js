@@ -1038,6 +1038,7 @@ router.delete("/:groupId/membership", async (req, res, next) => {
 
           await membership.destroy();
           return res.json({
+            id: memberId,
             message: "Successfully deleted membership from group",
           });
         }
@@ -1063,6 +1064,7 @@ router.delete("/:groupId/membership", async (req, res, next) => {
           });
           await membership.destroy();
           return res.json({
+            id: memberId,
             message: "Successfully deleted membership from group",
           });
         }

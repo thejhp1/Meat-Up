@@ -5,6 +5,7 @@ import { thunkGetAllGroups } from "../../store/groups";
 import { GroupsListIndex } from "./GroupsListIndex";
 import ScaleLoader from "react-spinners/PulseLoader";
 import "./Groups.css";
+import { thunkClearMembers } from "../../store/members";
 
 export const Groups = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ export const Groups = () => {
 
   useEffect(() => {
     dispatch(thunkGetAllGroups());
+    dispatch(thunkClearMembers())
   }, [dispatch]);
 
   let flag = false;

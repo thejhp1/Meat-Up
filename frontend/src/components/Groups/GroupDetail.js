@@ -6,6 +6,7 @@ import { GroupDetailPageEvents } from "./GroupDetailPageEvents";
 import { GroupDetailButton } from "./GroupDetailButton";
 import ScaleLoader from "react-spinners/PulseLoader";
 import VenueButtons from "./VenueButtons";
+import { thunkApproveMember, thunkDeleteMember, thunkGetAllMembers } from "../../store/members";
 
 export const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -13,10 +14,15 @@ export const GroupDetail = () => {
   let flag = false;
   const groupStore = useSelector((state) => state.groups);
   const sessionUser = useSelector((state) => state.session?.user);
+  const membersStore = useSelector((state) => state.members);
 
   useEffect(() => {
     dispatch(thunkGetGroupDetail(groupId));
   }, [dispatch, groupId]);
+
+  useEffect(() => {
+    dispatch(thunkGetAllMembers(groupId));
+  }, [dispatch, groupId])
 
   const group = groupStore[groupId];
 
@@ -62,6 +68,26 @@ export const GroupDetail = () => {
     }
   };
 
+  const approveMember = (member) => {
+    const safeMember = {
+      groupId: group.id,
+      member: {
+        memberId: member.id,
+        status: "member"
+      }
+    }
+    dispatch(thunkApproveMember(safeMember))
+  }
+
+  const rejectMember = (member) => {
+    const safeMember = {
+      groupId: group.id,
+      member: {
+       memberId: member.id,
+      }
+    };
+    dispatch(thunkDeleteMember(safeMember))
+  }
 
   return (
     <>
@@ -119,7 +145,7 @@ export const GroupDetail = () => {
                 </p>
               </div>
               <div className="group-detail-header-button-container">
-                <GroupDetailButton group={group} />
+                <GroupDetailButton group={group} members={Object.values(membersStore)} />
               </div>
             </div>
           </div>
@@ -142,6 +168,17 @@ export const GroupDetail = () => {
                 <VenueButtons group={group}/>
               </div>
               : <div className="group-detail-header-venue-menu-options" />}
+            </div>
+            <div className="group-detail-membership-container">
+              <h2>Members</h2>
+              <h4>Name and Membership Status</h4>
+              {Object.values(membersStore).map((member) => (
+                <div key={member.id} className="group-detail-membership-info">
+                  {member.id === sessionUser.id ? <i className="fa-solid fa-star"></i>:<i className="fa-solid fa-user"></i> }
+                  <p>{member.firstName} {member.lastName} | {member.Membership.status}</p>
+                  {member.Membership.status === "pending" ? <div className="group-detail-membership-buttons"><button onClick={() => approveMember(member)}>Approve</button> <button onClick={() => rejectMember(member)}>Reject</button></div> : ""}
+                </div>
+              ))}
             </div>
             <div className="group-detail-event-container">{eventsCheck()}</div>
           </div>

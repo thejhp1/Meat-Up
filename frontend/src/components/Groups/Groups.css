@@ -209,6 +209,16 @@
     background-color: rgb(145, 145, 145);
 }
 
+.group-detail-header-member-button > button {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: rgb(102,102,102);
+    color:white;
+    border: 2px solid black;
+    box-shadow: 2px 2px black;
+    cursor: pointer;
+    list-style-type: none;
+}
+
 /************************** GROUP DETAILS INFO ******************************/
 
 .group-detail-body-container {
@@ -445,6 +455,44 @@
 .venue-buttons-container > button:hover {
     background-color: rgb(145, 145, 145);
 }
+
+.group-detail-membership-container {
+    margin: 1rem 8rem;
+}
+
+.group-detail-membership-info {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+     /* gap: 40px; */
+}
+
+.group-detail-membership-container > h2 {
+    margin-bottom: 4px;
+}
+
+.group-detail-membership-container > h4 {
+    margin: 0;
+    margin-bottom: .25rem;
+}
+.group-detail-membership-buttons {
+    margin-left: 1rem;
+}
+.group-detail-membership-buttons > button {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: rgb(102,102,102);
+    color:white;
+    border: 2px solid black;
+    box-shadow: 2px 2px black;
+    cursor: pointer;
+    list-style-type: none;
+    margin-left: .8rem;
+}
+
+.group-detail-membership-buttons > button:hover {
+    background-color: rgb(145, 145, 145);
+}
+
 
 @media (min-width: 1500px)
     and (max-width: 2560px) {
