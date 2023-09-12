@@ -12,7 +12,7 @@ export const EventDetail = () => {
   const eventStore = useSelector((state) => state.events);
   const userStore = useSelector((state) => state.session.user);
   const event = eventStore[eventId];
-  const eventStatus = useRef(event?.Attendances.some(attendance => attendance.userId === userStore?.id));
+  const eventStatus = useRef(event?.Attendances?.some(attendance => attendance.userId === userStore?.id));
   let flag = false;
 
   useEffect(() => {
